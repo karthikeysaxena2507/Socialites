@@ -17,7 +17,7 @@ function MyPosts() {
     var [posts,setPosts] = useState([]);
 
     useEffect(function() {
-        axios.get("/posts/" + username) 
+        axios.get("/posts/list/" + username) 
             .then(function(response) {
                 setPosts(response.data.reverse());
             });

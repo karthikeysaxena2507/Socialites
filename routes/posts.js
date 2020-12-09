@@ -23,7 +23,7 @@ router.route("/delete/:id").delete(function(req, res) {
     });
 });
 
-router.route("/:username").get(function(req, res) {
+router.route("/list/:username").get(function(req, res) {
     Post.find({author: req.params.username}, function(err, posts) {
         if(err) {
             res.status(400).json("Error: " + err);
