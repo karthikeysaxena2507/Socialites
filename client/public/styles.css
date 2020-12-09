@@ -1,0 +1,90 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: darkcyan;
+    color: white;
+  } 
+  
+  .heading {
+    text-align: center;
+    margin-top: 200px;
+  }
+
+  .margin {
+      margin-top: 10px;
+  }
+
+  .upper-margin {
+    margin-top: 150px;
+  }
+
+  .expand {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .expand:hover {
+    transform: scale(1.10);
+    cursor: pointer;
+  }
+  
+  ::placeholder {
+    color: grey;
+    opacity: 1;
+  }
+  
+  .center-text {
+    text-align: center;
+  }
+
+  input {
+    padding: 10px 10px;
+  }
+
+  textarea {
+    padding: 10px 10px;
+  }
+
+  input[type="text"]:focus {
+    outline: none;
+    box-shadow: inset 0 -3px 0 0 #000000;
+  }
+  input[type="password"]:focus {
+    outline: none;
+    box-shadow: inset 0 -3px 0 0 #000000;
+  }
+  input[type="email"]:focus {
+    outline: none;
+    box-shadow: inset 0 -3px 0 0 #000000;
+  }
+
+
+  .post-title{
+    background-color: #000000;
+    padding: 5px 15px;
+    border-radius: 10px;
+  }
+
+  .post-content {
+    color: #000000;
+    background-color: white;
+    padding: 5px 15px;
+    border-radius: 10px;
+  }
+
+  .post-info {
+    background-color: rgb(132, 199, 190);
+    padding: 3px 25px;
+    border-radius: 10px;
+  }
+
+  .post {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  .one {
+    margin-right: 10px;
+  }
+
+  .trash {
+    float: right;
+  }
