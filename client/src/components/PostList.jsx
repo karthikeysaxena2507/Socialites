@@ -20,7 +20,7 @@ function PostList() {
             .then(function(response) {
                 setPosts(response.data.reverse());
             });
-    });
+    },[]);
 
     function createPost(props, index) {
 
