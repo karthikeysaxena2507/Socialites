@@ -6,9 +6,7 @@ import trash from "./images/trash.png";
 import like from "./images/like.png";
 import love from "./images/love.png";
 import laugh from "./images/laugh.png";
-// import liked from "./images/laughed.png";
-// import loved from "./images/loved.png";
-// import laughed from "./images/laughed.png";
+import edit from "./images/edit.png";
 
 function MyPosts() {
 
@@ -21,26 +19,38 @@ function MyPosts() {
             .then(function(response) {
                 setPosts(response.data.reverse());
             });
-    },[username]);
+    });
 
     function MyPost(props, index) {
 
-        function change() {
-        axios.delete("/posts/delete/" + props._id)
-            .then(function(response) {
-                console.log(response.data.reverse());
-            });
+        function change(event) {
+            axios.post("/posts/update/" + event.target.name + "/" + username, props)
+                .then(function(response) {
+                    console.log(response.data);
+                });
+        }
+
+        function remove() {
+            axios.delete("/posts/delete/" + props._id)
+                .then(function(response) {
+                    console.log(response.data.reverse());
+                });
             window.location = "/myposts/" + username;
+        }
+
+        function update() {
+            window.location = "/edit/" + username + "/" + props._id;
         }
     
         return(<div className="container margin post" key={index}> 
             <div className="post-title"> <h2> {props.title} </h2>  by {props.author} </div>
             <div className="post-content"> {props.content} </div>
             <div className="post-info"> 
-                <span className="one"> <img src={like} name="like" className="expand"/>  {props.like.length} </span>
-                <span className="one"> <img src={love} name="love" className="expand"/>  {props.love.length} </span>
-                <span className="one"> <img src={laugh} name="laugh" className="expand"/>  {props.laugh.length} </span>
-                <span> <img src={trash} onClick={change} className="trash expand"/> </span>
+                <span className="one"> <img src={like} name="like" onClick={change} className="expand"/>  {props.like} </span>
+                <span className="one"> <img src={love} name="love" onClick={change} className="expand"/>  {props.love} </span>
+                <span className="one"> <img src={laugh} name="laugh" onClick={change} className="expand"/>  {props.laugh} </span>
+                <span> <img src={trash} onClick={remove} className="move-right expand one"/> </span>
+                <span> <img src={edit} onClick={update} className="move-right expand one"/> </span>
             </div>
         </div>);
     }

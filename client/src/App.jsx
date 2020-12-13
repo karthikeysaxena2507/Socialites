@@ -6,6 +6,8 @@ import Create from "./components/Create";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import MyPosts from "./components/MyPosts";
+import Edit from "./components/Edit";
+import Reactions from "./components/Reactions";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
     <Route path="/posts/:username" component={PostList} />
     <Route path="/create/:username" component={Create} />
     <Route path="/myposts/:username" component={MyPosts} />
+    <Route path="/post/:id" component={Reactions} />
+    <Route path="/edit/:username/:id" component={Edit} />
     <Route path="/register" component={Register} />
     <Route path="/login" component={Login} />
     </Router>

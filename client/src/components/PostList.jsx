@@ -5,9 +5,7 @@ import { Link,useParams } from "react-router-dom";
 import like from "./images/like.png";
 import love from "./images/love.png";
 import laugh from "./images/laugh.png";
-// import liked from "./images/liked.png"
-// import loved from "./images/loved.png";
-// import laughed from "./images/laughed.png";
+import all from "./images/all.png";
 
 function PostList() {
 
@@ -20,7 +18,7 @@ function PostList() {
             .then(function(response) {
                 setPosts(response.data.reverse());
             });
-    },[]);
+    });
 
     function createPost(props, index) {
 
@@ -31,13 +29,46 @@ function PostList() {
                 });
         }        
 
+        function SeeAll() {
+            window.location = "/post/" + props._id;
+        }
+
         return(<div className="container margin post" key={index}> 
             <div className="post-title"> <h2> {props.title} </h2>  by {props.author} </div>
             <div className="post-content"> {props.content} </div>
             <div className="post-info"> 
-                <span className="one"> <img src={like} name="like" onClick={change} className="expand"/>  {props.like.length} </span>
-                <span className="one"> <img src={love} name="love" onClick={change} className="expand"/>  {props.love.length} </span>
-                <span className="one"> <img src={laugh} name="laugh" onClick={change} className="expand"/>  {props.laugh.length} </span>
+                <span className="one">
+                 <img
+                    src={like} 
+                    name="like" 
+                    onClick={change} 
+                    className="expand one"/>
+                    <span onClick={SeeAll} > {props.like} </span>
+                </span>
+                <span className="one">
+                 <img 
+                    src={love} 
+                    name="love" 
+                    onClick={change} 
+                    className="expand one"/>
+                    <span onClick={SeeAll} > {props.love} </span>
+                </span>
+                <span className="one">
+                 <img 
+                    src={laugh} 
+                    name="laugh" 
+                    onClick={change} 
+                    className="expand one"/>
+                    <span onClick={SeeAll} > {props.laugh} </span>
+                </span>
+                <span className="one move-right">
+                 <img 
+                    src={all} 
+                    name="arrow" 
+                    onClick={SeeAll} 
+                    className="expand one"/> 
+                    <span onClick={SeeAll} > {props.laugh + props.love + props.like} </span>
+                </span>
             </div>
         </div>);
     }
@@ -56,12 +87,10 @@ function PostList() {
                 <button className="btn btn-dark expand margin one" > Create a Post </button> 
             </Link>
             <Link to="/">
-                <button className="btn btn-dark expand margin"> LogOut </button> 
+                <button className="btn btn-dark expand margin one"> LogOut </button> 
             </Link>
         </div>
-        <div>
-            {posts.map(createPost)}
-        </div>
+        {posts.map(createPost)}
 </div>);
 }
 
