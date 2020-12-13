@@ -43,7 +43,7 @@ function Create() {
           laugh:0
 
         });
-        window.location = "/posts/" + username;
+        window.location = "/allposts/" + username;
     }
 
     function onDrop(files) {
@@ -66,7 +66,7 @@ function Create() {
         dropRef.current.style.border = '2px dashed #e9ebeb';
       }
     
-    let link1 = "/posts/" + username;
+    let link1 = "/allposts/" + username;
     let link2 = "/myposts/" + username;
 
     return (<div className="center-text">

@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
     <Route path="/" exact component={Home} />
-    <Route path="/posts/:username" component={PostList} />
+    <Route path="/allposts/:username" component={PostList} />
     <Route path="/create/:username" component={Create} />
     <Route path="/myposts/:username" component={MyPosts} />
     <Route path="/post/:id" component={Reactions} />

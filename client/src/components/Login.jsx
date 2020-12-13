@@ -26,7 +26,7 @@ function Login() {
                     setMessage(response.data);
                 }
                 else {
-                    window.location = "/posts/" + user.username;
+                    window.location = "/allposts/" + user.username;
                 }
             });
         
