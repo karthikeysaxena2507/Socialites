@@ -56,7 +56,7 @@ function MyPosts() {
     }
     
 
-    let link1 = "/posts/" + username;
+    let link1 = "/allposts/" + username;
     let link2 = "/create/" + username;
 
     return (<div>

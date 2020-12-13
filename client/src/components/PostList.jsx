@@ -6,6 +6,7 @@ import like from "./images/like.png";
 import love from "./images/love.png";
 import laugh from "./images/laugh.png";
 import all from "./images/all.png";
+import arrow from "./images/arrow.png";
 
 function PostList() {
 
@@ -60,6 +61,13 @@ function PostList() {
                     onClick={change} 
                     className="expand one"/>
                     <span onClick={SeeAll} > {props.laugh} </span>
+                </span>
+                <span className="one">
+                 <img 
+                    src={arrow} 
+                    name="laugh" 
+                    onClick={SeeAll} 
+                    className="expand one"/>
                 </span>
                 <span className="one move-right">
                  <img 
