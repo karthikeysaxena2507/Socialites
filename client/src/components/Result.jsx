@@ -8,22 +8,38 @@ import love from "./images/love.png";
 import laugh from "./images/laugh.png";
 import all from "./images/all.png";
 import arrow from "./images/arrow.png";
-import search from "./images/search.png";
 
-function PostList() {
+function Result() {
 
-    let { username } = useParams();
-    var [searchContent,setsearchContent] = useState("");
-    var [posts,setPosts] = useState([]);
+    let { username,searchContent,message } = useParams();
+    var [foundPosts,setfoundPosts] = useState([]);
 
     useEffect(function() {
-        axios.get("/posts") 
+        if(message === "all") {
+            axios.get("/posts") 
             .then(function(response) {
-                setPosts(response.data.reverse());
+                setfoundPosts(response.data.reverse().filter(function(post) {
+                    return ((post.title.indexOf(searchContent) !== -1) || 
+                    (post.author.indexOf(searchContent) !== -1) ||
+                    (post.content.indexOf(searchContent) !== -1)
+                    )
+                }));
+            });    
+        }
+        else {
+            axios.get("/posts/list/" + username) 
+            .then(function(response) {
+                setfoundPosts(response.data.reverse().filter(function(post) {
+                    return ((post.title.indexOf(searchContent) !== -1) || 
+                    (post.author.indexOf(searchContent) !== -1) ||
+                    (post.content.indexOf(searchContent) !== -1)
+                    )
+                }));
             });
+        }
     });
 
-    function createPost(props, index) {
+    function makePost(props, index) {
 
         function change(event) {
             axios.post("/posts/update/" + event.target.name + "/" + username, props)
@@ -83,29 +99,17 @@ function PostList() {
         </div>);
     }
 
-    function change_search_content(event) {
-        setsearchContent(event.target.value);
-    }
-
-    var message = "all";
-    function searchIt() {
-        window.location = "/result/" + username + "/" + searchContent + "/" + message;
-    }
-
     return (<div>
         <Navbar 
             name = {username}
-            page = "home"
+            page = "result"
         />
         <div className="center-text upper-margin">
-            <h1 className="main"> Socialites </h1>
-            <h2 className="margin"> All Posts </h2>
-            <input type="search" placeholder="Search" onChange={change_search_content}/>
-            <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
+            <h2 className="margin"> Search Results </h2>
         </div>
-        {posts.map(createPost)}
+        {foundPosts.map(makePost)}
 </div>);
 }
 
-export default PostList;
+export default Result;
 

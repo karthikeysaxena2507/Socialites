@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
 
 function Edit() {
@@ -34,8 +35,12 @@ function Edit() {
         window.location = "/myposts/" + username;
     }
 
-    return (<div  className="center-text upper-margin">
-        <div className="margin"> 
+    return (<div  className="center-text">
+        <Navbar 
+            name = {username}
+            page = "edit"
+        />
+        <div className="upper-margin"> 
             <h1> Edit Your Post Here </h1> 
         </div> 
         <div className="margin">

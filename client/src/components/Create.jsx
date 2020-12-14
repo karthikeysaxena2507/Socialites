@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useRef, useState } from "react";
 import axios from "axios";
-import { useParams,Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import upload from "./images/upload.png";
 import Dropzone from "react-dropzone";
+import Navbar from "./Navbar";
 
 function Create() {
 
@@ -65,23 +66,13 @@ function Create() {
       function over() {
         dropRef.current.style.border = '2px dashed #e9ebeb';
       }
-    
-    let link1 = "/allposts/" + username;
-    let link2 = "/myposts/" + username;
 
     return (<div className="center-text">
-        <div>
-            <Link to={link1}>
-                <button className="btn btn-dark expand margin one"> See All Posts </button> 
-            </Link>
-            <Link to={link2}>
-                <button className="btn btn-dark expand margin one"> My Posts </button> 
-            </Link>
-            <Link to="/">
-                <button className="btn btn-dark expand margin"> LogOut </button> 
-            </Link>
-        </div>
-        <div className="margin"> <h1> Create Your Post Here </h1> </div> 
+        <Navbar 
+            name = {username}
+            page = "create"
+        />
+        <div className="upper-margin"> <h1> Create Your Post Here </h1> </div> 
         <div className="margin">
             <textarea
                 name="title"

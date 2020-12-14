@@ -1,17 +1,19 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-import { Link,useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import Navbar from "./Navbar";
 import trash from "./images/trash.png";
 import like from "./images/like.png";
 import love from "./images/love.png";
 import laugh from "./images/laugh.png";
 import edit from "./images/edit.png";
+import search from "./images/search.png";
 
 function MyPosts() {
 
     let { username } = useParams();
-
+    var [searchContent,setsearchContent] = useState("");
     var [posts,setPosts] = useState([]);
 
     useEffect(function() {
@@ -54,25 +56,25 @@ function MyPosts() {
             </div>
         </div>);
     }
-    
 
-    let link1 = "/allposts/" + username;
-    let link2 = "/create/" + username;
+    function change_search_content(event) {
+        setsearchContent(event.target.value);
+    }
+
+    var message = "personal";
+    function searchIt() {
+        window.location = "/result/" + username + "/" + searchContent + "/" + message;
+    }
 
     return (<div>
-        <div className="center-text margin">
+        <Navbar 
+        name = {username}
+        page = "myposts"
+        />
+        <div className="center-text upper-margin">
             <h2> My Posts </h2>
-        </div>
-        <div className="center-text">
-            <Link to={link1}>
-                <button className="btn btn-dark expand margin one" > See All Posts </button> 
-            </Link>
-            <Link to={link2}>
-                <button className="btn btn-dark expand margin one" > Create a Post </button> 
-            </Link>
-            <Link to="/">
-                <button className="btn btn-dark expand margin" > Logout </button> 
-            </Link>
+            <input type="search" placeholder="Search" onChange={change_search_content}/>
+            <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
         </div>
         <div>
             {posts.map(MyPost)}
