@@ -3,10 +3,8 @@ import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
+import Post from "./Post";
 import trash from "./images/trash.png";
-import like from "./images/like.png";
-import love from "./images/love.png";
-import laugh from "./images/laugh.png";
 import edit from "./images/edit.png";
 import search from "./images/search.png";
 
@@ -25,8 +23,8 @@ function MyPosts() {
 
     function MyPost(props, index) {
 
-        function change(event) {
-            axios.post("/posts/update/" + event.target.name + "/" + username, props)
+        function changepost(event, post) {
+            axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
                 .then(function(response) {
                     console.log(response.data);
                 });
@@ -43,18 +41,25 @@ function MyPosts() {
         function update() {
             window.location = "/edit/" + username + "/" + props._id;
         }
-    
-        return(<div className="container margin post" key={index}> 
-            <div className="post-title"> <h2> {props.title} </h2>  by {props.author} </div>
-            <div className="post-content"> {props.content} </div>
-            <div className="post-info"> 
-                <span className="one"> <img src={like} name="like" onClick={change} className="expand"/>  {props.like} </span>
-                <span className="one"> <img src={love} name="love" onClick={change} className="expand"/>  {props.love} </span>
-                <span className="one"> <img src={laugh} name="laugh" onClick={change} className="expand"/>  {props.laugh} </span>
-                <span> <img src={trash} onClick={remove} className="move-right expand one"/> </span>
-                <span> <img src={edit} onClick={update} className="move-right expand one"/> </span>
-            </div>
-        </div>);
+
+        return (<div className="container">
+         <Post 
+                key = {index}
+                name = {username}
+                _id = {props._id}
+                author = {props.author}
+                title = {props.title}
+                content = {props.content}
+                like = {props.like}
+                love = {props.love}
+                laugh = {props.laugh}
+                change = {changepost}
+        />
+        <div className="post-options center-text">
+            <img src={trash} onClick={remove} className="expand one"/>
+            <img src={edit} onClick={update} className="expand"/>
+        </div>
+    </div>);
     }
 
     function change_search_content(event) {

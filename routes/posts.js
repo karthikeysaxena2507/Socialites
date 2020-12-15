@@ -83,7 +83,7 @@ router.route("/update/:react/:username").post(function(req, res) {
                     res.status(400).json("Error: " + err);
                 }
                 else {
-                    res.json(post.reacts);
+                    res.json(newReact.name);
                 }    
             });
         }

@@ -1,7 +1,5 @@
 /* GENERAL CLASSES */
 body {
-    /* font-family: 'Montserrat', sans-serif; */
-    /* font-family: 'Ubuntu', sans-serif; */
     font-family: 'Roboto', sans-serif;
     background-color:rgb(250, 210, 173);
     color: black;
@@ -134,11 +132,19 @@ textarea {
     background-color: rgb(192, 123, 90);
     padding: 8px 25px;
     border-radius: 0 0 10px 10px;
+    border-bottom: 1px solid black;
   }
 
   .post {
     margin-top: 25px;
-    margin-bottom: 25px;
+  }
+
+  .post-options {
+    width: 60px;
+    border-radius: 0 0 3px 3px;
+    border: 1px solid black;
+    margin: 0 auto;
+    background-color: rgb(192, 123, 90);
   }
 
    /* INPUT IMAGE DESIGNING */
@@ -174,4 +180,7 @@ textarea {
     text-decoration: underline;
   }
 
-  
+  .all {
+    display: inline-block;
+    text-decoration: underline;
+  }
