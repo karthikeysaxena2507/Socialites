@@ -101,6 +101,7 @@ textarea {
 
 .nav-item:hover {
   background-color: rgb(211, 115, 36);
+  cursor: pointer;
 }
 
 .nav-item-active {

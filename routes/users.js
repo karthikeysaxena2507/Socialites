@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const md5 = require("md5");
+const passport = require("passport");
 let User = require("../models/user.model.js");
 
 router.route("/:username/create").get(function(req, res) {
@@ -17,31 +18,28 @@ router.route("/:username/create").get(function(req, res) {
 });
 
 router.route("/").post(function(req, res) {
-    User.findOne({
+    const user = new User ({
         username: req.body.username,
-        password: md5(req.body.password)
-    }, function(err, foundUser) {
+        password: req.body.password
+    });
+    req.login(user, function(err) {
         if(err) {
-            res.status(400).json("Error: " + err);
+            res.json("user not found");
         }
         else {
-            if(foundUser === null) {
-                res.json("user not found");
-            }
-            else {
-                res.json("user found");
-            }
+            passport.authenticate("local")(req, res, function() {
+                res.json(user);
+            });
         }
-    })
+    });
 });
 
 router.route("/add").post(function(req, res) {
     const newUser = new User ({
         username: req.body.username,
         email: req.body.email,
-        password: md5(req.body.password)
+        password: req.body.password
     });
-
     User.findOne({
         username: req.body.username
     }, function(err, foundUser) {
@@ -50,17 +48,19 @@ router.route("/add").post(function(req, res) {
         }
         else {
             if(foundUser === null) {
-                newUser.save(function(err) {
+                User.register({username: req.body.username}, req.body.password, function(err, user) {
                     if(err) {
                         res.status(400).json("Error: " + err);
                     }
                     else {
-                        res.json("user added");
+                        passport.authenticate("local")(req, res, function(){
+                            res.json(user);
+                        });
                     }
                 });
             }
             else {
-                res.json("username alredy exists");
+                res.json("Username Already Exists");
             }
         }
     })

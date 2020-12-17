@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -22,7 +23,7 @@ function Register() {
 
         axios.post("/users/add", user)
             .then(function(res) {
-                if(res.data === "username already exists") {
+                if(res.data === "Username Already Exists") {
                     setMessage(res.data);
                 }
                 else {
@@ -73,10 +74,10 @@ function Register() {
                 <p className="margin"> {message} </p>
             </div>
             <div>
-                <input type="submit" className="btn btn-dark expand margin" value="Register"/> 
+                <input type="submit" className="btn btn-lg expand margin" value="Register"/> 
             </div>
         </form>
-        
+        <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
 </div>);
 }
 

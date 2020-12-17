@@ -27,10 +27,13 @@ function Edit() {
       });
     }
 
-    function editPost(event) {
+    function editPost() {
         axios.post("/posts/edit/" + id, post) 
             .then(function(response) {
                 console.log(response.data);
+            })
+            .catch(function(response) {
+                console.log(response);
             });
         window.location = "/myposts/" + username;
     }

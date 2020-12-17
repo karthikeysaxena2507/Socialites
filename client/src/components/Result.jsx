@@ -20,7 +20,10 @@ function Result() {
                     (post.content.indexOf(searchContent) !== -1)
                     )
                 }));
-            });    
+            })
+            .catch(function(response) {
+                console.log(response);
+            });
         }
         else {
             axios.get("/posts/list/" + username) 
@@ -31,6 +34,9 @@ function Result() {
                     (post.content.indexOf(searchContent) !== -1)
                     )
                 }));
+            })
+            .catch(function(response) {
+                console.log(response);
             });
         }
     });

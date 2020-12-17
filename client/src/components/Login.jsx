@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -21,15 +22,12 @@ function Login() {
         event.preventDefault();
 
         axios.post("/users/", user)
-            .then(function(response) {
-                if(response.data === "user not found") {
-                    setMessage(response.data);
-                }
-                else {
-                    window.location = "/allposts/" + user.username;
-                }
+            .then(function() {
+                window.location = "/allposts/" + user.username;
+            })
+            .catch(function() {
+                setMessage("User Not Found");
             });
-        
     }
 
     return (<div className="center-text upper-margin">
@@ -62,11 +60,12 @@ function Login() {
                 <p className="margin"> {message} </p>
             </div>
             <div>
-                <input type="submit" className="btn btn-dark expand margin" value="Log In"/> 
+                <input type="submit" className="btn btn-lg expand margin" value="Log In"/> 
             </div>
             <div className="margin">
                 <a href="/register"> Create an account </a>
             </div>
+            <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
         </form>
         
 </div>);

@@ -33,8 +33,11 @@ function Create() {
         event.preventDefault();
         axios.post("/posts/add", post)
           .then(function(res) { 
-            console.log(res.data);
-        });
+            console.log(res);
+            })
+          .catch(function(res) {
+            console.log(res);
+          })
         setPost({
           author: username,
           title:"", 

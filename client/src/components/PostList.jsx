@@ -17,6 +17,9 @@ function PostList() {
         axios.get("/posts") 
             .then(function(response) {
                 setPosts(response.data.reverse());
+            })
+            .catch(function(response) {
+                console.log(response);
             });
     });
 
@@ -26,6 +29,9 @@ function PostList() {
             axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
                 .then(function(response) {
                     console.log(response.data);
+                })
+                .catch(function(response) {
+                    console.log(response);
                 });
         }
 

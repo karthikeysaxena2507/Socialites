@@ -18,6 +18,9 @@ function MyPosts() {
         axios.get("/posts/list/" + username) 
             .then(function(response) {
                 setPosts(response.data.reverse());
+            })
+            .catch(function(response) {
+                console.log(response);
             });
     });
 
@@ -27,6 +30,9 @@ function MyPosts() {
             axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
                 .then(function(response) {
                     console.log(response.data);
+                })
+                .catch(function(response) {
+                    console.log(response);
                 });
         }
 
@@ -34,6 +40,9 @@ function MyPosts() {
             axios.delete("/posts/delete/" + props._id)
                 .then(function(response) {
                     console.log(response.data.reverse());
+                })
+                .catch(function(response) {
+                    console.log(response);
                 });
             window.location = "/myposts/" + username;
         }

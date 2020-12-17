@@ -26,6 +26,9 @@ function Reactions() {
                 setallreactions(response.data[0].reacts.reverse());
                 setreactions(response.data[0].reacts.reverse());
                 settempreactions(response.data[0].reacts.reverse());
+            })
+            .catch(function(response) {
+                console.log(response);
             });
     },[id]);
 
