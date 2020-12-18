@@ -44,6 +44,7 @@ body {
 }
 
 .btn {
+    color: white;
     margin: 10px 8px;
     background-color: rgb(211, 115, 36);
 }
@@ -54,6 +55,7 @@ body {
 
 .btn:hover {
   background-color: rgb(194, 105, 32);
+  color: #fff;
 }
 
 /* INPUT TAGS */
