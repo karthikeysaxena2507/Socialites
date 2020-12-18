@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import axios from "axios";
+import Footer from "./Footer";
 
 function Register() {
 
@@ -22,14 +23,17 @@ function Register() {
         event.preventDefault();
 
         axios.post("/users/add", user)
-            .then(function(res) {
+            .then((res) => {
                 if(res.data === "Username Already Exists") {
                     setMessage(res.data);
                 }
                 else {
                     window.location = "/allposts/" + user.username;
                 }
-            }); 
+            })
+            .catch((res) => {
+                console.log(res);
+            });
     }
 
     return (<div className="center-text upper-margin">
@@ -77,7 +81,9 @@ function Register() {
                 <input type="submit" className="btn btn-lg expand margin" value="Register"/> 
             </div>
         </form>
+        <h3 className="margin"> OR </h3>
         <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
+        <Footer />
 </div>);
 }
 

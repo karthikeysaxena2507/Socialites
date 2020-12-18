@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import axios from "axios";
+import Footer from "./Footer";
 
 function Login() {
 
@@ -22,10 +23,10 @@ function Login() {
         event.preventDefault();
 
         axios.post("/users/", user)
-            .then(function() {
+            .then(() => {
                 window.location = "/allposts/" + user.username;
             })
-            .catch(function() {
+            .catch(() => {
                 setMessage("User Not Found");
             });
     }
@@ -67,7 +68,7 @@ function Login() {
             </div>
             <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
         </form>
-        
+        <Footer />
 </div>);
 }
 

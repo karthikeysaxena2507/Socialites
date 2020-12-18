@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
+import Footer from "./Footer";
 
 function Edit() {
 
@@ -71,6 +72,7 @@ function Edit() {
         <div className="margin">
             <button className="btn btn-dark expand" onClick={editPost}> Edit </button> 
         </div>
+        <Footer />
     </div>);
 }
 

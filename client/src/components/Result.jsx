@@ -4,16 +4,17 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import Post from "./Post";
+import Footer from "./Footer";
 
 function Result() {
 
     let { username,searchContent,message } = useParams();
     var [foundPosts,setfoundPosts] = useState([]);
 
-    useEffect(function() {
+    useEffect(() => {
         if(message === "all") {
             axios.get("/posts") 
-            .then(function(response) {
+            .then((response) => {
                 setfoundPosts(response.data.reverse().filter(function(post) {
                     return ((post.title.indexOf(searchContent) !== -1) || 
                     (post.author.indexOf(searchContent) !== -1) ||
@@ -21,13 +22,13 @@ function Result() {
                     )
                 }));
             })
-            .catch(function(response) {
+            .catch((response) => {
                 console.log(response);
             });
         }
         else {
             axios.get("/posts/list/" + username) 
-            .then(function(response) {
+            .then((response) => {
                 setfoundPosts(response.data.reverse().filter(function(post) {
                     return ((post.title.indexOf(searchContent) !== -1) || 
                     (post.author.indexOf(searchContent) !== -1) ||
@@ -35,7 +36,7 @@ function Result() {
                     )
                 }));
             })
-            .catch(function(response) {
+            .catch((response) => {
                 console.log(response);
             });
         }
@@ -64,6 +65,7 @@ function Result() {
             <h2 className="margin"> Search Results </h2>
         </div>
         {foundPosts.map(makePost)}
+        <Footer />
 </div>);
 }
 

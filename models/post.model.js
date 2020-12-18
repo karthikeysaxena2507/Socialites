@@ -5,11 +5,18 @@ const reactSchema = new mongoose.Schema({
     type: String
 });
 
+const commentSchema = new mongoose.Schema({
+    name: String,
+    content: String
+});
+
 const postSchema = new mongoose.Schema({
     author: String,
     title: String,
     content: String,
     reacts: [reactSchema],
+    comments: [commentSchema],
+    comment_count: Number,
     like: Number,
     love: Number,
     laugh: Number

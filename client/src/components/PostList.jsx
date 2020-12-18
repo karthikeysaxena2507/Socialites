@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import search from "./images/search.png";
 import Post from "./Post";
+import Footer from "./Footer";
 
 function PostList() {
 
@@ -15,10 +16,10 @@ function PostList() {
 
     useEffect(function() {
         axios.get("/posts") 
-            .then(function(response) {
+            .then((response) => {
                 setPosts(response.data.reverse());
             })
-            .catch(function(response) {
+            .catch((response) => {
                 console.log(response);
             });
     });
@@ -27,10 +28,10 @@ function PostList() {
 
         function changepost(event, post) {
             axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
-                .then(function(response) {
+                .then((response) => {
                     console.log(response.data);
                 })
-                .catch(function(response) {
+                .catch((response) => {
                     console.log(response);
                 });
         }
@@ -45,7 +46,9 @@ function PostList() {
                 like = {props.like}
                 love = {props.love}
                 laugh = {props.laugh}
+                comment_count = {props.comment_count}
                 change = {changepost}
+                show_comments={true}
         />
     }
 
@@ -70,6 +73,7 @@ function PostList() {
             <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
         </div>
         {posts.map(createPost)}
+        <Footer />
 </div>);
 }
 

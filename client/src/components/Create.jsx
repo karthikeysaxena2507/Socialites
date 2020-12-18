@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import upload from "./images/upload.png";
 import Dropzone from "react-dropzone";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 function Create() {
 
@@ -16,7 +17,7 @@ function Create() {
     const dropRef = useRef(); 
 
 
-    var [post,setPost] = useState({author: username,title:"", content:"", like:0, love:0, laugh:0});
+    var [post,setPost] = useState({author: username,title:"", content:"", like:0, love:0, laugh:0, comment_count:0});
 
     function change(event) {
         var {name, value} = event.target;
@@ -32,10 +33,11 @@ function Create() {
     function addPost(event) {
         event.preventDefault();
         axios.post("/posts/add", post)
-          .then(function(res) { 
+          .then((res) => { 
             console.log(res);
+            window.location = "/allposts/" + username;
             })
-          .catch(function(res) {
+          .catch((res) => {
             console.log(res);
           })
         setPost({
@@ -44,10 +46,9 @@ function Create() {
           content:"",
           like:0,
           love:0,
-          laugh:0
-
+          laugh:0,
+          comment_count:0
         });
-        window.location = "/allposts/" + username;
     }
 
     function onDrop(files) {
@@ -137,8 +138,9 @@ function Create() {
         </div>
     </div>
     <div className="center-text margin">
-        <button className="btn btn-dark expand" onClick={addPost}> Post </button> 
+        <button className="btn btn-lg expand" onClick={addPost}> Post </button> 
     </div>
+    <Footer />
 </div>);
 }
 

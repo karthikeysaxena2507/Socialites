@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
-
+import Footer from "./Footer";
 
 function About() {
 
@@ -12,13 +12,13 @@ function About() {
             name = {username}
             page = "about"
             />
-
         <div className="container">
             <h1 className="upper-margin"> About Socialites </h1>
             <div className="margin">
                 <h5> Welcome to Socialites - A social media web application made by Karthikey Saxena </h5>
             </div>
         </div>
+        <Footer />
     </div>);
 }
 

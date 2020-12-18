@@ -7,6 +7,7 @@ import loved from "./images/love.png";
 import laughed from "./images/laugh.png";
 import axios from "axios";
 import search from "./images/search.png";
+import Footer from "./Footer";
 
 
 function Reactions() {
@@ -22,12 +23,12 @@ function Reactions() {
 
     useEffect(function() {
         axios.get("/posts/" + id)
-            .then(function(response) {
+            .then((response) => {
                 setallreactions(response.data[0].reacts.reverse());
                 setreactions(response.data[0].reacts.reverse());
                 settempreactions(response.data[0].reacts.reverse());
             })
-            .catch(function(response) {
+            .catch((response) => {
                 console.log(response);
             });
     },[id]);
@@ -123,6 +124,7 @@ function Reactions() {
         <div className="margin">
             {reactions.map(renderUsers)}    
         </div>
+        <Footer />
     </div>);
 }
 

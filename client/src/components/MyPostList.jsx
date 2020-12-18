@@ -7,6 +7,7 @@ import Post from "./Post";
 import trash from "./images/trash.png";
 import edit from "./images/edit.png";
 import search from "./images/search.png";
+import Footer from "./Footer";
 
 function MyPosts() {
 
@@ -16,10 +17,10 @@ function MyPosts() {
 
     useEffect(function() {
         axios.get("/posts/list/" + username) 
-            .then(function(response) {
+            .then((response) => {
                 setPosts(response.data.reverse());
             })
-            .catch(function(response) {
+            .catch((response) => {
                 console.log(response);
             });
     });
@@ -28,20 +29,20 @@ function MyPosts() {
 
         function changepost(event, post) {
             axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
-                .then(function(response) {
+                .then((response) => {
                     console.log(response.data);
                 })
-                .catch(function(response) {
+                .catch((response) => {
                     console.log(response);
                 });
         }
 
         function remove() {
             axios.delete("/posts/delete/" + props._id)
-                .then(function(response) {
+                .then((response) => {
                     console.log(response.data.reverse());
                 })
-                .catch(function(response) {
+                .catch((response) => {
                     console.log(response);
                 });
             window.location = "/myposts/" + username;
@@ -62,7 +63,9 @@ function MyPosts() {
                 like = {props.like}
                 love = {props.love}
                 laugh = {props.laugh}
+                comment_count = {props.comment_count}
                 change = {changepost}
+                show_comments = {true}
         />
         <div className="post-options center-text">
             <img src={trash} onClick={remove} className="expand one"/>
@@ -93,6 +96,7 @@ function MyPosts() {
         <div>
             {posts.map(MyPost)}
         </div>
+        <Footer />
 </div>);
 }
 

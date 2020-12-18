@@ -64,17 +64,17 @@ input {
 
 input[type="text"]:focus {
   outline: none;
-  box-shadow: inset 0 -2px 0 0 #000000;
+  box-shadow: inset 0 -1px 0 0 #000000;
 }
 
 input[type="password"]:focus {
   outline: none;
-  box-shadow: inset 0 -3px 0 0 #000000;
+  box-shadow: inset 0 -1px 0 0 #000000;
 }
 
 input[type="email"]:focus {
   outline: none;
-  box-shadow: inset 0 -3px 0 0 #000000;
+  box-shadow: inset 0 -1px 0 0 #000000;
 }
 
 textarea {
@@ -122,18 +122,61 @@ textarea {
     background-color: rgb(134, 63, 5);
     padding: 5px 15px;
     border-radius: 10px 10px 0 0;
+    border: 2px solid black;
+    border-bottom: none;
   }
 
   .post-content {
     background-color: rgb(235, 200, 167);
     padding: 5px 25px;
+    font-size: larger;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
   }
 
   .post-info {
     background-color: rgb(192, 123, 90);
-    padding: 8px 25px;
+    padding: 5px 25px;
     border-radius: 0 0 10px 10px;
-    border-bottom: 1px solid black;
+    border: 2px solid black;
+    border-top: none;
+  }
+
+  .post-info input {
+    border-radius: 5px;
+  }
+
+  .comment {
+    margin: 5px 0;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .comment-name {
+    background-color: rgb(192, 123, 90);
+    padding: 5px 10px;
+    border-radius: 10px 10px 0 0;
+    border: 2px solid black;
+    border-bottom: none;
+  }
+
+  .comment-name .name {
+    font-size: x-large;
+  }
+
+  .comment-content {
+    background-color: rgb(235, 200, 167);
+    padding: 5px 10px;
+    border-radius: 0 0 10px 10px;
+    font-size: large;
+    border: 2px solid black;
+    border-top: none;
+  }
+
+  .post-info input {
+    border: 2px solid black;
+    width: 100%;
+    height: 30px;
   }
 
   .post {
@@ -144,6 +187,7 @@ textarea {
     width: 60px;
     border-radius: 0 0 3px 3px;
     border: 1px solid black;
+    border-top: none;
     margin: 0 auto;
     background-color: rgb(192, 123, 90);
   }
@@ -184,4 +228,9 @@ textarea {
   .all {
     display: inline-block;
     text-decoration: underline;
+  }
+
+  footer {
+    margin: 35px 0;
+    font-size: larger;
   }

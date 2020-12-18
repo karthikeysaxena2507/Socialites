@@ -8,8 +8,10 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import MyPostList from "./components/MyPostList";
 import Edit from "./components/Edit";
+import Profile from "./components/Profile";
 import Reactions from "./components/Reactions";
 import Result from "./components/Result";
+import CompletePost from "./components/CompletePost";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
     <Route path="/myposts/:username" component={MyPostList} />
     <Route path="/post/:username/:id" component={Reactions} />
     <Route path="/edit/:username/:id" component={Edit} />
+    <Route path="/profile/:username" component={Profile} />
+    <Route path="/complete/:username/:id" component={CompletePost} />
     <Route path="/result/:username/:searchContent/:message" component={Result} />
     <Route path="/register" component={Register} />
     <Route path="/login" component={Login} />
