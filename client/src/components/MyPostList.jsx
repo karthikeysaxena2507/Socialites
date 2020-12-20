@@ -89,6 +89,7 @@ function MyPosts() {
         page = "myposts"
         />
         <div className="center-text upper-margin">
+        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
             <h2> My Posts </h2>
             <input type="search" placeholder="Search" onChange={change_search_content}/>
             <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
@@ -96,6 +97,7 @@ function MyPosts() {
         <div>
             {posts.map(MyPost)}
         </div>
+        <div className="space"></div>
         <Footer />
 </div>);
 }

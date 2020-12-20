@@ -1,9 +1,32 @@
 /* GENERAL CLASSES */
+html {
+  position: relative;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color:rgb(250, 210, 173);
     color: black;
-  } 
+    margin: 0;
+    padding: 0;
+} 
+
+.space {
+  margin-bottom: 100px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height:10px;
+    padding: 50px 10px;
+    font-size: larger;
+}
 
 .margin {
   margin-top: 12px;
@@ -154,9 +177,16 @@ textarea {
     cursor: pointer;
   }
 
+  .comment a {
+    display: inline-block;
+    color: #000000;
+    text-decoration: underline;
+  }
+
   .comment-name {
     background-color: rgb(192, 123, 90);
     padding: 5px 10px;
+    height: 80px;
     border-radius: 10px 10px 0 0;
     border: 2px solid black;
     border-bottom: none;
@@ -187,6 +217,15 @@ textarea {
 
   .post-options {
     width: 60px;
+    border-radius: 0 0 3px 3px;
+    border: 1px solid black;
+    border-top: none;
+    margin: 0 auto;
+    background-color: rgb(192, 123, 90);
+  }
+
+  .comment-options {
+    width: 28px;
     border-radius: 0 0 3px 3px;
     border: 1px solid black;
     border-top: none;
@@ -227,12 +266,15 @@ textarea {
     text-decoration: underline;
   }
 
-  .all {
+  .all a {
     display: inline-block;
     text-decoration: underline;
+    color: #000000;
   }
 
-  footer {
-    margin: 35px 0;
-    font-size: larger;
+  .allbtn {
+    color: black;
+  }
+  .allbtn:hover {
+    color: black;
   }

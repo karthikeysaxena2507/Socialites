@@ -45,7 +45,8 @@ function Edit() {
             page = "edit"
         />
         <div className="upper-margin"> 
-            <h1> Edit Your Post Here </h1> 
+        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+            <h1 className="margin"> Edit Your Post Here </h1> 
         </div> 
         <div className="margin">
             <textarea
@@ -72,6 +73,7 @@ function Edit() {
         <div className="margin">
             <button className="btn btn-dark expand" onClick={editPost}> Edit </button> 
         </div>
+        <div className="space"></div>
         <Footer />
     </div>);
 }

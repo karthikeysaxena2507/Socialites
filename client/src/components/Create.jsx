@@ -76,7 +76,10 @@ function Create() {
             name = {username}
             page = "create"
         />
-        <div className="upper-margin"> <h1> Create Your Post Here </h1> </div> 
+        <div className="upper-margin"> 
+          <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+          <h1 className="margin"> Create Your Post Here </h1>
+        </div> 
         <div className="margin">
             <textarea
                 name="title"
@@ -140,6 +143,7 @@ function Create() {
     <div className="center-text margin">
         <button className="btn btn-lg expand" onClick={addPost}> Post </button> 
     </div>
+    <div className="space"></div>
     <Footer />
 </div>);
 }

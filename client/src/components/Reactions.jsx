@@ -8,7 +8,7 @@ import laughed from "./images/laugh.png";
 import axios from "axios";
 import search from "./images/search.png";
 import Footer from "./Footer";
-
+import Post from "./Post";
 
 function Reactions() {
 
@@ -20,6 +20,7 @@ function Reactions() {
     var [reactions,setreactions] = useState([]);
     var [allreactions,setallreactions] = useState([]);
     var [tempreactions,settempreactions] = useState([]);
+    var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0});
 
     useEffect(function() {
         axios.get("/posts/" + id)
@@ -27,6 +28,7 @@ function Reactions() {
                 setallreactions(response.data[0].reacts.reverse());
                 setreactions(response.data[0].reacts.reverse());
                 settempreactions(response.data[0].reacts.reverse());
+                setPost(response.data[0]);
             })
             .catch((response) => {
                 console.log(response);
@@ -98,6 +100,16 @@ function Reactions() {
         }));
     }
 
+    function changepost(event, post) {
+        axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((response) => {
+                console.log(response);
+            });
+    }
+
     var style1 = (like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
     var style2 = (love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
     var style3 = (laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
@@ -108,10 +120,26 @@ function Reactions() {
             name={username}
             page="reactions"
         />
-        <div className="center-text container">
-            <h2 className="upper-margin"> Users who Reacted: </h2>
+        <div className="container upper-margin">
+        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+        <Post 
+                key = {post._id}
+                name = {username}
+                _id = {post._id}
+                author = {post.author}
+                title = {post.title}
+                content = {post.content}
+                like = {post.like}
+                love = {post.love}
+                laugh = {post.laugh}
+                comment_count = {post.comments.length}
+                change = {changepost}
+                show_comments = {true}
+        />
+        <div className="center-text">
+        <h2 className="margin"> Users who Reacted: </h2>
             <div>
-                <button className="btn expand margin one" onClick={changeAll} style={style4}> All </button> 
+                <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
                 <button className="btn expand margin one" onClick={changeLike} style={style1}> <img src={liked} name="like" className="expand"/> </button> 
                 <button className="btn expand margin one" onClick={changeLove} style={style2}> <img src={loved} name="love" className="expand"/> </button> 
                 <button className="btn expand margin one" onClick={changeLaugh} style={style3}> <img src={laughed} name="laugh" className="expand"/> </button> 
@@ -121,9 +149,11 @@ function Reactions() {
                 <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
             </div>
         </div>    
+        </div>
         <div className="margin">
             {reactions.map(renderUsers)}    
         </div>
+        <div className="space"></div>
         <Footer />
     </div>);
 }

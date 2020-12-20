@@ -37,6 +37,7 @@ function Register() {
     }
 
     return (<div className="center-text upper-margin">
+    <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
     <h2> Register Your Account </h2>
         <form onSubmit={add}>
             <div>
@@ -83,6 +84,7 @@ function Register() {
         </form>
         <h3 className="margin"> OR </h3>
         <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
+        <div className="space"></div>
         <Footer />
 </div>);
 }

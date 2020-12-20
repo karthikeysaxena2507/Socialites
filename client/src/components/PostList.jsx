@@ -73,6 +73,7 @@ function PostList() {
             <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
         </div>
         {posts.map(createPost)}
+        <div className="space"></div>
         <Footer />
 </div>);
 }

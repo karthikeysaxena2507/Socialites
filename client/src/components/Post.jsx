@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import like from "./images/like.png";
@@ -8,7 +9,7 @@ import axios from "axios";
 
 function Post(props) {
 
-    var [comment, setComment] = useState({name:props.name, content:""});
+    var [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
 
     function change(event) {
         var {name, value} = event.target;
@@ -22,7 +23,8 @@ function Post(props) {
     }
 
     function addComment(event) {
-        axios.post("/posts/add/" + props._id, comment)
+        if(comment.content !== "") {
+            axios.post("/posts/add/" + props._id, comment)
             .then((response) => {
                 console.log(response.data);
                 window.location = "/complete/" + props.name + "/" + props._id;
@@ -30,6 +32,7 @@ function Post(props) {
             .catch((response) => {
                 console.log(response);
             });
+        }
     }
 
     function changePost(event) {
@@ -74,8 +77,8 @@ function Post(props) {
                 className="expand one"/>
                 <span onClick={SeeAll} > {props.laugh} </span>
             </span>
-            <span>
-                <span onClick={SeeAll} className="expand one all"> See All </span> 
+            <span className="all">
+                <a onClick={SeeAll} className="expand"> All </a> 
             </span>
             <span className="move-right">
              <img 
@@ -86,10 +89,10 @@ function Post(props) {
                 <span onClick={SeeAll} > {props.laugh + props.love + props.like} </span>
             </span>
             <div className="margin">
-                <input type="text" onChange={change} name="content" value={comment.content} placeholder="Add a Comment"/>
+                <input type="text" onChange={change} name="content" value={comment.content} placeholder="Add a Comment" required/>
             </div>
             <div className="comment">
-                <span onClick={SeeComplete} style={visibility} > See All {props.comment_count} comments </span>
+                <a onClick={SeeComplete} style={visibility} className="expand"> {props.comment_count} comments </a>
                 <button onClick={addComment} className="move-right btn-dark expand"> Add Comment </button>
             </div>
         </div>

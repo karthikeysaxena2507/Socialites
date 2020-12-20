@@ -7,7 +7,11 @@ const reactSchema = new mongoose.Schema({
 
 const commentSchema = new mongoose.Schema({
     name: String,
-    content: String
+    content: String,
+    likes: Number,
+    loves: Number,
+    laughs: Number,
+    reacts: [reactSchema]
 });
 
 const postSchema = new mongoose.Schema({
