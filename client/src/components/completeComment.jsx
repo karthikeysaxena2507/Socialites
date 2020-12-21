@@ -104,10 +104,10 @@ function CompleteComment() {
                         <img src={liked} className="one"/> {props.likes}
                     </span>
                     <span className="one">
-                        <img src={loved} className="one"/> {props.likes}
+                        <img src={loved} className="one"/> {props.loves}
                     </span>
                     <span className="one">
-                        <img src={laughed} className="one"/> {props.likes}
+                        <img src={laughed} className="one"/> {props.laughs}
                     </span>
                 </span> 
             </div>
