@@ -12,6 +12,7 @@ import Profile from "./components/Profile";
 import Reactions from "./components/Reactions";
 import Result from "./components/Result";
 import CompletePost from "./components/CompletePost";
+import CompleteComment from "./components/completeComment";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
     <Route path="/edit/:username/:id" component={Edit} />
     <Route path="/profile/:username" component={Profile} />
     <Route path="/complete/:username/:id" component={CompletePost} />
+    <Route path="/comment/:username/:commentId/:id" component={CompleteComment} />
     <Route path="/result/:username/:searchContent/:message" component={Result} />
     <Route path="/register" component={Register} />
     <Route path="/login" component={Login} />

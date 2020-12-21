@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -57,6 +58,10 @@ function CompletePost() {
                 });
         }
 
+        function SeeAll() {
+            window.location = "/comment/" + username + "/" + props._id + "/" + id;
+        }
+
         var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
 
         return <div className="container margin" key={index}>
@@ -89,6 +94,9 @@ function CompletePost() {
                             name = "laughs"
                             className="expand one"/> 
                             {props.laughs}
+                    </span>
+                    <span className="all">
+                        <a onClick={SeeAll} className="expand"> All </a> 
                     </span>
                 </span> 
             </div>
