@@ -18,7 +18,7 @@ function MyPosts() {
     useEffect(function() {
         axios.get("/posts/list/" + username) 
             .then((response) => {
-                setPosts(response.data.reverse());
+                setPosts(response.data);
             })
             .catch((response) => {
                 console.log(response);
@@ -52,9 +52,8 @@ function MyPosts() {
             window.location = "/edit/" + username + "/" + props._id;
         }
 
-        return (<div className="container">
+        return (<div className="container" key ={index}>
          <Post 
-                key = {index}
                 name = {username}
                 _id = {props._id}
                 author = {props.author}

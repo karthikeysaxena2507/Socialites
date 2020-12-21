@@ -29,7 +29,7 @@ function Edit() {
     }
 
     function editPost() {
-        axios.post("/posts/edit/" + id, post) 
+        axios.post("/posts/editpost/" + id, post) 
             .then(function(response) {
                 console.log(response.data);
             })

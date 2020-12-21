@@ -104,7 +104,7 @@ router.route("/update/:react/:username").post((req, res) => {
 
 });
 
-router.route("/edit/:id").post((req, res) => {
+router.route("/editpost/:id").post((req, res) => {
     Post.findOne({_id: req.params.id}, (err, post) => {
         if(err) {
             res.status(400).json("Error: " + err);
@@ -112,7 +112,6 @@ router.route("/edit/:id").post((req, res) => {
         else {
                 post.title = req.body.title;
                 post.content = req.body.content;
-                post[comment_count]++;
                 post.save(function(err) {
                 if(err) {
                     res.status(400).json("Error: " + err);
