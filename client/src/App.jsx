@@ -13,6 +13,8 @@ import Reactions from "./components/Reactions";
 import Result from "./components/Result";
 import CompletePost from "./components/CompletePost";
 import CompleteComment from "./components/completeComment";
+import Verify from "./components/Verify";
+import Verified from "./components/Verified";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
     <Route path="/edit/:username/:id" component={Edit} />
     <Route path="/profile/:username" component={Profile} />
     <Route path="/complete/:username/:id" component={CompletePost} />
+    <Route path="/verify/:username" component={Verify} />
+    <Route path="/verified/:username" component={Verified} />
     <Route path="/comment/:username/:commentId/:id" component={CompleteComment} />
     <Route path="/result/:username/:searchContent/:message" component={Result} />
     <Route path="/register" component={Register} />

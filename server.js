@@ -33,7 +33,9 @@ mongoose.connect(uri, {
     useCreateIndex: true,
     useUnifiedTopology: true,
     useFindAndModify:false
-});
+})
+.then(() => {console.log("DB connected successfully");})
+.catch((err) => {console.log(err);});
 
 const postsRouter = require("./routes/posts.js");
 const usersRouter = require("./routes/users.js");
@@ -92,6 +94,6 @@ if(process.env.NODE_ENV === "production") {
 };
 
 app.listen(port, function() {
-    console.log("server is ready");
+    console.log(`server is ready on ${port}`);
 });
 

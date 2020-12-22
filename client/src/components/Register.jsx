@@ -21,18 +21,17 @@ function Register() {
 
     function add(event) {
         event.preventDefault();
-
         axios.post("/users/add", user)
             .then((res) => {
                 if(res.data === "Username Already Exists") {
                     setMessage(res.data);
                 }
                 else {
-                    window.location = "/allposts/" + user.username;
+                    window.location = "/verify/" + user.username + "/" + user.email;
                 }
             })
-            .catch((res) => {
-                console.log(res);
+            .catch((err) => {
+                console.log(err);
             });
     }
 

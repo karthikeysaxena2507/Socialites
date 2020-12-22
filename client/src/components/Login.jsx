@@ -21,10 +21,14 @@ function Login() {
 
     function add(event) {
         event.preventDefault();
-
         axios.post("/users/", user)
-            .then(() => {
-                window.location = "/allposts/" + user.username;
+            .then((response) => {
+                if(response.data.verified) {
+                    window.location = "/allposts/" + user.username;  
+                }
+                else {
+                    window.location = "/verify/" + user.username;  
+                }
             })
             .catch(() => {
                 setMessage("User Not Found");

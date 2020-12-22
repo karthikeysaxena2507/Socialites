@@ -8,7 +8,7 @@ function Navbar(props) {
     var about_link = "/about/" + props.name;
     var create_link = "/create/" + props.name;
     var myposts_link = "/myposts/" + props.name;
-    var profile_link = "/profile/" + props.name;
+    // var profile_link = "/profile/" + props.name;
 
     var current_page = props.page;
 

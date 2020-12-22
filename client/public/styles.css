@@ -278,3 +278,10 @@ textarea {
   .allbtn:hover {
     color: black;
   }
+
+  .send {
+    text-decoration: underline;
+    display: inline-block;
+    cursor: pointer;
+    color: brown;
+  }
