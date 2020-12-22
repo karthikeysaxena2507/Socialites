@@ -20,6 +20,60 @@ router.route("/find/:username").get((req, res) => {
     })
 });
 
+router.route("/reset").post((req, res) => {
+    User.findOne({
+        username: req.body.name
+    }, (err, foundUser) => {
+        if(err) {
+            res.status(400).json("Error: " + err);
+        }
+        else {
+            if(foundUser) {
+                foundUser.setPassword(req.body.new, function() {
+                    foundUser.save();
+                    res.json("password reset successfull");
+                });
+            }
+            else {
+                res.json("user does not exists");
+            }
+        }
+    });
+});
+
+router.route("/forgot").post((req, res) => {
+    User.findOne({
+        email: req.body.mail
+    }, (err, foundUser) => {
+        if(err) {
+            res.status(400).json("Error: " + err);
+        }
+        else {
+            if(foundUser === null) {
+                res.json("account with the entered email does not exists, please enter the email with which you registered");
+            }
+            else {
+                var link = "https://socialites-karthikey.herokuapp.com/reset/" + foundUser.username;
+                const msg = {
+                    to: foundUser.email,
+                    from: "karthikeysaxena@outlook.com", 
+                    subject: "Welcome to Socialites",
+                    html: `<a href=${link}> Link to Reset your Password </a>`
+                }
+                sgMail
+                    .send(msg)
+                    .then(() => {
+                        console.log("Email sent");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                    res.json("Password reset mail is sent to the user, check your email");
+                }
+        }
+    });
+});
+
 router.route("/").post((req, res) => {
     const user = new User ({
         username: req.body.username,
@@ -110,31 +164,45 @@ router.route("/add").post((req, res) => {
         }
         else {
             if(foundUser === null) {
-                User.register({username: req.body.username, email: req.body.email, verified: newUser.verified}, req.body.password, function(err, user) {
+                User.findOne({
+                    email: req.body.email
+                }, (err, user) => {
                     if(err) {
                         res.status(400).json("Error: " + err);
                     }
                     else {
-                            passport.authenticate("local")(req, res, function(){
-                                var link = "https://socialites-karthikey.herokuapp.com/verified/" + req.body.username;
-                                const msg = {
-                                to: newUser.email,
-                                from: "karthikeysaxena@outlook.com", 
-                                subject: "Welcome to Socialites",
-                                html: `<a href=${link}> Link to verify your Email </a>`
-                            }
-                            sgMail
-                                .send(msg)
-                                .then(() => {
-                                    console.log("Email sent");
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
-                            res.json(user);
-                        });
+                        if(user === null) {
+                            User.register({username: req.body.username, email: req.body.email, verified: newUser.verified}, req.body.password, function(err, user) {
+                                if(err) {
+                                    res.status(400).json("Error: " + err);
+                                }
+                                else {
+                                        passport.authenticate("local")(req, res, function(){
+                                            var link = "https://socialites-karthikey.herokuapp.com/verified/" + req.body.username;
+                                            const msg = {
+                                            to: newUser.email,
+                                            from: "karthikeysaxena@outlook.com", 
+                                            subject: "Welcome to Socialites",
+                                            html: `<a href=${link}> Link to verify your Email </a>`
+                                        }
+                                        sgMail
+                                            .send(msg)
+                                            .then(() => {
+                                                console.log("Email sent");
+                                            })
+                                            .catch((error) => {
+                                                console.log(error);
+                                            });
+                                        res.json(user);
+                                    });
+                                }
+                            });
+                        }
+                        else {
+                            res.json("Account with given Email Already Exists");
+                        }
                     }
-                });
+                })
             }
             else {
                 res.json("Username Already Exists");

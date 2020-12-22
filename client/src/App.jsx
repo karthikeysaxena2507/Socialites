@@ -16,6 +16,7 @@ import CompleteComment from "./components/completeComment";
 import Verify from "./components/Verify";
 import Verified from "./components/Verified";
 import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
     <Route path="/verify/:username" component={Verify} />
     <Route path="/verified/:username" component={Verified} />
     <Route path="/forgot" component={ForgotPassword} />
+    <Route path="/reset/:username" component={ResetPassword} />
     <Route path="/comment/:username/:commentId/:id" component={CompleteComment} />
     <Route path="/result/:username/:searchContent/:message" component={Result} />
     <Route path="/register" component={Register} />

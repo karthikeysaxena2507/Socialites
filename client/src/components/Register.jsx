@@ -26,6 +26,9 @@ function Register() {
                 if(res.data === "Username Already Exists") {
                     setMessage(res.data);
                 }
+                else if(res.data === "Account with given Email Already Exists") {
+                    setMessage(res.data);
+                }
                 else {
                     window.location = "/verify/" + user.username + "/" + user.email;
                 }
@@ -79,6 +82,9 @@ function Register() {
             </div>
             <div>
                 <input type="submit" className="btn btn-lg expand margin" value="Register"/> 
+            </div>
+            <div className="margin">
+                 Already have an account ? <a href="/login"> Login </a>
             </div>
         </form>
         <h3 className="margin"> OR </h3>

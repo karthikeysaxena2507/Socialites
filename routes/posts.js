@@ -16,6 +16,22 @@ router.route("/").get((req, res) => {
     });
 });
 
+router.route("/getcomment/:commentId/:id").get((req, res) => {
+    Post.find({_id: req.params.id}, (err, post) => {
+        if(err) {
+            res.status(400).json("Error: " + err);
+        }
+        else {
+            for (var index = 0; index < post[0].comments.length; index++) {
+                if(post[0].comments[index]._id == req.params.commentId) {
+                    break;
+                }    
+            }
+            res.json(post[0].comments[index]);
+        }
+    });
+});
+
 router.route("/:id").get((req, res) => {
     Post.find({_id: req.params.id}, (err, post) => {
         if(err) {

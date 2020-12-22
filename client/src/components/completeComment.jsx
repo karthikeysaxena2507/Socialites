@@ -13,7 +13,7 @@ import trash from "./images/trash.png";
 function CompleteComment() {
     let { username,commentId,id } = useParams();
 
-    var [comments, setComments] = useState([]);
+    var [comment, setComment] = useState({});
 
     var [like,setlike] = useState(false);
     var [love,setlove] = useState(false);
@@ -22,13 +22,12 @@ function CompleteComment() {
     var [allreactions,setallreactions] = useState([]);
 
     useEffect(() => {
-        axios.get("/posts/" + id)
+        axios.get("/posts/getcomment/" + commentId + "/" + id)
             .then((response) => {
-                setComments(response.data[0].comments.filter((comment) => {
-                    return (comment._id === commentId);
-                }));
-                setallreactions(response.data[0].comments[0].reacts.reverse());
-                setreactions(response.data[0].comments[0].reacts.reverse());
+                console.log(response.data);
+                setComment(response.data)
+                setallreactions(response.data.reacts.reverse());
+                setreactions(response.data.reacts.reverse());
             })
             .catch((response) => {
                 console.log(response.data);
@@ -78,46 +77,19 @@ function CompleteComment() {
     var style3 = (laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
     var style4 = (!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"} 
 
-    function createComment(props, index) {
-
-        function remove() {
-            axios.post("/posts/remove/" + id, props) 
-                .then((response) => {
-                    console.log(response.data);
-                    window.location = "/comment/" + username + "/" + props._id + "/" + id;        
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-
-        var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
-
-        return <div className="container margin" key={index}>
-        <div className="comment-name">
-            <div> 
-                <span className="name"> {props.name} </span>
-            </div>
-            <div>
-                <span className="move-right"> 
-                    <span className="one">
-                        <img src={liked} className="one"/> {props.likes}
-                    </span>
-                    <span className="one">
-                        <img src={loved} className="one"/> {props.loves}
-                    </span>
-                    <span className="one">
-                        <img src={laughed} className="one"/> {props.laughs}
-                    </span>
-                </span> 
-            </div>
-        </div>
-        <div className="comment-content"> {props.content} </div>            
-        <div className="comment-options center-text" style={style1}>
-            <img src={trash} onClick={remove} className="expand one"/>
-        </div>
-    </div>
+    function remove() {
+        axios.post("/posts/remove/" + id, comment) 
+            .then((response) => {
+                console.log(response.data);
+                window.location = "/comment/" + username + "/" + comment._id + "/" + id;        
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
+
+
+    var styling = (comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"};
 
     function renderUsers(props, index) {
         return (<div className="container user" key={index}>
@@ -132,7 +104,30 @@ function CompleteComment() {
     />
     <div className="upper-margin container">
         <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
-        {comments.map(createComment)}
+        <div className="container margin">
+        <div className="comment-name">
+            <div> 
+                <span className="name"> {comment.name} </span>
+            </div>
+            <div>
+                <span className="move-right"> 
+                    <span className="one">
+                        <img src={liked} className="one"/> {comment.likes}
+                    </span>
+                    <span className="one">
+                        <img src={loved} className="one"/> {comment.loves}
+                    </span>
+                    <span className="one">
+                        <img src={laughed} className="one"/> {comment.laughs}
+                    </span>
+                </span> 
+            </div>
+        </div>
+        <div className="comment-content"> {comment.content} </div>            
+        <div className="comment-options center-text" style={styling}>
+            <img src={trash} onClick={remove} className="expand one"/>
+        </div>
+    </div>
         <div className="margin center-text">
             <h2> Users who reacted: </h2>
             <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
