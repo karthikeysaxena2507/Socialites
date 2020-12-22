@@ -1,4 +1,2 @@
-/node_modules
-npm-debug.log
-.DS_Store
-/*.envsendgrid.env
+node_modules
+.env

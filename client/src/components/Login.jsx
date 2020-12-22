@@ -71,6 +71,9 @@ function Login() {
             <div className="margin">
                 <a href="/register"> Create an account </a>
             </div>
+            {/* <div className="margin">
+                <a href="/forgot"> Forgot Password </a>
+            </div> */}
             <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
         </form>
         <div className="space"></div>
