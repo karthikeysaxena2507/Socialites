@@ -8,14 +8,13 @@ import axios from "axios";
 import Post from "./Post";
 import trash from "./images/trash.png";
 import edit from "./images/edit.png";
-import search from "./images/search.png";
 import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
+import SearchBar from "./SearchBar";
 
 const MyCategoryPosts = () => {
 
     let { username,type } = useParams();
-    var [searchContent,setsearchContent] = useState("");
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -79,16 +78,6 @@ const MyCategoryPosts = () => {
     </div>);
     }
 
-    const change_search_content = (event) => {
-        setsearchContent(event.target.value);
-    }
-
-    var message = "personal";
-    const searchIt = () => {
-        window.location = `/result/${username}/${searchContent}/${message}/${type}`;
-        setsearchContent("");
-    }
-
     return (<div>
     <Navbar 
             name = {username}
@@ -98,17 +87,16 @@ const MyCategoryPosts = () => {
     <div className="center-text">
         <h3 className="margin"> My Posts </h3>
     </div>
-    <div className="container center-text margin">
-        <CategoryMenu
-            name = {username}
-            category_type = {type}
-            message = "my"
+    <CategoryMenu
+        name = {username}
+        category_type = {type}
+        message = "my"
         />
-        <div className="margin container center-text">
-            <input type="search" placeholder="Search" className="width" onChange={change_search_content}/>
-            <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
-        </div>
-    </div>
+    <SearchBar 
+        name = {username}
+        type = {type}
+        message = "personal"
+    />
     {posts.map(MyPost)}
     <div className="space"></div>
     <Footer />

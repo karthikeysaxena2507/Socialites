@@ -4,16 +4,15 @@ import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
-import search from "./images/search.png";
 import Post from "./Post";
 import Footer from "./Footer";
 import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
+import SearchBar from "./SearchBar";
 
 const Posts = () => {
 
     let { username } = useParams();
-    var [searchContent,setsearchContent] = useState("");
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -55,17 +54,6 @@ const Posts = () => {
         />
     }
 
-    const change_search_content = (event) => {
-        setsearchContent(event.target.value);
-    }
-
-    var message = "all";
-    var type = "none";
-    const searchIt = () => {
-        window.location = `/result/${username}/${searchContent}/${message}/${type}`;
-        setsearchContent("");
-    }
-
     return (<div>
         <Navbar 
             name = {username}
@@ -80,10 +68,11 @@ const Posts = () => {
             category_type = "Select Category"
             message = "all"
         />
-        <div className="margin container center-text">
-            <input type="search" placeholder="Search" className="width" onChange={change_search_content}/>
-            <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
-        </div>
+        <SearchBar 
+            name = {username}
+            message = "all"
+            type = "none"
+        />
         {posts.map(createPost)}
         <div className="space"></div>
         <Footer />

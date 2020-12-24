@@ -81,6 +81,10 @@ footer {
   color: #fff;
 }
 
+.about p {
+  font-size: larger;
+}
+
 /* INPUT TAGS */
 
 input {
@@ -92,7 +96,7 @@ input {
 }
 
 .dropdown {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
 input[type="text"]:focus {

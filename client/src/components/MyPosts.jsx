@@ -7,15 +7,14 @@ import Navbar from "./Navbar";
 import Post from "./Post";
 import trash from "./images/trash.png";
 import edit from "./images/edit.png";
-import search from "./images/search.png";
 import Footer from "./Footer";
 import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
+import SearchBar from "./SearchBar";
 
 const MyPosts = () => {
 
     let { username } = useParams();
-    var [searchContent,setsearchContent] = useState("");
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -77,33 +76,25 @@ const MyPosts = () => {
     </div>);
     }
 
-    const change_search_content = (event) => {
-        setsearchContent(event.target.value);
-    }
-
-    var message = "personal";
-    var type = "none";
-    const searchIt = () => {
-        window.location = `/result/${username}/${searchContent}/${message}/${type}`;
-        setsearchContent("");
-    }
-    
     return (<div>
         <Navbar 
-        name = {username}
-        page = "myposts"
+            name = {username}
+            page = "myposts"
         />
         <Heading />
         <div className="center-text">
             <h3 className="margin"> My Posts </h3>
-            <CategoryMenu
-                name = {username}
-                category_type = "Select Category"
-                message = "my"
-            />
-            <input type="search" placeholder="Search" className="width" onChange={change_search_content}/>
-            <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
         </div>
+        <CategoryMenu
+            name = {username}
+            category_type = "Select Category"
+            message = "my"
+        />
+        <SearchBar 
+            name = {username}
+            message = "personal"
+            type = "none"
+        />
         <div>
             {posts.map(MyPost)}
         </div>

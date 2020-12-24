@@ -6,14 +6,13 @@ import Footer from "./Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Post from "./Post";
-import search from "./images/search.png";
 import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
+import SearchBar from "./SearchBar";
 
 const CategoryPosts = () => {
 
     let { username,type } = useParams();
-    var [searchContent,setsearchContent] = useState("");
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -56,16 +55,6 @@ const CategoryPosts = () => {
                 show_comments={true}
         />
     }
-
-    const change_search_content = (event) => {
-        setsearchContent(event.target.value);
-    }
-
-    var message = "all";
-    const searchIt = () => {
-        window.location = `/result/${username}/${searchContent}/${message}/${type}`;
-        setsearchContent("");
-    }
     
     return <div>
         <Navbar 
@@ -75,16 +64,17 @@ const CategoryPosts = () => {
         <Heading />
         <div className="container center-text margin">
             <h3 className="margin"> All Posts </h3>
-            <CategoryMenu
-                name = {username}
-                category_type = {type}
-                message = "all"
-            />
-            <div className="margin container center-text">
-                <input type="search" placeholder="Search" className="width" onChange={change_search_content}/>
-                <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
-            </div>
         </div>
+        <CategoryMenu
+            name = {username}
+            category_type = {type}
+            message = "all"
+        />
+        <SearchBar
+            name = {username}
+            type = {type}
+            message = "all"
+        />
         {posts.map(createPost)}
         <div className="space"></div>
         <Footer />
