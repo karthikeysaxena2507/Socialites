@@ -62,11 +62,15 @@ const Edit = () => {
                 {category}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
+            <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
             </div>
         </div>
