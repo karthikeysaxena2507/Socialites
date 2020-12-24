@@ -7,11 +7,11 @@ import laugh from "./images/laugh.png";
 import all from "./images/all.png";
 import axios from "axios";
 
-function Post(props) {
+const Post = (props) => {
 
     var [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
 
-    function change(event) {
+    const change = (event) => {
         var {name, value} = event.target;
 
         setComment((prevPost) => {
@@ -22,12 +22,12 @@ function Post(props) {
       });
     }
 
-    function addComment(event) {
+    const addComment = (event) => {
         if(comment.content !== "") {
-            axios.post("/posts/add/" + props._id, comment)
+            axios.post(`/posts/add/${props._id}`, comment)
             .then((response) => {
                 console.log(response.data);
-                window.location = "/complete/" + props.name + "/" + props._id;
+                window.location = `/complete/${props.name}/${props._id}`;
             })
             .catch((response) => {
                 console.log(response);
@@ -35,22 +35,26 @@ function Post(props) {
         }
     }
 
-    function changePost(event) {
+    const changePost = (event) => {
         props.change(event, props);
     }        
 
-    function SeeAll() {
-        window.location = "/post/" + props.name + "/" + props._id;
+    const SeeAll = () => {
+        window.location = `/post/${props.name}/${props._id}`;
     }
 
-    function SeeComplete() {
-        window.location = "/complete/" + props.name + "/" + props._id;
+    const SeeComplete = () => {
+        window.location = `/complete/${props.name}/${props._id}`;
     }
 
     var visibility = (props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"}
     
     return(<div className="container margin post"> 
-        <div className="post-title"> <h2> {props.title} </h2>  by {props.author} </div>
+        <div className="post-title"> 
+            <h2> {props.title} </h2>
+            by {props.author} 
+            <span className="move-right"> <i>#{props.category}</i> </span>
+        </div>
         <div className="post-content"> {props.content} </div>
         <div className="post-info"> 
             <span className="one">

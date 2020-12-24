@@ -2,13 +2,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Footer from "./Footer";
+import Heading from "./Heading";
 
-function Login() {
+const Login = () => {
 
     var [user, setUser] = useState({username:"", password:""});
     var [message, setMessage] = useState(" ");
 
-    function change(event) {
+    const change = (event) => {
         var {name, value} = event.target;
 
         setUser((prevUser) => {
@@ -19,7 +20,7 @@ function Login() {
       });
     }
 
-    function add(event) {
+    const add = (event) => {
         event.preventDefault();
         axios.post("/users/", user)
             .then((response) => {
@@ -35,8 +36,8 @@ function Login() {
             });
     }
 
-    return (<div className="center-text upper-margin">
-    <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+    return (<div className="center-text">
+        <Heading />
         <h2> Log In to Your Account </h2>
         <form onSubmit={add}>
             <div>
@@ -44,7 +45,7 @@ function Login() {
                     type="text" 
                     name="username" 
                     value={user.username}
-                    className="margin" 
+                    className="margin width" 
                     onChange={change}
                     placeholder="Username" 
                     autoComplete="off" 
@@ -57,7 +58,7 @@ function Login() {
                     name="password" 
                     value={user.password}
                     onChange={change}
-                    className="margin" 
+                    className="margin width" 
                     placeholder="Password" 
                     required 
                 />

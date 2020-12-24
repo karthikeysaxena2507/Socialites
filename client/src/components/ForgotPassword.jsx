@@ -1,15 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
+import Heading from "./Heading";
 
-function ForgotPassword() {
+const ForgotPassword = () => {
 
     var [email, setEmail] = useState("");
 
-    function change(event) {
+    const change = (event) => {
         setEmail(event.target.value);
     }
 
-    function reset() {
+    const reset = () => {
         const user = {mail: email};
         axios.post("/users/forgot", user)
             .then((response) => {
@@ -20,8 +21,8 @@ function ForgotPassword() {
             })
     }
 
-    return (<div className="upper-margin container center-text">
-    <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+    return (<div className="container center-text">
+        <Heading />
         <h5 className="margin"> Enter your registered email to reset password </h5>
         <input 
                     type="email" 

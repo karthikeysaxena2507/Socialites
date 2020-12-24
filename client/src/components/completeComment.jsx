@@ -9,8 +9,9 @@ import liked from "./images/like.png";
 import loved from "./images/love.png";
 import laughed from "./images/laugh.png";
 import trash from "./images/trash.png";
+import Heading from "./Heading";
 
-function CompleteComment() {
+const CompleteComment = () => {
     let { username,commentId,id } = useParams();
 
     var [comment, setComment] = useState({});
@@ -22,7 +23,7 @@ function CompleteComment() {
     var [allreactions,setallreactions] = useState([]);
 
     useEffect(() => {
-        axios.get("/posts/getcomment/" + commentId + "/" + id)
+        axios.get(`/posts/getcomment/${commentId}/${id}`)
             .then((response) => {
                 console.log(response.data);
                 setComment(response.data)
@@ -34,7 +35,7 @@ function CompleteComment() {
             });
     },[commentId, id]);
 
-    function changeLike(event) {
+    const changeLike = () => {
         if(!like) {
             setlike(true);    
             setlove(false);
@@ -44,7 +45,7 @@ function CompleteComment() {
             }));
         }
     }
-    function changeLove() {
+    const changeLove = () => {
         if(!love) {
             setlike(false);    
             setlove(true);
@@ -54,7 +55,7 @@ function CompleteComment() {
             }));
         }
     }
-    function changeLaugh() {
+    const changeLaugh = () => {
         if(!laugh) {
             setlike(false);    
             setlove(false);
@@ -65,7 +66,7 @@ function CompleteComment() {
         }
     }
 
-    function changeAll() {
+    const changeAll = () => {
         setlike(false);    
         setlove(false);
         setlaugh(false);
@@ -77,11 +78,11 @@ function CompleteComment() {
     var style3 = (laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
     var style4 = (!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"} 
 
-    function remove() {
-        axios.post("/posts/remove/" + id, comment) 
+    const remove = () => {
+        axios.post(`/posts/remove/${id}`, comment) 
             .then((response) => {
                 console.log(response.data);
-                window.location = "/comment/" + username + "/" + comment._id + "/" + id;        
+                window.location = `/comment/${username}/${comment._id}/${id}`;        
             })
             .catch((err) => {
                 console.log(err);
@@ -91,7 +92,7 @@ function CompleteComment() {
 
     var styling = (comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"};
 
-    function renderUsers(props, index) {
+    const renderUsers = (props, index) => {
         return (<div className="container user" key={index}>
             <li> {props.name} </li>
         </div>);
@@ -102,8 +103,8 @@ function CompleteComment() {
         name = {username}
         page = "comment"
     />
-    <div className="upper-margin container">
-        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+    <Heading />
+    <div className="container">
         <div className="container margin">
         <div className="comment-name">
             <div> 

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useRef, useState } from "react";
 import axios from "axios";
@@ -6,20 +7,22 @@ import upload from "./images/upload.png";
 import Dropzone from "react-dropzone";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Heading from "./Heading";
 
-function Create() {
+const Create = () => {
 
     let { username } = useParams();
 
     const [file, setFile] = useState(null); 
     const [previewSrc, setPreviewSrc] = useState(''); 
-    const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); 
+    const [isPreviewAvailable, setIsPreviewAvailable] = useState(false);
+    var [category, setCategory] = useState("Category"); 
     const dropRef = useRef(); 
 
 
-    var [post,setPost] = useState({author: username,title:"", content:"", like:0, love:0, laugh:0, comment_count:0});
+    var [post,setPost] = useState({author: username,title:"", content:"", like:0, love:0, laugh:0, comment_count:0, category:""});
 
-    function change(event) {
+    const change = (event) => {
         var {name, value} = event.target;
 
         setPost((prevPost) => {
@@ -30,12 +33,11 @@ function Create() {
       });
     }
 
-    function addPost(event) {
+    const addPost = (event) => {
         event.preventDefault();
         axios.post("/posts/add", post)
-          .then((res) => { 
-            console.log(res);
-            window.location = "/allposts/" + username;
+          .then(() => { 
+            window.location = `/allposts/${username}`;
             })
           .catch((res) => {
             console.log(res);
@@ -51,7 +53,7 @@ function Create() {
         });
     }
 
-    function onDrop(files) {
+    const onDrop = (files) => {
         const [uploadedFile] = files;
         setFile(uploadedFile);
       
@@ -63,23 +65,45 @@ function Create() {
         setIsPreviewAvailable(uploadedFile.name.match(/\.(jpeg|jpg|png)$/));
       };
 
-      function enter() {
-        dropRef.current.style.border = '2px solid #000';
+      const enter = () => {
+        dropRef.current.style.border = "2px solid #000";
       };
 
-      function over() {
-        dropRef.current.style.border = '2px dashed #e9ebeb';
+      const over = () => {
+        dropRef.current.style.border = "2px dashed #e9ebeb";
       }
+    
+    const changeCategory = (event) => {
+        setCategory(event.target.innerText);
+        setPost({author: username,title:post.title, content:post.content, like:post.like, love:post.love, laugh:post.laugh, comment_count:post.comment_count, category:event.target.innerText});
+    }
 
     return (<div className="center-text">
         <Navbar 
             name = {username}
             page = "create"
         />
-        <div className="upper-margin"> 
-          <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+        <Heading />
+        <div> 
           <h1 className="margin"> Create Your Post Here </h1>
         </div> 
+        <div className="dropdown container center-text">
+            <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {category}
+            </button>
+            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
+            </div>
+        </div>
         <div className="margin">
             <textarea
                 name="title"
@@ -96,7 +120,7 @@ function Create() {
                 name="content"
                 value={post.content}
                 placeholder="Content of your Post"
-                rows="5"
+                rows="9"
                 cols="50"
                 onChange={change}
                 required

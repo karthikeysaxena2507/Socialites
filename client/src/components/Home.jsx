@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 
-function Home() {
+const Home = () => {
     return(<div>
         <div className="heading">
         <div className="center-text"> <h1 className="main"> Socialites </h1> </div>

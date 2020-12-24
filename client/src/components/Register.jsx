@@ -2,13 +2,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Footer from "./Footer";
+import Heading from "./Heading";
 
-function Register() {
+const Register = () => {
 
     var [user, setUser] = useState({username:"", email:"", password:""});
     var [message, setMessage] = useState(" ");
 
-    function change(event) {
+    const change = (event) => {
         var {name, value} = event.target;
 
         setUser((prevUser) => {
@@ -19,7 +20,7 @@ function Register() {
       });
     }
 
-    function add(event) {
+    const add = (event) => {
         event.preventDefault();
         axios.post("/users/add", user)
             .then((res) => {
@@ -30,7 +31,7 @@ function Register() {
                     setMessage(res.data);
                 }
                 else {
-                    window.location = "/verify/" + user.username + "/" + user.email;
+                    window.location = `/verify/${user.username}/${user.email}`;
                 }
             })
             .catch((err) => {
@@ -38,8 +39,8 @@ function Register() {
             });
     }
 
-    return (<div className="center-text upper-margin">
-    <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+    return (<div className="center-text">
+    <Heading />
     <h2> Register Your Account </h2>
         <form onSubmit={add}>
             <div>
@@ -47,7 +48,7 @@ function Register() {
                     type="text" 
                     name="username" 
                     value={user.username}
-                    className="margin" 
+                    className="margin width" 
                     onChange={change}
                     placeholder="Username" 
                     autoComplete="off" 
@@ -59,7 +60,7 @@ function Register() {
                     type="email" 
                     name="email" 
                     value={user.email}
-                    className="margin" 
+                    className="margin width" 
                     onChange={change}
                     placeholder="email" 
                     autoComplete="off" 
@@ -72,7 +73,7 @@ function Register() {
                     name="password" 
                     value={user.password}
                     onChange={change}
-                    className="margin" 
+                    className="margin width" 
                     placeholder="Password" 
                     required 
                 />

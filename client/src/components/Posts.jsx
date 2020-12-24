@@ -7,14 +7,16 @@ import Navbar from "./Navbar";
 import search from "./images/search.png";
 import Post from "./Post";
 import Footer from "./Footer";
+import CategoryMenu from "./CategoryMenu";
+import Heading from "./Heading";
 
-function PostList() {
+const Posts = () => {
 
     let { username } = useParams();
     var [searchContent,setsearchContent] = useState("");
     var [posts,setPosts] = useState([]);
 
-    useEffect(function() {
+    useEffect(() => {
         axios.get("/posts") 
             .then((response) => {
                 setPosts(response.data.reverse());
@@ -24,10 +26,10 @@ function PostList() {
             });
     });
 
-    function createPost(props, index) {
+    const createPost = (props, index) => {
 
-        function changepost(event, post) {
-            axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
+        const changepost = (event, post) => {
+            axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
                 .then((response) => {
                     console.log(response.data);
                 })
@@ -43,6 +45,7 @@ function PostList() {
                 author = {props.author}
                 title = {props.title}
                 content = {props.content}
+                category = {props.category}
                 like = {props.like}
                 love = {props.love}
                 laugh = {props.laugh}
@@ -52,13 +55,15 @@ function PostList() {
         />
     }
 
-    function change_search_content(event) {
+    const change_search_content = (event) => {
         setsearchContent(event.target.value);
     }
 
     var message = "all";
-    function searchIt() {
-        window.location = "/result/" + username + "/" + searchContent + "/" + message;
+    var type = "none";
+    const searchIt = () => {
+        window.location = `/result/${username}/${searchContent}/${message}/${type}`;
+        setsearchContent("");
     }
 
     return (<div>
@@ -66,10 +71,17 @@ function PostList() {
             name = {username}
             page = "home"
         />
-        <div className="center-text upper-margin">
-            <h1 className="main"> Socialites </h1>
-            <h2 className="margin"> All Posts </h2>
-            <input type="search" placeholder="Search" onChange={change_search_content}/>
+        <Heading />
+        <div className="center-text">
+            <h3 className="margin"> All Posts </h3>
+        </div>
+        <CategoryMenu
+            name = {username}
+            category_type = "Select Category"
+            message = "all"
+        />
+        <div className="margin container center-text">
+            <input type="search" placeholder="Search" className="width" onChange={change_search_content}/>
             <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
         </div>
         {posts.map(createPost)}
@@ -78,5 +90,5 @@ function PostList() {
 </div>);
 }
 
-export default PostList;
+export default Posts;
 

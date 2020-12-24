@@ -5,14 +5,29 @@ import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import Post from "./Post";
 import Footer from "./Footer";
+import Heading from "./Heading";
 
-function Result() {
+const Result = () => {
 
-    let { username,searchContent,message } = useParams();
+    let { username,searchContent,message,type } = useParams();
     var [foundPosts,setfoundPosts] = useState([]);
 
     useEffect(() => {
-        if(message === "all") {
+        if(message === "all" && type !== "none") {
+            axios.get("/posts") 
+            .then((response) => {
+                setfoundPosts(response.data.reverse().filter(function(post) {
+                    return (((post.title.indexOf(searchContent) !== -1) || 
+                    (post.author.indexOf(searchContent) !== -1) ||
+                    (post.content.indexOf(searchContent) !== -1)
+                    ) && (post.category === type))
+                }));
+            })
+            .catch((response) => {
+                console.log(response);
+            });
+        }
+        else if(message === "all" && type === "none") {
             axios.get("/posts") 
             .then((response) => {
                 setfoundPosts(response.data.reverse().filter(function(post) {
@@ -26,8 +41,22 @@ function Result() {
                 console.log(response);
             });
         }
+        else if(message === "personal" && type !== "none") {
+            axios.get(`/posts/list/${username}`) 
+            .then((response) => {
+                setfoundPosts(response.data.reverse().filter(function(post) {
+                    return (((post.title.indexOf(searchContent) !== -1) || 
+                    (post.author.indexOf(searchContent) !== -1) ||
+                    (post.content.indexOf(searchContent) !== -1)
+                    ) && (post.category === type))
+                }));
+            })
+            .catch((response) => {
+                console.log(response);
+            });
+        }
         else {
-            axios.get("/posts/list/" + username) 
+            axios.get(`/posts/list/${username}`) 
             .then((response) => {
                 setfoundPosts(response.data.reverse().filter(function(post) {
                     return ((post.title.indexOf(searchContent) !== -1) || 
@@ -42,10 +71,10 @@ function Result() {
         }
     });
 
-    function makePost(props, index) {
+    const makePost = (props, index) => {
 
-        function changepost(event, post) {
-            axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
+        const changepost = (event, post) => {
+            axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
                 .then((response) => {
                     console.log(response.data);
                 })
@@ -61,6 +90,7 @@ function Result() {
                 author = {props.author}
                 title = {props.title}
                 content = {props.content}
+                category = {props.category}
                 like = {props.like}
                 love = {props.love}
                 laugh = {props.laugh}
@@ -75,8 +105,8 @@ function Result() {
             name = {username}
             page = "result"
         />
-        <div className="center-text upper-margin">
-        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+        <Heading />
+        <div className="center-text">
             <h2 className="margin"> Search Results </h2>
         </div>
         {foundPosts.map(makePost)}

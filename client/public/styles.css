@@ -87,6 +87,14 @@ input {
   padding: 6px 6px;
 }
 
+.width {
+  width: 45%;
+}
+
+.dropdown {
+  margin-bottom: 50px;
+}
+
 input[type="text"]:focus {
   outline: none;
   box-shadow: inset 0 -1px 0 0 #000000;
@@ -104,7 +112,7 @@ input[type="email"]:focus {
 
 textarea {
   padding: 10px 10px;
-  width: 324px;
+  width: 70%;
 }
   
 /* ENTRY HEADING */
@@ -276,7 +284,7 @@ textarea {
     color: black;
   }
   .allbtn:hover {
-    color: black;
+    color: black; 
   }
 
   .send {

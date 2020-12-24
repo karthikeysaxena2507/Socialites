@@ -21,6 +21,7 @@ const postSchema = new mongoose.Schema({
     reacts: [reactSchema],
     comments: [commentSchema],
     comment_count: Number,
+    category: String,
     like: Number,
     love: Number,
     laugh: Number

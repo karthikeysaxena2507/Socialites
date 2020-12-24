@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Heading from "./Heading";
 
-function ResetPassword() {
+const ResetPassword = () => {
 
     let { username } = useParams();
 
@@ -10,7 +11,7 @@ function ResetPassword() {
 
     var [message, setMessage] = useState(" ");
 
-    function change(event) {
+    const change = (event) => {
         var {name, value} = event.target;
         setPassword((prevPassword) => {
         return {
@@ -20,7 +21,7 @@ function ResetPassword() {
       });
     }
 
-    function reset() {
+    const reset = () => {
         if(password.new === password.confirm) {
             axios.post("/users/reset", password)
             .then((response) => {
@@ -37,8 +38,8 @@ function ResetPassword() {
         }
     }
 
-    return (<div className="upper-margin container center-text">
-    <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+    return (<div className="container center-text">
+    <Heading />
         <h5 className="margin"> Set New Password </h5>
         <div>
             <input 

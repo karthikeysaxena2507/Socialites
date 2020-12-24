@@ -2,17 +2,17 @@
 import axios from "axios";
 import React from "react";
 
-function Navbar(props) {
+const Navbar = (props) => {
 
-    var home_link = "/allposts/" + props.name;
-    var about_link = "/about/" + props.name;
-    var create_link = "/create/" + props.name;
-    var myposts_link = "/myposts/" + props.name;
+    var home_link = `/allposts/${props.name}`;
+    var about_link = `/about/${props.name}`;
+    var create_link = `/create/${props.name}`;
+    var myposts_link = `/myposts/${props.name}`;
     // var profile_link = "/profile/" + props.name;
 
     var current_page = props.page;
 
-    function change() {
+    const change = () => {
       axios.post("/logout", props)
         .then(function(response) {
           console.log(response);

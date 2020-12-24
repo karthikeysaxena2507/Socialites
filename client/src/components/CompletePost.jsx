@@ -10,14 +10,15 @@ import love from "./images/love.png";
 import laugh from "./images/laugh.png";
 import trash from "./images/trash.png";
 import Footer from "./Footer";
+import Heading from "./Heading";
 
-function CompletePost() {
+const CompletePost = () => {
     let { username,id } = useParams();
 
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0});
 
     useEffect(() => {
-        axios.get("/posts/" + id)
+        axios.get(`/posts/${id}`)
             .then((response) => {
                 setPost(response.data[0]);
             })
@@ -26,8 +27,8 @@ function CompletePost() {
             })
     });
 
-    function changepost(event, post) {
-        axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
+    const changepost = (event, post) => {
+        axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
             .then((response) => {
                 console.log(response.data);
             })
@@ -36,10 +37,10 @@ function CompletePost() {
             });
     }
 
-    function createComment(props, index) {
+    const createComment = (props, index) => {
 
-        function reactToComment(event) {
-            axios.post("/posts/comment/" + event.target.name + "/" + id + "/" + username, props)
+        const reactToComment = (event) => {
+            axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props)
                 .then((response) => {
                     console.log(response.data);
                 })
@@ -48,8 +49,8 @@ function CompletePost() {
                 })
         }
 
-        function remove() {
-            axios.post("/posts/remove/" + id, props) 
+        const remove = () => {
+            axios.post(`/posts/remove/${id}`, props) 
                 .then((response) => {
                     console.log(response.data);
                 })
@@ -58,8 +59,8 @@ function CompletePost() {
                 });
         }
 
-        function SeeAll() {
-            window.location = "/comment/" + username + "/" + props._id + "/" + id;
+        const SeeAll = () => {
+            window.location = `/comment/${username}/${props._id}/${id}`;
         }
 
         var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
@@ -113,9 +114,8 @@ function CompletePost() {
             name = {username}
             page = "complete"
         />
-
-    <div className="upper-margin">
-        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+    <Heading />
+    <div>
         <Post 
                 key = {id}
                 name = {username}
@@ -123,6 +123,7 @@ function CompletePost() {
                 author = {post.author}
                 title = {post.title}
                 content = {post.content}
+                category = {post.category}
                 like = {post.like}
                 love = {post.love}
                 laugh = {post.laugh}

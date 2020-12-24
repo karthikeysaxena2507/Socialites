@@ -9,8 +9,9 @@ import axios from "axios";
 import search from "./images/search.png";
 import Footer from "./Footer";
 import Post from "./Post";
+import Heading from "./Heading";
 
-function Reactions() {
+const Reactions = () => {
 
     let { username,id } = useParams();
     var [like,setlike] = useState(false);
@@ -22,8 +23,8 @@ function Reactions() {
     var [tempreactions,settempreactions] = useState([]);
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0});
 
-    useEffect(function() {
-        axios.get("/posts/" + id)
+    useEffect(() => {
+        axios.get(`/posts/${id}`)
             .then((response) => {
                 setallreactions(response.data[0].reacts.reverse());
                 setreactions(response.data[0].reacts.reverse());
@@ -35,7 +36,7 @@ function Reactions() {
             });
     },[id]);
 
-    function changeLike() {
+    const changeLike = () => {
         if(!like) {
             setlike(true);    
             setlove(false);
@@ -48,7 +49,7 @@ function Reactions() {
             }));
         }
     }
-    function changeLove() {
+    const changeLove = () => {
         if(!love) {
             setlike(false);    
             setlove(true);
@@ -61,7 +62,7 @@ function Reactions() {
             }));
         }
     }
-    function changeLaugh() {
+    const changeLaugh = () => {
         if(!laugh) {
             setlike(false);    
             setlove(false);
@@ -75,7 +76,7 @@ function Reactions() {
         }
     }
 
-    function changeAll() {
+    const changeAll = () => {
         setlike(false);    
         setlove(false);
         setlaugh(false);
@@ -83,25 +84,25 @@ function Reactions() {
         settempreactions(allreactions);
     }
 
-    function change(event) {
+    const change = (event) => {
         setsearchContent(event.target.value);
     }
 
-    function renderUsers(props, index) {
+    const renderUsers = (props, index) => {
         return (<div className="container user" key={index}>
             <li> {props.name} </li>
         </div>);
     }
 
-    function searchIt(event) {
+    const searchIt = (event) => {
         event.preventDefault();
         setreactions(tempreactions.filter(function(reaction) {
             return (reaction.name.indexOf(searchContent) !== -1);
         }));
     }
 
-    function changepost(event, post) {
-        axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
+    const changepost = (event, post) => {
+        axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
             .then((response) => {
                 console.log(response.data);
             })
@@ -120,8 +121,8 @@ function Reactions() {
             name={username}
             page="reactions"
         />
-        <div className="container upper-margin">
-        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
+        <Heading />
+        <div className="container">
         <Post 
                 key = {post._id}
                 name = {username}
@@ -129,6 +130,7 @@ function Reactions() {
                 author = {post.author}
                 title = {post.title}
                 content = {post.content}
+                category = {post.category}
                 like = {post.like}
                 love = {post.love}
                 laugh = {post.laugh}
@@ -145,7 +147,7 @@ function Reactions() {
                 <button className="btn expand margin one" onClick={changeLaugh} style={style3}> <img src={laughed} name="laugh" className="expand"/> </button> 
             </div>
             <div>
-                <input type="text" value={searchContent} onChange={change} placeholder="Search" autoComplete="off"/>
+                <input type="text" value={searchContent} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
                 <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
             </div>
         </div>    

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
 import axios from "axios";
@@ -8,15 +9,17 @@ import trash from "./images/trash.png";
 import edit from "./images/edit.png";
 import search from "./images/search.png";
 import Footer from "./Footer";
+import CategoryMenu from "./CategoryMenu";
+import Heading from "./Heading";
 
-function MyPosts() {
+const MyPosts = () => {
 
     let { username } = useParams();
     var [searchContent,setsearchContent] = useState("");
     var [posts,setPosts] = useState([]);
 
-    useEffect(function() {
-        axios.get("/posts/list/" + username) 
+    useEffect(() => {
+        axios.get(`/posts/list/${username}`) 
             .then((response) => {
                 setPosts(response.data);
             })
@@ -25,10 +28,10 @@ function MyPosts() {
             });
     });
 
-    function MyPost(props, index) {
+    const MyPost = (props, index) => {
 
-        function changepost(event, post) {
-            axios.post("/posts/update/" + event.target.name + "/" + post.name, post)
+        const changepost = (event, post) => {
+            axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
                 .then((response) => {
                     console.log(response.data);
                 })
@@ -37,19 +40,19 @@ function MyPosts() {
                 });
         }
 
-        function remove() {
-            axios.delete("/posts/delete/" + props._id)
+        const remove = () => {
+            axios.delete(`/posts/delete/${props._id}`)
                 .then((response) => {
                     console.log(response.data.reverse());
                 })
                 .catch((response) => {
                     console.log(response);
                 });
-            window.location = "/myposts/" + username;
+            window.location = `/myposts/${username}`;
         }
 
-        function update() {
-            window.location = "/edit/" + username + "/" + props._id;
+        const update = () => {
+            window.location = `/edit/${username}/${props._id}`;
         }
 
         return (<div className="container" key ={index}>
@@ -59,6 +62,7 @@ function MyPosts() {
                 author = {props.author}
                 title = {props.title}
                 content = {props.content}
+                category = {props.category}
                 like = {props.like}
                 love = {props.love}
                 laugh = {props.laugh}
@@ -73,24 +77,31 @@ function MyPosts() {
     </div>);
     }
 
-    function change_search_content(event) {
+    const change_search_content = (event) => {
         setsearchContent(event.target.value);
     }
 
     var message = "personal";
-    function searchIt() {
-        window.location = "/result/" + username + "/" + searchContent + "/" + message;
+    var type = "none";
+    const searchIt = () => {
+        window.location = `/result/${username}/${searchContent}/${message}/${type}`;
+        setsearchContent("");
     }
-
+    
     return (<div>
         <Navbar 
         name = {username}
         page = "myposts"
         />
-        <div className="center-text upper-margin">
-        <div className="center-text"> <h1 className="main"> Socialites </h1> </div>
-            <h2> My Posts </h2>
-            <input type="search" placeholder="Search" onChange={change_search_content}/>
+        <Heading />
+        <div className="center-text">
+            <h3 className="margin"> My Posts </h3>
+            <CategoryMenu
+                name = {username}
+                category_type = "Select Category"
+                message = "my"
+            />
+            <input type="search" placeholder="Search" className="width" onChange={change_search_content}/>
             <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
         </div>
         <div>

@@ -62,7 +62,8 @@ router.route("/edit/:id").get((req, res) => {
         else {
             const edited_post = {
                 title: post.title,
-                content: post.content
+                content: post.content,
+                category: post.category
             }
             post.save(function(err) {
                 if(err) {
@@ -128,6 +129,7 @@ router.route("/editpost/:id").post((req, res) => {
         else {
                 post.title = req.body.title;
                 post.content = req.body.content;
+                post.category = req.body.category;
                 post.save(function(err) {
                 if(err) {
                     res.status(400).json("Error: " + err);
@@ -145,6 +147,7 @@ router.route("/add").post((req, res) => {
         author: req.body.author,
         title: req.body.title,
         content: req.body.content,
+        category: req.body.category,
         reacts: [],
         comment_count: 0,
         like: 0,
