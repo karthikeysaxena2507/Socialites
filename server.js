@@ -103,9 +103,9 @@ app.get("/fail", (req, res) => {
   res.send("Failed attempt");
 });
 
-app.get("/", (req, res) => {
-  res.send("Success");
-});
+// app.get("/", (req, res) => {
+//   res.send("Success");
+// });
 
 app.get("/auth/google", passport.authenticate("google", { 
     scope: ["profile"]
