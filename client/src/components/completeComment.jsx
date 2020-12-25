@@ -23,16 +23,19 @@ const CompleteComment = () => {
     var [allreactions,setallreactions] = useState([]);
 
     useEffect(() => {
-        axios.get(`/posts/getcomment/${commentId}/${id}`)
-            .then((response) => {
+        const fetch = async() => {
+            try{
+                const response = await axios.get(`/posts/getcomment/${commentId}/${id}`);
                 console.log(response.data);
                 setComment(response.data)
                 setallreactions(response.data.reacts.reverse());
                 setreactions(response.data.reacts.reverse());
-            })
-            .catch((response) => {
-                console.log(response.data);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        fetch();
     },[commentId, id]);
 
     const changeLike = () => {
@@ -79,14 +82,17 @@ const CompleteComment = () => {
     var style4 = (!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"} 
 
     const remove = () => {
-        axios.post(`/posts/remove/${id}`, comment) 
-            .then((response) => {
+        const drop = async() => {
+            try {
+                const response = await axios.post(`/posts/remove/${id}`, comment);
                 console.log(response.data);
                 window.location = `/comment/${username}/${comment._id}/${id}`;        
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        drop();
     }
 
 

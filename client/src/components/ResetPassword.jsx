@@ -23,14 +23,17 @@ const ResetPassword = () => {
 
     const reset = () => {
         if(password.new === password.confirm) {
-            axios.post("/users/reset", password)
-            .then((response) => {
-                console.log(response.data);
-                window.location = "/login";
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            const drop = async() => {
+                try {
+                    const response = await axios.post("/users/reset", password);
+                    console.log(response.data);
+                    window.location = "/login";    
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
             setMessage(" ");
         }
         else {

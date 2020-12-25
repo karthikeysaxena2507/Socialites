@@ -10,13 +10,17 @@ const Verified = () => {
 
     const submit = () => {
         var user = {name: username};
-        axios.post("/users/verify/", user)
-            .then(() => {
+        const drop = async() => {
+            try {
+                const response = await axios.post("/users/verify/", user);
+                console.log(response.data);
                 window.location = "/allposts/" + username;
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
     }
 
     return <div className="container center-text">

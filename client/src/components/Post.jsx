@@ -24,14 +24,17 @@ const Post = (props) => {
 
     const addComment = (event) => {
         if(comment.content !== "") {
-            axios.post(`/posts/add/${props._id}`, comment)
-            .then((response) => {
-                console.log(response.data);
-                window.location = `/complete/${props.name}/${props._id}`;
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            const drop = async() => {
+                try {
+                    const response = await axios.post(`/posts/add/${props._id}`, comment);
+                    console.log(response.data);
+                    window.location = `/complete/${props.name}/${props._id}`;
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
     }
 

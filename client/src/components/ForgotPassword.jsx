@@ -12,13 +12,16 @@ const ForgotPassword = () => {
 
     const reset = () => {
         const user = {mail: email};
-        axios.post("/users/forgot", user)
-            .then((response) => {
+        const drop = async() => {
+            try {
+                const response = await axios.post("/users/forgot", user);
                 alert(response.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
     }
 
     return (<div className="container center-text">

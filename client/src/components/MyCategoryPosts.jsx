@@ -18,37 +18,46 @@ const MyCategoryPosts = () => {
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
-        axios.get(`/posts/list/${username}`) 
-            .then((response) => {
+        const fetch = async() => {
+            try {
+                const response = await axios.get(`/posts/list/${username}`);
                 setPosts(response.data.reverse().filter((post) => {
                     return (post.category === type);
                 }));
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        fetch();
     });
 
     const MyPost = (props, index) => {
 
         const changepost = (event, post) => {
-            axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-                .then((response) => {
+            const drop = async() => {
+                try {
+                    const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                     console.log(response.data);
-                })
-                .catch((response) => {
-                    console.log(response);
-                });
+                }   
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
 
         const remove = () => {
-            axios.delete(`/posts/delete/${props._id}`)
-                .then((response) => {
+            const del = async() => {
+                try {
+                    const response = await axios.delete(`/posts/delete/${props._id}`);
                     console.log(response.data.reverse());
-                })
-                .catch((response) => {
-                    console.log(response);
-                });
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            del();
             window.location = `/myposts/${username}`;
         }
 

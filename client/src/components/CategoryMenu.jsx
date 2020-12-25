@@ -20,7 +20,7 @@ const CategoryMenu = (props) => {
 
     return <div className="dropdown container center-text">
             <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select  Category
+                {props.category_type}
             </button>
             <div
              className="dropdown-menu" aria-labelledby="dropdownMenuButton">

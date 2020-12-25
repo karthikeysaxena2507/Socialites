@@ -22,21 +22,24 @@ const Register = () => {
 
     const add = (event) => {
         event.preventDefault();
-        axios.post("/users/add", user)
-            .then((res) => {
-                if(res.data === "Username Already Exists") {
-                    setMessage(res.data);
+        const drop = async() => {
+            try {
+                const response = await axios.post("/users/add", user);
+                if(response.data === "Username Already Exists") {
+                    setMessage(response.data);
                 }
-                else if(res.data === "Account with given Email Already Exists") {
-                    setMessage(res.data);
+                else if(response.data === "Account with given Email Already Exists") {
+                    setMessage(response.data);
                 }
                 else {
                     window.location = `/verify/${user.username}/${user.email}`;
                 }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
     }
 
     return (<div className="center-text">
@@ -85,10 +88,12 @@ const Register = () => {
                 <input type="submit" className="btn btn-lg expand margin" value="Register"/> 
             </div>
             <div className="margin">
-                 Already have an account ? <a href="/login"> Login </a>
+                 Already have an account ? <a href="/login"> Login Here </a>
             </div>
         </form>
-        <h3 className="margin"> OR </h3>
+        <div className="margin">
+            <h3> OR </h3>
+        </div>
         <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
         {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/facebook"><img src="https://img.icons8.com/fluent/32/000000/facebook-new.png"/> SignUp Using Facebook </a> </div> */}
         <div className="space"></div>

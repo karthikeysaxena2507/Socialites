@@ -10,14 +10,17 @@ const Verify = () => {
 
     const send = () => {
         var user = {name: username};
-        axios.post("/users/send", user)
-            .then((response) => {
+        const drop = async() => {
+            try {
+                const response = await axios.post("/users/send", user);
                 console.log(response.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-            alert("Link sent to email");
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
+        alert("Link sent to email");
     }
 
     return <div className="container center-text">

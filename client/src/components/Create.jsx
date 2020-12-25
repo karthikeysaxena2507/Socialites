@@ -35,13 +35,16 @@ const Create = () => {
 
     const addPost = (event) => {
         event.preventDefault();
-        axios.post("/posts/add", post)
-          .then(() => { 
-            window.location = `/allposts/${username}`;
-            })
-          .catch((res) => {
-            console.log(res);
-          })
+        const drop = async() => {
+            try {
+                const response = await axios.post("/posts/add", post);
+                console.log(response.data);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        drop();
         setPost({
           author: username,
           title:"", 
@@ -51,6 +54,7 @@ const Create = () => {
           laugh:0,
           comment_count:0
         });
+        window.location = `/allposts/${username}`;
     }
 
     const onDrop = (files) => {

@@ -24,16 +24,19 @@ const Reactions = () => {
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0});
 
     useEffect(() => {
-        axios.get(`/posts/${id}`)
-            .then((response) => {
+        const fetch = async() => {
+            try {
+                const response = await axios.get(`/posts/${id}`);
                 setallreactions(response.data[0].reacts.reverse());
                 setreactions(response.data[0].reacts.reverse());
                 settempreactions(response.data[0].reacts.reverse());
                 setPost(response.data[0]);
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        fetch();
     },[id]);
 
     const changeLike = () => {
@@ -102,13 +105,16 @@ const Reactions = () => {
     }
 
     const changepost = (event, post) => {
-        axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-            .then((response) => {
+        const drop = async() => {
+            try {
+                const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                 console.log(response.data);
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
     }
 
     var style1 = (like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}

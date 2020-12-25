@@ -14,73 +14,88 @@ const Result = () => {
 
     useEffect(() => {
         if(message === "all" && type !== "none") {
-            axios.get("/posts") 
-            .then((response) => {
-                setfoundPosts(response.data.reverse().filter(function(post) {
-                    return (((post.title.indexOf(searchContent) !== -1) || 
-                    (post.author.indexOf(searchContent) !== -1) ||
-                    (post.content.indexOf(searchContent) !== -1)
-                    ) && (post.category === type))
-                }));
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            const fetch = async() => {
+                try {
+                    const response = await axios.get("/posts");
+                    setfoundPosts(response.data.reverse().filter(function(post) {
+                        return (((post.title.indexOf(searchContent) !== -1) || 
+                        (post.author.indexOf(searchContent) !== -1) ||
+                        (post.content.indexOf(searchContent) !== -1)
+                        ) && (post.category === type))
+                    }));    
+                }   
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            fetch();
         }
         else if(message === "all" && type === "none") {
-            axios.get("/posts") 
-            .then((response) => {
-                setfoundPosts(response.data.reverse().filter(function(post) {
-                    return ((post.title.indexOf(searchContent) !== -1) || 
-                    (post.author.indexOf(searchContent) !== -1) ||
-                    (post.content.indexOf(searchContent) !== -1)
-                    )
-                }));
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            const fetch = async() => {
+                try {
+                    const response = await axios.get("/posts");
+                    setfoundPosts(response.data.reverse().filter(function(post) {
+                        return ((post.title.indexOf(searchContent) !== -1) || 
+                        (post.author.indexOf(searchContent) !== -1) ||
+                        (post.content.indexOf(searchContent) !== -1)
+                        )
+                    }));
+                }   
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            fetch();
         }
         else if(message === "personal" && type !== "none") {
-            axios.get(`/posts/list/${username}`) 
-            .then((response) => {
-                setfoundPosts(response.data.reverse().filter(function(post) {
-                    return (((post.title.indexOf(searchContent) !== -1) || 
-                    (post.author.indexOf(searchContent) !== -1) ||
-                    (post.content.indexOf(searchContent) !== -1)
-                    ) && (post.category === type))
-                }));
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            const fetch = async() => {
+                try {
+                    const response = await axios.get(`/posts/list/${username}`);
+                    setfoundPosts(response.data.reverse().filter(function(post) {
+                        return (((post.title.indexOf(searchContent) !== -1) || 
+                        (post.author.indexOf(searchContent) !== -1) ||
+                        (post.content.indexOf(searchContent) !== -1)
+                        ) && (post.category === type))
+                    }));    
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            fetch();
         }
         else {
-            axios.get(`/posts/list/${username}`) 
-            .then((response) => {
-                setfoundPosts(response.data.reverse().filter(function(post) {
-                    return ((post.title.indexOf(searchContent) !== -1) || 
-                    (post.author.indexOf(searchContent) !== -1) ||
-                    (post.content.indexOf(searchContent) !== -1)
-                    )
-                }));
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            const fetch = async() => {
+                try {
+                    const response = await axios.get(`/posts/list/${username}`);
+                    setfoundPosts(response.data.reverse().filter(function(post) {
+                        return ((post.title.indexOf(searchContent) !== -1) || 
+                        (post.author.indexOf(searchContent) !== -1) ||
+                        (post.content.indexOf(searchContent) !== -1)
+                        )
+                    }));
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            fetch();
         }
     });
 
     const makePost = (props, index) => {
 
         const changepost = (event, post) => {
-            axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-                .then((response) => {
+            const drop = async() => {
+                try {
+                    const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                     console.log(response.data);
-                })
-                .catch((response) => {
-                    console.log(response);
-                });
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
 
         return <Post 

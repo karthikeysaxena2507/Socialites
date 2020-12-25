@@ -16,27 +16,33 @@ const CategoryPosts = () => {
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
-        axios.get("/posts") 
-            .then((response) => {
+        const fetch = async() => {
+            try{
+                const response = await axios.get("/posts");
                 setPosts(response.data.reverse().filter((post) => {
                     return (post.category === type);
                 }));
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        fetch();
     });
 
     const createPost = (props, index) => {
 
         const changepost = (event, post) => {
-            axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-                .then((response) => {
+            const drop = async() => {
+                try{
+                    const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
                     console.log(response.data);
-                })
-                .catch((response) => {
-                    console.log(response);
-                });
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
 
         return <Post 

@@ -14,11 +14,17 @@ const Edit = () => {
     var [category, setCategory] = useState("Category");
 
     useEffect(() => {
-        axios.get(`/posts/edit/${id}`)
-            .then(function(response) {
+        const fetch = async() => {
+            try {
+                const response = await axios.get(`/posts/edit/${id}`);
                 setPost(response.data);
                 setCategory(response.data.category);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        fetch();
     },[id]);
 
     const change = (event) => {
@@ -33,13 +39,16 @@ const Edit = () => {
     }
 
     const editPost = () => {
-        axios.post(`/posts/editpost/${id}`, post) 
-            .then(function(response) {
+        const drop = async() => {
+            try {
+                const response = await axios.post(`/posts/editpost/${id}`, post);
                 console.log(response.data);
-            })
-            .catch(function(response) {
-                console.log(response);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
         window.location = `/myposts/${username}`;
     }
 

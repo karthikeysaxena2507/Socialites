@@ -16,25 +16,31 @@ const Posts = () => {
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
-        axios.get("/posts") 
-            .then((response) => {
+        const fetch = async () => {
+            try {
+                const response = await axios.get("/posts/");
                 setPosts(response.data.reverse());
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            }
+            catch (err) {
+                console.log(err);
+            }
+        };
+        return fetch(); // OR simple write fetch();
     });
 
     const createPost = (props, index) => {
 
         const changepost = (event, post) => {
-            axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-                .then((response) => {
-                    console.log(response.data);
-                })
-                .catch((response) => {
-                    console.log(response);
-                });
+            const drop = async() => {
+                try {
+                    const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
+                    console.log(response.data);    
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
 
         return <Post 

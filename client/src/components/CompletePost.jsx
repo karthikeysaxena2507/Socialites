@@ -18,45 +18,57 @@ const CompletePost = () => {
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0});
 
     useEffect(() => {
-        axios.get(`/posts/${id}`)
-            .then((response) => {
+        const fetch = async() => {
+            try {
+                const response = await axios.get(`/posts/${id}`);
                 setPost(response.data[0]);
-            })
-            .catch( (err) => {
-                console.log(err);
-            })
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        fetch();
     });
 
     const changepost = (event, post) => {
-        axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-            .then((response) => {
+        const drop = async() => {
+            try {
+                const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                 console.log(response.data);
-            })
-            .catch((response) => {
-                console.log(response);
-            });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
     }
 
     const createComment = (props, index) => {
 
         const reactToComment = (event) => {
-            axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props)
-                .then((response) => {
+            const drop = async() => {
+                try {
+                    const response = await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
                     console.log(response.data);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
 
         const remove = () => {
-            axios.post(`/posts/remove/${id}`, props) 
-                .then((response) => {
+            const drop = async() => {
+                try {
+                    const response = await axios.post(`/posts/remove/${id}`, props);
                     console.log(response.data);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
 
         const SeeAll = () => {
