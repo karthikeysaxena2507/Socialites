@@ -75,7 +75,7 @@ passport.use(new FacebookSTrategy(
     {
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: "/auth/facebook/callback",
+      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
       passReqToCallback : true,
       profileFields: ["email", "name"]
     },
@@ -91,21 +91,15 @@ passport.use(new FacebookSTrategy(
     )
 );
 
-app.get("/auth/facebook", passport.authenticate("facebook"));
-
-app.get("/auth/facebook/callback",passport.authenticate("facebook", {
-    successRedirect: "/success",
-    failureRedirect: "/fail"
-  })
+app.get("/auth/facebook", passport.authenticate("facebook", { 
+    scope: ["profile"]
+ })
 );
 
-app.get("/fail", (req, res) => {
-  res.send("Failed attempt");
-});
-
-app.get("/success", (req, res) => {
-    console.log(req);
-    res.send("success");
+app.get("/socialites-karthikey/auth/facebook/social", passport.authenticate("facebook", {
+    failureRedirect: "/login"
+    }), function(req, res) {
+        res.redirect("/allposts/"+req.user.username);
 });
 
 app.get("/auth/google", passport.authenticate("google", { 
