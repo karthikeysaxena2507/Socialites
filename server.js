@@ -90,10 +90,7 @@ passport.use(new FacebookSTrategy({
     )
 );
 
-app.get("/auth/facebook", passport.authenticate("facebook", { 
-    scope: ["profile"]
- })
-);
+app.get("/auth/facebook", passport.authenticate("facebook"));
 
 app.get("/socialites-karthikey/auth/facebook/social", passport.authenticate("facebook", {
     failureRedirect: "/login"
