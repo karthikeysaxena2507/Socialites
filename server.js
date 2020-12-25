@@ -57,13 +57,13 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    callbackURL: "/socialites-karthikey/auth/google/social",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
 
     User.findOrCreate( { 
-        googleId: profile.id,
+        userId: profile.id,
         username: profile._json.given_name
     }, function(err, user) {
         return cb(err, user);
@@ -75,18 +75,18 @@ passport.use(new FacebookSTrategy(
     {
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+      callbackURL: "/auth/facebook/callback",
+      passReqToCallback : true,
       profileFields: ["email", "name"]
     },
-    function(accessToken, refreshToken, profile, done) {
-        const { email, first_name, last_name } = profile._json;
-        const userData = {
-          email,
-          firstName: first_name,
-          lastName: last_name
-        };
-        new userModel(userData).save();
-        done(null, profile);
+    function(accessToken, refreshToken, profile, cb) {
+
+        User.findOrCreate( { 
+            userId: profile.id,
+            username: profile._json.given_name
+        }, function(err, user) {
+            return cb(err, user);
+        });
       }
     )
 );
@@ -94,7 +94,7 @@ passport.use(new FacebookSTrategy(
 app.get("/auth/facebook", passport.authenticate("facebook"));
 
 app.get("/auth/facebook/callback",passport.authenticate("facebook", {
-    successRedirect: "/",
+    successRedirect: "/success",
     failureRedirect: "/fail"
   })
 );
@@ -103,9 +103,10 @@ app.get("/fail", (req, res) => {
   res.send("Failed attempt");
 });
 
-// app.get("/", (req, res) => {
-//   res.send("Success");
-// });
+app.get("/success", (req, res) => {
+    console.log(req);
+    res.send("success");
+});
 
 app.get("/auth/google", passport.authenticate("google", { 
     scope: ["profile"]

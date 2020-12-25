@@ -5,7 +5,7 @@ const findOrCreate = require("mongoose-findorcreate");
 const userSchema = new mongoose.Schema({
     username: String,
     email: String,
-    googleId: String,
+    userId: String,
     password: String,
     verified: Boolean
 });

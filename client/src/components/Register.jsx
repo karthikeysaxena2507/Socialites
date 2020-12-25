@@ -90,7 +90,7 @@ const Register = () => {
         </form>
         <h3 className="margin"> OR </h3>
         <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
-        {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/facebook"><img src="https://img.icons8.com/fluent/32/000000/facebook-new.png"/> SignUp Using Facebook </a> </div> */}
+        <div className="margin"> <a className="btn btn-lg expand" href="/auth/facebook"><img src="https://img.icons8.com/fluent/32/000000/facebook-new.png"/> SignUp Using Facebook </a> </div>
         <div className="space"></div>
         <Footer />
 </div>);
