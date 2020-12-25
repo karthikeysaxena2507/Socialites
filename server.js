@@ -92,11 +92,9 @@ passport.use(new FacebookSTrategy({
 
 app.get("/auth/facebook", passport.authenticate("facebook"));
 
-app.get("/auth/facebook/callback", passport.authenticate("facebook", {
-    failureRedirect: "/login"
-    }), function(req, res) {
-        res.send("success");
-});
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/register',
+                                      failureRedirect: '/login' }));
 
 app.get("/auth/google", passport.authenticate("google", { 
     scope: ["profile"]
