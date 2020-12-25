@@ -76,6 +76,7 @@ const Login = () => {
                 <a href="/forgot"> Forgot Password </a>
             </div>
             <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
+            {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/facebook"><img src="https://img.icons8.com/fluent/32/000000/facebook-new.png"/> SignIn Using Facebook </a> </div> */}
         </form>
         <div className="space"></div>
         <Footer />

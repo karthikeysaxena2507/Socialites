@@ -8,6 +8,7 @@ const session = require("express-session");
 const User = require("./models/user.model");
 var LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const FacebookSTrategy = require("passport-facebook").Strategy;
 
 const app = express();
 
@@ -54,9 +55,9 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://socialites-karthikey.herokuapp.com/socialites-karthikey/auth/google/social",
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
@@ -69,6 +70,42 @@ passport.use(new GoogleStrategy({
     });
   }
 ));
+
+passport.use(new FacebookSTrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+      profileFields: ["email", "name"]
+    },
+    function(accessToken, refreshToken, profile, done) {
+        const { email, first_name, last_name } = profile._json;
+        const userData = {
+          email,
+          firstName: first_name,
+          lastName: last_name
+        };
+        new userModel(userData).save();
+        done(null, profile);
+      }
+    )
+);
+
+app.get("/auth/facebook", passport.authenticate("facebook"));
+
+app.get("/auth/facebook/callback",passport.authenticate("facebook", {
+    successRedirect: "/",
+    failureRedirect: "/fail"
+  })
+);
+
+app.get("/fail", (req, res) => {
+  res.send("Failed attempt");
+});
+
+app.get("/", (req, res) => {
+  res.send("Success");
+});
 
 app.get("/auth/google", passport.authenticate("google", { 
     scope: ["profile"]

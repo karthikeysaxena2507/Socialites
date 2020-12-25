@@ -136,6 +136,10 @@ textarea {
   text-decoration: none;
 }
 
+.col-6 {
+  border: 2px solid red;
+}
+
 .nav-item:hover {
   background-color: rgb(211, 115, 36);
   cursor: pointer;
