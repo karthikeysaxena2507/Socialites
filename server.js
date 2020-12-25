@@ -92,7 +92,7 @@ passport.use(new FacebookSTrategy({
 
 app.get("/auth/facebook", passport.authenticate("facebook"));
 
-app.get("/socialites-karthikey/auth/facebook/social", passport.authenticate("facebook", {
+app.get("/auth/facebook/callback", passport.authenticate("facebook", {
     failureRedirect: "/login"
     }), function(req, res) {
         res.redirect("/allposts/"+req.user.username);
