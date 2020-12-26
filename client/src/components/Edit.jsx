@@ -11,14 +11,12 @@ const Edit = () => {
     let { username,id } = useParams();
 
     var [post,setPost] = useState({title:"", content:"", category:""});
-    var [category, setCategory] = useState("Category");
 
     useEffect(() => {
         const fetch = async() => {
             try {
                 const response = await axios.get(`/posts/edit/${id}`);
                 setPost(response.data);
-                setCategory(response.data.category);
             }
             catch(error) {
                 console.log(error);
@@ -53,7 +51,6 @@ const Edit = () => {
     }
 
     const changeCategory = (event) => {
-        setCategory(event.target.innerText);
         setPost({title:post.title, content:post.content, category:event.target.innerText});
     }
 
@@ -68,7 +65,7 @@ const Edit = () => {
         </div> 
         <div className="dropdown container center-text">
             <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {category}
+                {post.category}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
