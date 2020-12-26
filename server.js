@@ -60,7 +60,7 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK_URL,
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
-  function(accessToken, refreshToken, profile, cb) {
+  (accessToken, refreshToken, profile, cb) => {
     User.findOrCreate( { 
         userId: profile.id,
         username: profile._json.given_name
@@ -102,11 +102,11 @@ app.get("/auth/google", passport.authenticate("google", {
 
 app.get("/socialites-karthikey/auth/google/social", passport.authenticate("google", {
     failureRedirect: "/login"
-    }), function(req, res) {
+    }), (req, res) => {
         res.redirect("/allposts/"+req.user.username);
 });
 
-app.post("/logout", function(req, res) {
+app.post("/logout", (req, res) => {
     req.logOut();
 });
 
@@ -118,7 +118,7 @@ if(process.env.NODE_ENV === "production") {
     });
 };
 
-app.listen(port, function() {
+app.listen(port, () => {
     console.log(`server is ready on ${port}`);
 });
 
