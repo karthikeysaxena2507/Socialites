@@ -19,6 +19,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import CategoryPosts from "./components/CategoryPosts";
 import MyCategoryPosts from "./components/MyCategoryPosts";
+import Users from "./components/Users";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
     <Route path="/" exact component={Home} />
     <Route path="/about/:username" component={About}/>
     <Route path="/allposts/:username" component={Posts} />
+    <Route path="/allusers/:username" component={Users} />
     <Route path="/create/:username" component={Create} />
     <Route path="/myposts/:username" component={MyPosts} />
     <Route path="/post/:username/:id" component={Reactions} />

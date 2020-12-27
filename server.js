@@ -108,6 +108,7 @@ app.get("/socialites-karthikey/auth/google/social", passport.authenticate("googl
 
 app.post("/logout", (req, res) => {
     req.logOut();
+    res.json("logged out");
 });
 
 if(process.env.NODE_ENV === "production") {

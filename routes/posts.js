@@ -11,7 +11,7 @@ router.route("/").get( async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-})
+});
 
 router.route("/getcomment/:commentId/:id").get( async(req, res, next) => {
     try {
