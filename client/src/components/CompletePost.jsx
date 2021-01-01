@@ -15,7 +15,7 @@ import Heading from "./Heading";
 const CompletePost = () => {
     let { username,id } = useParams();
 
-    var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0});
+    var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
 
     useEffect(() => {
         const fetch = async() => {
@@ -142,6 +142,7 @@ const CompletePost = () => {
                 comment_count = {post.comments.length}
                 change = {changepost}
                 show_comments = {false}
+                imageUrl = {post.imageUrl}
         />
         <h3 className="margin center-text"> Comments </h3>
         {post.comments.map(createComment)}

@@ -21,7 +21,7 @@ const MyPosts = () => {
         const fetch = async() => {
             try {
                 const response = await axios.get(`/posts/list/${username}`);
-                setPosts(response.data);
+                setPosts(response.data.reverse());
             }
             catch(error) {
                 console.log(error);
@@ -77,6 +77,7 @@ const MyPosts = () => {
                 comment_count = {props.comment_count}
                 change = {changepost}
                 show_comments = {true}
+                imageUrl = {props.imageUrl}
         />
         <div className="post-options center-text">
             <img src={trash} onClick={remove} className="expand one"/>

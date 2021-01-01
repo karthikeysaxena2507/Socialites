@@ -240,6 +240,24 @@ textarea {
     background-color: rgb(192, 123, 90);
   }
 
+  .post-image {
+    width: 280px;
+    margin-bottom: 20px;
+    border: 3px solid rgb(134, 63, 5);
+    border-radius: 5px;
+  }
+
+  .preview {
+    margin-top: 20px;
+    width: 280px;
+    border: 3px solid rgb(134, 63, 5);
+    border-radius: 5px;
+  }
+
+  .upload {
+    margin-left: 540px;
+  }
+
   .comment-options {
     width: 28px;
     border-radius: 0 0 3px 3px;

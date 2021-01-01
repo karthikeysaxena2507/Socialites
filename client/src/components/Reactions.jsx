@@ -21,7 +21,7 @@ const Reactions = () => {
     var [reactions,setreactions] = useState([]);
     var [allreactions,setallreactions] = useState([]);
     var [tempreactions,settempreactions] = useState([]);
-    var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0});
+    var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
 
     useEffect(() => {
         const fetch = async() => {
@@ -143,6 +143,7 @@ const Reactions = () => {
                 comment_count = {post.comments.length}
                 change = {changepost}
                 show_comments = {true}
+                imageUrl = {post.imageUrl}
         />
         <div className="center-text">
         <h2 className="margin"> Users who Reacted: </h2>

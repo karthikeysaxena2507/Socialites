@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
@@ -50,7 +51,9 @@ const Post = (props) => {
         window.location = `/complete/${props.name}/${props._id}`;
     }
 
-    var visibility = (props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"}
+    var visibility = (props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"};
+
+    var image = (props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"};
     
     return(<div className="container margin post"> 
         <div className="post-title"> 
@@ -58,7 +61,12 @@ const Post = (props) => {
             by {props.author} 
             <span className="move-right"> <i>#{props.category}</i> </span>
         </div>
-        <div className="post-content"> {props.content} </div>
+        <div className="post-content">
+            {props.content}
+            <div className="margin center-text">
+                <img src={props.imageUrl} style={image} className="post-image" alt="image not found"/>
+            </div>
+        </div>
         <div className="post-info"> 
             <span className="one">
              <img

@@ -22,6 +22,7 @@ const postSchema = new mongoose.Schema({
     comments: [commentSchema],
     comment_count: Number,
     category: String,
+    imageUrl: String,
     like: Number,
     love: Number,
     laugh: Number

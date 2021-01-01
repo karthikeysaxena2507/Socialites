@@ -8,14 +8,13 @@ const session = require("express-session");
 const User = require("./models/user.model");
 var LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-// const FacebookSTrategy = require("passport-facebook").Strategy;
 
 const app = express();
 
 const port = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json( {limit: "50mb"}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -69,31 +68,6 @@ passport.use(new GoogleStrategy({
     });
   }
 ));
-
-// passport.use(new FacebookSTrategy({
-//       clientID: process.env.FACEBOOK_CLIENT_ID,
-//       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-//       callbackURL: process.env.FACEBOOK_CALLBACK_URL,
-//       passReqToCallback : true,
-//       profileFields: ["email", "name"]
-//     },
-//     function(accessToken, refreshToken, profile, cb) {
-
-//         User.findOrCreate( { 
-//             userId: profile.id,
-//             username: profile._json.given_name
-//         }, function(err, user) {
-//             return cb(err, user);
-//         });
-//       }
-//     )
-// );
-
-// app.get("/auth/facebook", passport.authenticate("facebook"));
-
-// app.get('/auth/facebook/callback',
-//   passport.authenticate('facebook', { successRedirect: '/',
-//                                       failureRedirect: '/login' }));
 
 app.get("/auth/google", passport.authenticate("google", { 
     scope: ["profile"]

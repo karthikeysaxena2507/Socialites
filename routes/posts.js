@@ -2,6 +2,7 @@ const router = require("express").Router();
 let Post = require("../models/post.model");
 let React = require("../models/react.model");
 let Comment = require("../models/comment.model");
+const { cloudinary } = require("../utils/cloudinary");
 
 router.route("/").get( async(req, res, next) => {
     try {
@@ -54,6 +55,7 @@ router.route("/edit/:id").get( async(req, res, next) => {
         const edited_post = {
             title: post.title,
             content: post.content,
+            imageUrl: post.imageUrl,
             category: post.category
         }
         res.json(edited_post);
@@ -99,14 +101,24 @@ router.route("/update/:react/:username").post( async(req, res, next) => {
     }
 });
 
-router.route("/editpost/:id").post( async(req, res, next) => {
+router.route("/edit/:id").post( async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
+        var imageUrl = "";
+        if(req.body.data !== "") {
+            var fileStr = req.body.data;
+            var uploadedResponse = await cloudinary.uploader.
+            upload(fileStr, {
+                upload_preset: "socialites"
+            });
+            imageUrl = uploadedResponse.url;
+        }
         post.title = req.body.title;
         post.content = req.body.content;
         post.category = req.body.category;
+        post.imageUrl = imageUrl;
         post.save();
-        res.json("post updated");
+        res.json(post);
     }
     catch(error) {
         res.json(next(error));
@@ -114,21 +126,37 @@ router.route("/editpost/:id").post( async(req, res, next) => {
 });
 
 router.route("/add").post( async(req, res, next) => {
-    try {   
+    try {
+        var imageUrl = "";
+        if(req.body.data !== "") {
+            var fileStr = req.body.data;
+            var uploadedResponse = await cloudinary.uploader.
+            upload(fileStr, {
+                upload_preset: "socialites"
+            });
+            imageUrl = uploadedResponse.url;
+        }
         const post = new Post({
             author: req.body.author,
             title: req.body.title,
             content: req.body.content,
             category: req.body.category,
+            imageUrl: imageUrl,
             reacts: [],
             comment_count: 0,
             like: 0,
             love: 0,
             laugh: 0
         });
-        post.save();
-        res.json("post added");
-    }
+        post.save((err) => {
+            if(err) {
+                res.json(err);
+            }
+            else {
+                res.json(post);
+            }
+        })
+    }   
     catch(error) {
         res.json(next(error));
     }

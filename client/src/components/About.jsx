@@ -19,7 +19,7 @@ const About = () => {
                 <h2 className="margin"> About Socialites </h2>
             </div>
             <div className="margin">
-                <p className="margin"> Welcome to Socialites - A social media web application. Here Users can:
+                <p className="margin"> Welcome to Socialites - A social media web application. Here Users can: </p>
                     <ul>
                         <li> Create a Post related to any Category </li>
                         <li> Edit their Post. </li>
@@ -33,7 +33,6 @@ const About = () => {
                         <li> Search for any particular user who has commented and reacted to any post. </li>
                         <li> Users can start by simply registering on the site locally or with google </li>
                     </ul>
-                </p>
             </div>
             <div className="margin">
                 <h4 className="margin"> Made By: Karthikey Saxena </h4>

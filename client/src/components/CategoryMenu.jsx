@@ -34,6 +34,7 @@ const CategoryMenu = (props) => {
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
             </div>
         </div>

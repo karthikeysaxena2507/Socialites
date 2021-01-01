@@ -79,6 +79,7 @@ const MyCategoryPosts = () => {
                 comment_count = {props.comment_count}
                 change = {changepost}
                 show_comments = {true}
+                imageUrl = {props.imageUrl}
         />
         <div className="post-options center-text">
             <img src={trash} onClick={remove} className="expand one"/>

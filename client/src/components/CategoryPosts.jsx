@@ -59,6 +59,7 @@ const CategoryPosts = () => {
                 comment_count = {props.comment_count}
                 change = {changepost}
                 show_comments={true}
+                imageUrl = {props.imageUrl}
         />
     }
     
