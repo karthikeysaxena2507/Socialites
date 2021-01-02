@@ -75,12 +75,16 @@ const CompletePost = () => {
             window.location = `/comment/${username}/${props._id}/${id}`;
         }
 
+        const SeeProfile = (e) => {
+            window.location = `/profile/${e.target.innerText}/${props.name}`;
+        }
+
         var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
 
         return <div className="container margin" key={index}>
         <div className="comment-name">
             <div> 
-                <span className="name"> {props.name} </span>
+                <span className="name author" onClick={SeeProfile}> {props.name} </span>
             </div>
             <div>
                 <span className="move-right"> 

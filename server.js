@@ -62,7 +62,8 @@ passport.use(new GoogleStrategy({
   (accessToken, refreshToken, profile, cb) => {
     User.findOrCreate( { 
         userId: profile.id,
-        username: profile._json.given_name
+        username: profile._json.given_name,
+        email: profile._json.email
     }, function(err, user) {
         return cb(err, user);
     });

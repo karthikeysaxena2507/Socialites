@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     email: String,
     userId: String,
     password: String,
-    verified: Boolean
+    verified: Boolean,
+    imageUrl: String
 });
 
 userSchema.plugin(passportLocalMongoose);

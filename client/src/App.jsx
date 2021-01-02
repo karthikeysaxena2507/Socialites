@@ -32,7 +32,7 @@ function App() {
     <Route path="/myposts/:username" component={MyPosts} />
     <Route path="/post/:username/:id" component={Reactions} />
     <Route path="/edit/:username/:id" component={Edit} />
-    <Route path="/profile/:username" component={Profile} />
+    <Route path="/profile/:user/:username" component={Profile} />
     <Route path="/complete/:username/:id" component={CompletePost} />
     <Route path="/categoryposts/:username/:type" component={CategoryPosts} />
     <Route path="/mycategoryposts/:username/:type" component={MyCategoryPosts} />

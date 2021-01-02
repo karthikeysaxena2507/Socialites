@@ -51,6 +51,10 @@ const Post = (props) => {
         window.location = `/complete/${props.name}/${props._id}`;
     }
 
+    const SeeProfile = (e) => {
+        window.location = `/profile/${e.target.innerText}/${props.name}`;
+    }
+
     var visibility = (props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"};
 
     var image = (props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"};
@@ -58,8 +62,9 @@ const Post = (props) => {
     return(<div className="container margin post"> 
         <div className="post-title"> 
             <h2> {props.title} </h2>
-            by {props.author} 
-            <span className="move-right"> <i>#{props.category}</i> </span>
+            <span> by </span>
+            <span className="author expand" onClick={SeeProfile}> {props.author} </span>
+            <span className="move-right"> <i> #{props.category} </i> </span>
         </div>
         <div className="post-content">
             {props.content}

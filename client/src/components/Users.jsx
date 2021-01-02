@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import axios from "axios";
 import React, { useEffect,useState } from "react";
@@ -8,6 +9,8 @@ import search from "./images/search.png";
 import Navbar from "./Navbar";
 
 const Users = () => {
+
+    let { username } = useParams();
 
     var [allUsers, setAllUsers] = useState([]);
     var [users, setUsers] = useState([]);
@@ -29,8 +32,15 @@ const Users = () => {
     },[]);
 
     const createUser = (props, index) => {
+
+        const SeeProfile = (e) => {
+            window.location = `/profile/${e.target.innerText}/${username}`;
+        }
+
         return (<div className="container user" key={index}>
-            <li> {props.username} </li>
+            <li onClick={SeeProfile} className="profile">
+                {props.username} 
+            </li>
         </div>);
     }
 
@@ -47,7 +57,6 @@ const Users = () => {
         }));
     }
 
-    let { username } = useParams();
     return <div>
     <Navbar 
         name = {username}

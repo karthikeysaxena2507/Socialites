@@ -25,7 +25,7 @@ const Posts = () => {
                 console.log(err);
             }
         };
-        return fetch(); // OR simple write fetch();
+        fetch(); 
     });
 
     const createPost = (props, index) => {

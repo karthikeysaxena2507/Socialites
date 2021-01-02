@@ -99,9 +99,16 @@ const CompleteComment = () => {
     var styling = (comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"};
 
     const renderUsers = (props, index) => {
+        const SeeProfile = (e) => {
+            window.location = `/profile/${e.target.innerText}/${username}`;
+        }
         return (<div className="container user" key={index}>
-            <li> {props.name} </li>
+            <li onClick={SeeProfile} className="profile"> {props.name} </li>
         </div>);
+    }
+
+    const SeeProfile = (e) => {
+        window.location = `/profile/${e.target.innerText}/${username}`;
     }
 
     return (<div>
@@ -114,7 +121,7 @@ const CompleteComment = () => {
         <div className="container margin">
         <div className="comment-name">
             <div> 
-                <span className="name"> {comment.name} </span>
+                <span className="name author" onClick={SeeProfile}> {comment.name} </span>
             </div>
             <div>
                 <span className="move-right"> 

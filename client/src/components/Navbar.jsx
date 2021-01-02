@@ -8,7 +8,7 @@ const Navbar = (props) => {
     var about_link = `/about/${props.name}`;
     var create_link = `/create/${props.name}`;
     var myposts_link = `/myposts/${props.name}`;
-    // var profile_link = `/profile/${props.name}`;
+    var profile_link = `/profile/${props.name}/${props.name}`;
     var allusers_link = `/allusers/${props.name}`;
 
     var current_page = props.page;
@@ -38,7 +38,7 @@ const Navbar = (props) => {
           <a href={about_link} className={"nav-item nav-link active " + ((current_page === "about") ? "nav-item-active" : "")}> About </a>
           <a href={create_link} className={"nav-item nav-link active " + ((current_page === "create") ? "nav-item-active" : "")}> Create </a>
           <a href={myposts_link} className={"nav-item nav-link active " + ((current_page === "myposts") ? "nav-item-active" : "")}> MyPosts </a>
-          {/* <a href={profile_link} className={"nav-item nav-link active " + ((current_page === "profile") ? "nav-item-active" : "")}> MyProfile </a> */}
+          <a href={profile_link} className={"nav-item nav-link active " + ((current_page === "profile") ? "nav-item-active" : "")}> MyProfile </a>
           <a href={allusers_link} className={"nav-item nav-link active " + ((current_page === "allusers") ? "nav-item-active" : "")}> AllUsers </a>
           <a onClick={change} className={"nav-item nav-link active"}> Logout </a>
         </div>

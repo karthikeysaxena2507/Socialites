@@ -5,15 +5,19 @@ import Navbar from "./Navbar";
 import Heading from "./Heading";
 
 const Profile = () => {
-    let { username } = useParams();
+    let { user,username } = useParams();
+
+    
+
+    var profile = (user === username) ? ("profile") : ("null");
     return (<div>
     <Navbar 
             name = {username}
-            page = "profile"
+            page = {profile}
     />
     <Heading />
     <div className="container center-text margin">
-        Profile of {username}
+        Profile of {user}
         <br />
         (page is not yet complete)
         <div className="space"></div>

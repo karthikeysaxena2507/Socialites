@@ -92,8 +92,11 @@ const Reactions = () => {
     }
 
     const renderUsers = (props, index) => {
+        const SeeProfile = (e) => {
+            window.location = `/profile/${e.target.innerText}/${username}`;
+        }
         return (<div className="container user" key={index}>
-            <li> {props.name} </li>
+            <li onClick={SeeProfile} className="profile"> {props.name} </li>
         </div>);
     }
 
