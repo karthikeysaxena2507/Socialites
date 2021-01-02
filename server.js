@@ -60,10 +60,10 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   (accessToken, refreshToken, profile, cb) => {
-    User.findOrCreate( { 
+    User.findOrCreate({ 
         userId: profile.id,
         username: profile._json.given_name,
-        email: profile._json.email
+        email: profile.email
     }, function(err, user) {
         return cb(err, user);
     });
