@@ -129,7 +129,7 @@ const Reactions = () => {
                 includeMatches: true
             });
             const result = fuse.search(searchContent);
-            setreactions(result.reverse());
+            setreactions(result);
         }
     }
 
@@ -183,7 +183,7 @@ const Reactions = () => {
                     <button className="btn expand margin one" onClick={changeLaugh} style={style3}> <img src={laughed} name="laugh" className="expand"/> </button> 
                 </div>
                 <div>
-                    <input type="text" value={searchContent} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
+                    <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
                     <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
                 </div>
             </div>    

@@ -27,7 +27,7 @@ const Result = () => {
                     const results = fuse.search(searchContent);
                     setfoundPosts(results.reverse());
                     if(type !== "none") {
-                        setfoundPosts(results.reverse().filter((post) => {
+                        setfoundPosts(results.filter((post) => {
                             return (post.item.category === type);
                         }));
                     }
@@ -50,9 +50,10 @@ const Result = () => {
                     const results = fuse.search(searchContent);
                     setfoundPosts(results.reverse());
                     if(type !== "none") {
-                        setfoundPosts(results.reverse().filter((post) => {
+                        setfoundPosts(results.filter((post) => {
                             return (post.item.category === type);
                         }));
+                        
                     }
                 }
                 catch(error) {
@@ -105,7 +106,7 @@ const Result = () => {
         <div className="center-text">
             <h2 className="margin"> Search Results </h2>
         </div>
-        {foundPosts.map(createPost)}
+        {foundPosts.reverse().map(createPost)}
         <div className="space"></div>
         <Footer />
 </div>);

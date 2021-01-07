@@ -6,7 +6,7 @@ const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-router.route("/").get( async(req, res, next) => {
+router.get("/", async(req, res, next) => {
     try {   
         const users = await User.find({});
         res.json(users);
@@ -16,7 +16,7 @@ router.route("/").get( async(req, res, next) => {
     }
 });
 
-router.route("/find/:username").get( async(req, res, next) => {
+router.get("/find/:username", async(req, res, next) => {
     try {
         const user = await User.find({username: req.params.username});
         res.json(user);
@@ -26,7 +26,7 @@ router.route("/find/:username").get( async(req, res, next) => {
     }
 });
 
-router.route("/reset").post( async(req, res, next) => {
+router.post("/reset", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({username: req.body.name});
         if(foundUser) {
@@ -44,7 +44,7 @@ router.route("/reset").post( async(req, res, next) => {
     }
 });
 
-router.route("/forgot").post( async(req, res, next) => {
+router.post("/forgot", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({ email: req.body.mail });
         if (foundUser === null) {
@@ -74,7 +74,7 @@ router.route("/forgot").post( async(req, res, next) => {
     }
 });
 
-router.route("/").post( async(req, res, next) => {
+router.post("/", async(req, res, next) => {
     try {
         const user = new User ({
             username: req.body.username,
@@ -97,7 +97,7 @@ router.route("/").post( async(req, res, next) => {
     }
 });
 
-router.route("/send").post( async(req, res, next) => {
+router.post("/send", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({username: req.body.name});
         var link = "https://socialites-karthikey.herokuapp.com/verified/" + foundUser.username;
@@ -122,7 +122,7 @@ router.route("/send").post( async(req, res, next) => {
     }
 });
 
-router.route("/verify").post( async(req, res, next) => {
+router.post("/verify", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({username: req.body.name});
         foundUser.verified = true;
@@ -133,7 +133,7 @@ router.route("/verify").post( async(req, res, next) => {
     }
 });
 
-router.route("/add").post( async(req, res, next) => {
+router.post("/add", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({username: req.body.username});
         const newUser = new User ({

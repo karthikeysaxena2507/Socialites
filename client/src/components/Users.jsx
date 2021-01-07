@@ -72,7 +72,7 @@ const Users = () => {
                 includeMatches: true
             });
             const result = fuse.search(searchContent);
-            setUsers(result.reverse());
+            setUsers(result);
         }
     }
 
@@ -86,7 +86,7 @@ const Users = () => {
         <h3 className="margin"> All Users </h3>
     </div>
     <div className="container margin center-text">
-        <input type="text" value={searchContent} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
+        <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
         <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
     </div>
     <div className="margin center-text">

@@ -24,26 +24,26 @@ import Users from "./components/Users";
 function App() {
   return (
     <Router>
-    <Route path="/" exact component={Home} />
-    <Route path="/about/:username" component={About}/>
-    <Route path="/allposts/:username" component={Posts} />
-    <Route path="/allusers/:username" component={Users} />
-    <Route path="/create/:username" component={Create} />
-    <Route path="/myposts/:username" component={MyPosts} />
-    <Route path="/post/:username/:id" component={Reactions} />
-    <Route path="/edit/:username/:id" component={Edit} />
-    <Route path="/profile/:user/:username" component={Profile} />
-    <Route path="/complete/:username/:id" component={CompletePost} />
-    <Route path="/categoryposts/:username/:type" component={CategoryPosts} />
-    <Route path="/mycategoryposts/:username/:type" component={MyCategoryPosts} />
-    <Route path="/verify/:username" component={Verify} />
-    <Route path="/verified/:username" component={Verified} />
-    <Route path="/forgot" component={ForgotPassword} />
-    <Route path="/reset/:username" component={ResetPassword} />
-    <Route path="/comment/:username/:commentId/:id" component={CompleteComment} />
-    <Route path="/result/:username/:searchContent/:message/:type" component={SearchResult} />
-    <Route path="/register" component={Register} />
-    <Route path="/login" component={Login} />
+    <Route exact path="/" component={Home} />
+    <Route exact path="/about/:username" component={About}/>
+    <Route exact path="/allposts/:username" component={Posts} />
+    <Route exact path="/allusers/:username" component={Users} />
+    <Route exact path="/create/:username" component={Create} />
+    <Route exact path="/myposts/:username" component={MyPosts} />
+    <Route exact path="/post/:username/:id" component={Reactions} />
+    <Route exact path="/edit/:username/:id" component={Edit} />
+    <Route exact path="/profile/:user/:username" component={Profile} />
+    <Route exact path="/complete/:username/:id" component={CompletePost} />
+    <Route exact path="/categoryposts/:username/:type" component={CategoryPosts} />
+    <Route exact path="/mycategoryposts/:username/:type" component={MyCategoryPosts} />
+    <Route exact path="/verify/:username" component={Verify} />
+    <Route exact path="/verified/:username" component={Verified} />
+    <Route exact path="/forgot" component={ForgotPassword} />
+    <Route exact path="/reset/:username" component={ResetPassword} />
+    <Route exact path="/comment/:username/:commentId/:id" component={CompleteComment} />
+    <Route exact path="/result/:username/:searchContent/:message/:type" component={SearchResult} />
+    <Route exact path="/register" component={Register} />
+    <Route exact path="/login" component={Login} />
     </Router>
   );
 }
