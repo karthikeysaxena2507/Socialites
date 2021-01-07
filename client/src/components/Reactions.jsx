@@ -10,6 +10,7 @@ import search from "./images/search.png";
 import Footer from "./Footer";
 import Post from "./Post";
 import Heading from "./Heading";
+import Fuse from "fuse.js";
 
 const Reactions = () => {
 
@@ -21,12 +22,14 @@ const Reactions = () => {
     var [reactions,setreactions] = useState([]);
     var [allreactions,setallreactions] = useState([]);
     var [tempreactions,settempreactions] = useState([]);
+    var [message, setMessage] = useState("");
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
 
     useEffect(() => {
         const fetch = async() => {
             try {
                 const response = await axios.get(`/posts/${id}`);
+                console.log(response.data[0].reacts.reverse());
                 setallreactions(response.data[0].reacts.reverse());
                 setreactions(response.data[0].reacts.reverse());
                 settempreactions(response.data[0].reacts.reverse());
@@ -44,12 +47,13 @@ const Reactions = () => {
             setlike(true);    
             setlove(false);
             setlaugh(false);
-            setreactions(allreactions.filter(function(reaction) {
+            setreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "like");
             }));
-            settempreactions(allreactions.filter(function(reaction) {
+            settempreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "like");
             }));
+            setMessage("Showing All Users Who Liked");
         }
     }
     const changeLove = () => {
@@ -57,12 +61,13 @@ const Reactions = () => {
             setlike(false);    
             setlove(true);
             setlaugh(false);
-            setreactions(allreactions.filter(function(reaction) {
+            setreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "love");
             }));
-            settempreactions(allreactions.filter(function(reaction) {
+            settempreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "love");
             }));
+            setMessage("Showing All Users Who Loved");
         }
     }
     const changeLaugh = () => {
@@ -70,12 +75,13 @@ const Reactions = () => {
             setlike(false);    
             setlove(false);
             setlaugh(true);
-            setreactions(allreactions.filter(function(reaction) {
+            setreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "laugh");
             }));
-            settempreactions(allreactions.filter(function(reaction) {
+            settempreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "laugh");
             }));
+            setMessage("Showing All Users Who Laughed");
         }
     }
 
@@ -85,6 +91,7 @@ const Reactions = () => {
         setlaugh(false);
         setreactions(allreactions);
         settempreactions(allreactions);
+        setMessage("Showing All Users Who Reacted");
     }
 
     const change = (event) => {
@@ -95,16 +102,35 @@ const Reactions = () => {
         const SeeProfile = (e) => {
             window.location = `/profile/${e.target.innerText}/${username}`;
         }
-        return (<div className="container user" key={index}>
+
+        if(props.name !== undefined) {
+            return (<div className="container user" key={index}>
             <li onClick={SeeProfile} className="profile"> {props.name} </li>
         </div>);
+        }
+        else {
+            return (<div className="container user" key={index}>
+            <li onClick={SeeProfile} className="profile"> {props.item.name} </li>
+        </div>);
+        }
     }
 
     const searchIt = (event) => {
         event.preventDefault();
-        setreactions(tempreactions.filter(function(reaction) {
-            return (reaction.name.indexOf(searchContent) !== -1);
-        }));
+        if(searchContent === "") {
+            setMessage("Showing All Users in this Category");
+            setreactions(tempreactions);
+        }
+        else {
+            setMessage(`Showing Search results for: ${searchContent}` )
+            const fuse = new Fuse(tempreactions, {
+                keys: ["name"],
+                includeScore: true,
+                includeMatches: true
+            });
+            const result = fuse.search(searchContent);
+            setreactions(result.reverse());
+        }
     }
 
     const changepost = (event, post) => {
@@ -132,35 +158,38 @@ const Reactions = () => {
         />
         <Heading />
         <div className="container">
-        <Post 
-                key = {post._id}
-                name = {username}
-                _id = {post._id}
-                author = {post.author}
-                title = {post.title}
-                content = {post.content}
-                category = {post.category}
-                like = {post.like}
-                love = {post.love}
-                laugh = {post.laugh}
-                comment_count = {post.comments.length}
-                change = {changepost}
-                show_comments = {true}
-                imageUrl = {post.imageUrl}
-        />
-        <div className="center-text">
-        <h2 className="margin"> Users who Reacted: </h2>
-            <div>
-                <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
-                <button className="btn expand margin one" onClick={changeLike} style={style1}> <img src={liked} name="like" className="expand"/> </button> 
-                <button className="btn expand margin one" onClick={changeLove} style={style2}> <img src={loved} name="love" className="expand"/> </button> 
-                <button className="btn expand margin one" onClick={changeLaugh} style={style3}> <img src={laughed} name="laugh" className="expand"/> </button> 
-            </div>
-            <div>
-                <input type="text" value={searchContent} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
-                <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
-            </div>
-        </div>    
+            <Post 
+                    key = {post._id}
+                    name = {username}
+                    _id = {post._id}
+                    author = {post.author}
+                    title = {post.title}
+                    content = {post.content}
+                    category = {post.category}
+                    like = {post.like}
+                    love = {post.love}
+                    laugh = {post.laugh}
+                    comment_count = {post.comments.length}
+                    change = {changepost}
+                    show_comments = {true}
+                    imageUrl = {post.imageUrl}
+            />
+            <div className="center-text">
+                <h2 className="margin"> Users who Reacted: </h2>
+                <div>
+                    <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
+                    <button className="btn expand margin one" onClick={changeLike} style={style1}> <img src={liked} name="like" className="expand"/> </button> 
+                    <button className="btn expand margin one" onClick={changeLove} style={style2}> <img src={loved} name="love" className="expand"/> </button> 
+                    <button className="btn expand margin one" onClick={changeLaugh} style={style3}> <img src={laughed} name="laugh" className="expand"/> </button> 
+                </div>
+                <div>
+                    <input type="text" value={searchContent} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
+                    <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                </div>
+            </div>    
+        </div>
+        <div className="margin center-text">
+            <p className="margin"> {message} </p>
         </div>
         <div className="margin">
             {reactions.map(renderUsers)}    

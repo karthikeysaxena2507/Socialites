@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import Heading from "./Heading";
 import search from "./images/search.png";
 import Navbar from "./Navbar";
+import Fuse from "fuse.js";
 
 const Users = () => {
 
@@ -37,11 +38,20 @@ const Users = () => {
             window.location = `/profile/${e.target.innerText}/${username}`;
         }
 
-        return (<div className="container user" key={index}>
+        if(props.username !== undefined) {
+            return (<div className="container user" key={index}>
             <li onClick={SeeProfile} className="profile">
                 {props.username} 
             </li>
         </div>);
+        } 
+        else {
+            return (<div className="container user" key={index}>
+            <li onClick={SeeProfile} className="profile">
+                {props.item.username} 
+            </li>
+        </div>);
+        }
     }
 
     const change = (event) => {
@@ -50,11 +60,20 @@ const Users = () => {
 
     const searchIt = (event) => {
         event.preventDefault();
-        if(searchContent === "") setMessage("Showing All Users");
-        else setMessage(`Showing Search results for: ${searchContent}` );
-        setUsers(allUsers.filter(function(user) {
-            return (user.username.indexOf(searchContent) !== -1);
-        }));
+        if(searchContent === "") {
+            setMessage("Showing All Users");
+            setUsers(allUsers);
+        }
+        else {
+            setMessage(`Showing Search results for: ${searchContent}` )
+            const fuse = new Fuse(allUsers, {
+                keys: ["username"],
+                includeScore: true,
+                includeMatches: true
+            });
+            const result = fuse.search(searchContent);
+            setUsers(result.reverse());
+        }
     }
 
     return <div>

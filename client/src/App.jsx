@@ -10,7 +10,7 @@ import MyPosts from "./components/MyPosts";
 import Edit from "./components/Edit";
 import Profile from "./components/Profile";
 import Reactions from "./components/Reactions";
-import Result from "./components/Result";
+import SearchResult from "./components/SearchResult";
 import CompletePost from "./components/CompletePost";
 import CompleteComment from "./components/completeComment";
 import Verify from "./components/Verify";
@@ -41,7 +41,7 @@ function App() {
     <Route path="/forgot" component={ForgotPassword} />
     <Route path="/reset/:username" component={ResetPassword} />
     <Route path="/comment/:username/:commentId/:id" component={CompleteComment} />
-    <Route path="/result/:username/:searchContent/:message/:type" component={Result} />
+    <Route path="/result/:username/:searchContent/:message/:type" component={SearchResult} />
     <Route path="/register" component={Register} />
     <Route path="/login" component={Login} />
     </Router>
