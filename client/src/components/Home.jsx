@@ -9,7 +9,7 @@ const Home = () => {
     var [visits, setVisits] = useState(0);
     useEffect(() => {
         countapi.visits().then((result) => {
-            setVisits(result.value - 4000);
+            setVisits(result.value);
         });  
     },[]);
 
