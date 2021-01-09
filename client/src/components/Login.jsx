@@ -32,7 +32,7 @@ const Login = (props) => {
                 localStorage.setItem("email", response.data.user.email);
                 localStorage.setItem("token", response.data.token);
                 if(response.data.user.verified) {
-                    history.push(`/allposts`);
+                    window.location = `/allposts`;
                 }
                 else {
                     history.push(`/verify/${userDetails.username}`);  
@@ -91,7 +91,7 @@ const Login = (props) => {
             <div className="margin">
                 <h3> OR </h3>
             </div>
-            <div className="margin"> <a className="btn btn-lg expand" to="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
+            <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
         </form>
         <div className="space"></div>
         <Footer />
