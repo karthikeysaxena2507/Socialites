@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import Heading from "./Heading";
 import { Link,useHistory } from "react-router-dom";
 
-const Login = (props) => {
+const Login = () => {
 
     let history = useHistory();
 
@@ -27,9 +27,8 @@ const Login = (props) => {
         const drop = async() => {
             try {
                 const response = await axios.post("/users/", userDetails);
-                localStorage.setItem("username", response.data.user.username);
-                // localStorage.setItem("token", response.data.token);
-                if(response.data.user.verified) {
+                localStorage.setItem("username", response.data.username);
+                if(response.data.verified) {
                     history.push(`/allposts`);
                 }
                 else {

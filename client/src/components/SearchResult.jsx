@@ -7,6 +7,7 @@ import Post from "./Post";
 import Footer from "./Footer";
 import Heading from "./Heading";
 import Fuse from "fuse.js";
+import InvalidUser from "./InvalidUser";
 
 const Result = () => {
 
@@ -98,14 +99,25 @@ const Result = () => {
             />
     }
 
-    return (<div>
-        <Navbar page = "result"/>
-        <Heading />
-        <div className="center-text"> <h2 className="margin"> Search Results </h2> </div>
-        {foundPosts.reverse().map(createPost)}
-        <div className="space"></div>
-        <Footer />
-</div>);
+    const Check = () => {
+        if(username === null) {
+            return (
+                <InvalidUser />
+            )
+        }
+        else {
+            return (<div>
+                <Navbar page = "result"/>
+                <Heading />
+                <div className="center-text"> <h2 className="margin"> Search Results </h2> </div>
+                {foundPosts.reverse().map(createPost)}
+                <div className="space"></div>
+                <Footer />
+        </div>);
+        }
+    }
+
+    return <Check />;
 }
 
 export default Result;

@@ -8,6 +8,7 @@ import Footer from "./Footer";
 import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
 import SearchBar from "./SearchBar";
+import InvalidUser from "./InvalidUser";
 
 const Posts = () => {
 
@@ -60,17 +61,27 @@ const Posts = () => {
         />
     }
 
-    return (<div>
-        <Navbar page = "home"/>
-        <Heading />
-        <div className="center-text"> <h3 className="margin"> All Posts </h3> </div>
-        <CategoryMenu category_type = "Select Category" message = "all" />
-        <SearchBar message = "all" type = "none" />
-        {posts.map(createPost)}
-        <div className="space"></div>
-        <Footer />
-</div>);
+    const Check = () => {
+        if(username === null) {
+            return (
+                <InvalidUser />
+            )
+        }
+        else {
+            return (<div>
+                <Navbar page = "home"/>
+                <Heading />
+                <div className="center-text"> <h3 className="margin"> All Posts </h3> </div>
+                <CategoryMenu category_type = "Select Category" message = "all" />
+                <SearchBar message = "all" type = "none" />
+                {posts.map(createPost)}
+                <div className="space"></div>
+                <Footer />
+        </div>);
+        }
+    }
+
+    return <Check />;
 }
 
 export default Posts;
-

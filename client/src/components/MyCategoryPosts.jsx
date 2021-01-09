@@ -11,6 +11,7 @@ import edit from "./images/edit.png";
 import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
 import SearchBar from "./SearchBar";
+import InvalidUser from "./InvalidUser";
 
 const MyCategoryPosts = () => {
 
@@ -90,16 +91,28 @@ const MyCategoryPosts = () => {
     </div>);
     }
 
-    return (<div>
-    <Navbar page = "myposts"/>
-    <Heading />
-    <div className="center-text"> <h3 className="margin"> My Posts </h3> </div>
-    <CategoryMenu category_type = {type} message = "my" />
-    <SearchBar type = {type} message = "personal"/>
-    {posts.map(MyPost)}
-    <div className="space"></div>
-    <Footer />
-    </div>);
+    const Check = () => {
+        if(username === null) {
+            return (
+                <InvalidUser />
+            )
+        }
+        else {
+            return (<div>
+                <Navbar page = "myposts"/>
+                <Heading />
+                <div className="center-text"> <h3 className="margin"> My Posts </h3> </div>
+                <CategoryMenu category_type = {type} message = "my" />
+                <SearchBar type = {type} message = "personal"/>
+                {posts.map(MyPost)}
+                <div className="space"></div>
+                <Footer />
+                </div>
+            );
+        }
+    }
+
+    return <Check />;
 }
 
 export default MyCategoryPosts;

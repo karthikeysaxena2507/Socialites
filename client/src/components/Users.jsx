@@ -7,9 +7,11 @@ import Heading from "./Heading";
 import search from "./images/search.png";
 import Navbar from "./Navbar";
 import Fuse from "fuse.js";
+import InvalidUser from "./InvalidUser";
 
 const Users = () => {
 
+    var username = localStorage.getItem("username");
     var [allUsers, setAllUsers] = useState([]);
     var [users, setUsers] = useState([]);
     var [searchContent,setsearchContent] = useState("");
@@ -28,15 +30,6 @@ const Users = () => {
             }
         }
         fetch();
-        // axios.get("/users/", {
-        //     headers: {
-        //         "access-token": localStorage.getItem("token")
-        // }}).then((res) => {
-        //         console.log(res);
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
     },[]);
 
     const createUser = (props, index) => {
@@ -79,23 +72,34 @@ const Users = () => {
         }
     }
 
-    return <div>
-    <Navbar page = "allusers"/>
-    <Heading />
-    <div className="center-text"> <h3 className="margin"> All Users </h3> </div>
-    <div className="container margin center-text">
-        <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
-        <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
-    </div>
-    <div className="margin center-text">
-        <p className="margin"> {message} </p>
-    </div>
-    <div className="margin">
-        {users.map(createUser)}
-    </div>
-    <div className="space"></div>
-    <Footer />
-</div>
+    const Check = () => {
+        if(username === null) {
+            return (
+                <InvalidUser />
+            )
+        }
+        else {
+            return <div>
+            <Navbar page = "allusers"/>
+            <Heading />
+            <div className="center-text"> <h3 className="margin"> All Users </h3> </div>
+            <div className="container margin center-text">
+                <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
+                <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+            </div>
+            <div className="margin center-text">
+                <p className="margin"> {message} </p>
+            </div>
+            <div className="margin">
+                {users.map(createUser)}
+            </div>
+            <div className="space"></div>
+            <Footer />
+        </div>
+        }
+    }
+
+    return <Check />;
 }
 
 export default Users;

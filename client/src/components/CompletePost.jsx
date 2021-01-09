@@ -11,6 +11,7 @@ import laugh from "./images/laugh.png";
 import trash from "./images/trash.png";
 import Footer from "./Footer";
 import Heading from "./Heading";
+import InvalidUser from "./InvalidUser";
 
 const CompletePost = () => {
     
@@ -123,32 +124,43 @@ const CompletePost = () => {
     </div>
     }
 
-    return (<div className="container">
-    <Navbar page = "complete" />
-    <Heading />
-    <div>
-        <Post 
-                key = {id}
-                name = {username}
-                _id = {id}
-                author = {post.author}
-                title = {post.title}
-                content = {post.content}
-                category = {post.category}
-                like = {post.like}
-                love = {post.love}
-                laugh = {post.laugh}
-                comment_count = {post.comments.length}
-                change = {changepost}
-                show_comments = {false}
-                imageUrl = {post.imageUrl}
-        />
-        <h3 className="margin center-text"> Comments </h3>
-        {post.comments.map(createComment)}
-    </div>
-    <div className="space"></div>
-    <Footer />
-    </div>);
+    const Check = () => {
+        if(username === null) {
+            return (
+                <InvalidUser />
+            )
+        }
+        else {
+            return (<div className="container">
+            <Navbar page = "complete" />
+            <Heading />
+            <div>
+                <Post 
+                        key = {id}
+                        name = {username}
+                        _id = {id}
+                        author = {post.author}
+                        title = {post.title}
+                        content = {post.content}
+                        category = {post.category}
+                        like = {post.like}
+                        love = {post.love}
+                        laugh = {post.laugh}
+                        comment_count = {post.comments.length}
+                        change = {changepost}
+                        show_comments = {false}
+                        imageUrl = {post.imageUrl}
+                />
+                <h3 className="margin center-text"> Comments </h3>
+                {post.comments.map(createComment)}
+            </div>
+            <div className="space"></div>
+            <Footer />
+            </div>);
+        }
+    }
+
+    return <Check />;
 }
 
 export default CompletePost;

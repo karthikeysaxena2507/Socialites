@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import { useParams, useHistory } from "react-router-dom";
 import Footer from "./Footer";
 import Heading from "./Heading";
+import InvalidUser from "./InvalidUser";
 
 const Edit = () => {
 
@@ -88,92 +89,103 @@ const Edit = () => {
     var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
-    return (<div>
-        <Navbar 
-            name = {username}
-            page = "edit"
-        />
-        <Heading />
-        <div className="center-text"> 
-            <h1 className="margin"> Edit Your Post Here </h1> 
-        </div> 
-        <div className="dropdown container center-text">
-            <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {category}
-            </button>
-            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
-            </div>
-        </div>
-        <form onSubmit={handleSubmitFile}>
-            <div className="center-text margin">
-                <textarea
-                    name="title"
-                    value={title}
-                    placeholder="Title of your Post"
-                    rows="1"
-                    cols="50"
-                    onChange={changeTitle}
-                    required
+    const Check = () => {
+        if(username === null) {
+            return (
+                <InvalidUser />
+            )
+        }
+        else {
+            return (<div>
+                <Navbar 
+                    name = {username}
+                    page = "edit"
                 />
-            </div>
-            <div className="center-text margin">
-                <textarea
-                    name="content"
-                    value={content}
-                    placeholder="Content of your Post"
-                    rows="9"
-                    cols="50"
-                    onChange={changeContent}
-                    required
-                />
-            </div>
-            <div className="margin">
-            <div className="center-text">
-                <label for="file"> 
-                    <span className="btn expand"> Select Image </span>
-                </label>
-                <span className="center-text margin">
-                    <button className="btn expand" onClick={removeImage}> Remove Image </button> 
-                </span>
-            </div>
-                <input
-                    type="file" 
-                    name="image" 
-                    style={{visibility: "hidden"}}
-                    id="file"
-                    onChange={handleFileInputChange}
-                />
-            </div>
-            <div className="margin center-text"> Current Image </div>
-            <div className="margin center-text" style={styling}>
-                Image preview will be shown here
-            </div>
-            <div className="center-text">
-            <img 
-                src={preview} 
-                alt="invalid image" 
-                className="preview margin"
-                style={previewStyling} 
-                />
-            </div>
-            <div className="center-text margin">
-                <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
-            </div>
-        </form>
-    <div className="space"></div>
-    <Footer />
-</div>);
+                <Heading />
+                <div className="center-text"> 
+                    <h1 className="margin"> Edit Your Post Here </h1> 
+                </div> 
+                <div className="dropdown container center-text">
+                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {category}
+                    </button>
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
+                        <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
+                    </div>
+                </div>
+                <form onSubmit={handleSubmitFile}>
+                    <div className="center-text margin">
+                        <textarea
+                            name="title"
+                            value={title}
+                            placeholder="Title of your Post"
+                            rows="1"
+                            cols="50"
+                            onChange={changeTitle}
+                            required
+                        />
+                    </div>
+                    <div className="center-text margin">
+                        <textarea
+                            name="content"
+                            value={content}
+                            placeholder="Content of your Post"
+                            rows="9"
+                            cols="50"
+                            onChange={changeContent}
+                            required
+                        />
+                    </div>
+                    <div className="margin">
+                    <div className="center-text">
+                        <label for="file"> 
+                            <span className="btn expand"> Select Image </span>
+                        </label>
+                        <span className="center-text margin">
+                            <button className="btn expand" onClick={removeImage}> Remove Image </button> 
+                        </span>
+                    </div>
+                        <input
+                            type="file" 
+                            name="image" 
+                            style={{visibility: "hidden"}}
+                            id="file"
+                            onChange={handleFileInputChange}
+                        />
+                    </div>
+                    <div className="margin center-text"> Current Image </div>
+                    <div className="margin center-text" style={styling}>
+                        Image preview will be shown here
+                    </div>
+                    <div className="center-text">
+                    <img 
+                        src={preview} 
+                        alt="invalid image" 
+                        className="preview margin"
+                        style={previewStyling} 
+                        />
+                    </div>
+                    <div className="center-text margin">
+                        <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
+                    </div>
+                </form>
+            <div className="space"></div>
+            <Footer />
+        </div>);
+        }
+    }
+
+    return <Check />;
 }
 
 export default Edit;
