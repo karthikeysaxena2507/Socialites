@@ -28,10 +28,10 @@ const Login = (props) => {
             try {
                 const response = await axios.post("/users/", userDetails);
                 // console.log(response.data.user.email);
-                localStorage.setItem("username", response.data.username);
-                localStorage.setItem("email", response.data.email);
-                // localStorage.setItem("token", response.data.token);
-                if(response.data.verified) {
+                localStorage.setItem("username", response.data.user.username);
+                localStorage.setItem("email", response.data.user.email);
+                localStorage.setItem("token", response.data.token);
+                if(response.data.user.verified) {
                     history.push(`/allposts`);
                 }
                 else {

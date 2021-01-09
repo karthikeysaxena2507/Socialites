@@ -115,7 +115,6 @@ router.post("/", async(req, res, next) => {
                         expiresIn: 600,
                     });
                     res.json({user: foundUser, token});
-                    res.json(foundUser)
                 });
             }
             catch(error) {
