@@ -172,7 +172,6 @@ router.post("/add", async(req, res, next) => {
             password: req.body.password,
             verified: false
         });
-        // res.json(newUser);
         if(foundUser === null) {
             const user = await User.findOne({email: req.body.email});
             if(user === null) {
