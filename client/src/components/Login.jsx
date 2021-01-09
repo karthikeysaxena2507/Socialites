@@ -27,10 +27,8 @@ const Login = (props) => {
         const drop = async() => {
             try {
                 const response = await axios.post("/users/", userDetails);
-                // console.log(response.data.user.email);
                 localStorage.setItem("username", response.data.user.username);
-                localStorage.setItem("email", response.data.user.email);
-                localStorage.setItem("token", response.data.token);
+                // localStorage.setItem("token", response.data.token);
                 if(response.data.user.verified) {
                     history.push(`/allposts`);
                 }
