@@ -91,7 +91,7 @@ const Login = (props) => {
             <div className="margin">
                 <h3> OR </h3>
             </div>
-            {/* <div className="margin"> <Link className="btn btn-lg expand" to="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </Link> </div> */}
+            <div className="margin"> <a className="btn btn-lg expand" to="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
         </form>
         <div className="space"></div>
         <Footer />

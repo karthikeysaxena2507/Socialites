@@ -78,7 +78,7 @@ app.get("/auth/google", passport.authenticate("google", {
 app.get("/socialites-karthikey/auth/google/social", passport.authenticate("google", {
     failureRedirect: "/login"
     }), (req, res) => {
-        res.redirect("/allposts/"+req.user.username);
+        res.redirect("/allposts");
 });
 
 app.post("/logout", (req, res) => {
