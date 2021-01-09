@@ -172,11 +172,12 @@ router.post("/add", async(req, res, next) => {
             password: req.body.password,
             verified: false
         });
+        // res.json(newUser);
         if(foundUser === null) {
             const user = await User.findOne({email: req.body.email});
             if(user === null) {
                 User.register({username: req.body.username, email: req.body.email, verified: newUser.verified},
-                    req.body.password, async(err,user) => {
+                    req.body.password, async(err,foundUser) => {
                         try {
                             passport.authenticate("local")(req, res, () => {
                                 var link = "https://socialites-karthikey.herokuapp.com/verified/" + req.body.username;
@@ -195,7 +196,7 @@ router.post("/add", async(req, res, next) => {
                                         console.log(error);
                                     });
                                 });
-                            res.json(user);
+                            res.json(foundUser);
                         }
                         catch(error) {
                             res.json(error);

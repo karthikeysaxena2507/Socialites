@@ -8,6 +8,7 @@ const session = require("express-session");
 const User = require("./models/user.model");
 var LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
@@ -79,6 +80,12 @@ app.get("/socialites-karthikey/auth/google/social", passport.authenticate("googl
     failureRedirect: "/login"
     }), (req, res) => {
         res.redirect("/allposts");
+        localStorage.setItem("username",req.user.username);
+        const id = req.user.userId;
+        const token = jwt.sign({id}, process.env.JWT_SECRET, {
+            expiresIn: 600,
+        });
+        localStorage.setItem("token", token);
 });
 
 app.post("/logout", (req, res) => {
