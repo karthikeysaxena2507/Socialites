@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Navbar from "./Navbar";
 import Post from "./Post";
 import trash from "./images/trash.png";
@@ -14,7 +14,8 @@ import SearchBar from "./SearchBar";
 
 const MyPosts = () => {
 
-    let { username } = useParams();
+    var history = useHistory();
+    var username = localStorage.getItem("username");
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -56,11 +57,11 @@ const MyPosts = () => {
                 }
             }
             del();
-            window.location = `/myposts/${username}`;
+            history.push(`/myposts`);
         }
 
         const update = () => {
-            window.location = `/edit/${username}/${props._id}`;
+            history.push(`/edit/${props._id}`);
         }
 
         return (<div className="container" key ={index}>
@@ -87,27 +88,12 @@ const MyPosts = () => {
     }
 
     return (<div>
-        <Navbar 
-            name = {username}
-            page = "myposts"
-        />
+        <Navbar page = "myposts"/>
         <Heading />
-        <div className="center-text">
-            <h3 className="margin"> My Posts </h3>
-        </div>
-        <CategoryMenu
-            name = {username}
-            category_type = "Select Category"
-            message = "my"
-        />
-        <SearchBar 
-            name = {username}
-            message = "personal"
-            type = "none"
-        />
-        <div>
-            {posts.map(MyPost)}
-        </div>
+        <div className="center-text"><h3 className="margin"> My Posts </h3> </div>
+        <CategoryMenu category_type = "Select Category" message = "my"/>
+        <SearchBar message = "personal" type = "none" />
+        {posts.map(MyPost)}
         <div className="space"></div>
         <Footer />
 </div>);

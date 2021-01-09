@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import Post from "./Post";
 import Navbar from "./Navbar";
@@ -13,8 +13,10 @@ import Footer from "./Footer";
 import Heading from "./Heading";
 
 const CompletePost = () => {
-    let { username,id } = useParams();
-
+    
+    var history = useHistory();
+    var username = localStorage.getItem("username");
+    var { id } = useParams();
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
 
     useEffect(() => {
@@ -72,11 +74,7 @@ const CompletePost = () => {
         }
 
         const SeeAll = () => {
-            window.location = `/comment/${username}/${props._id}/${id}`;
-        }
-
-        const SeeProfile = (e) => {
-            window.location = `/profile/${e.target.innerText}/${props.name}`;
+            history.push(`/comment/${props._id}/${id}`);
         }
 
         var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
@@ -84,7 +82,7 @@ const CompletePost = () => {
         return <div className="container margin" key={index}>
         <div className="comment-name">
             <div> 
-                <span className="name author" onClick={SeeProfile}> {props.name} </span>
+                <span className="name author"> {props.name} </span>
             </div>
             <div>
                 <span className="move-right"> 
@@ -126,10 +124,7 @@ const CompletePost = () => {
     }
 
     return (<div className="container">
-    <Navbar 
-            name = {username}
-            page = "complete"
-        />
+    <Navbar page = "complete" />
     <Heading />
     <div>
         <Post 

@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import search from "./images/search.png";
+import { useHistory } from "react-router-dom";
 
 const SearchBar = (props) => {
 
+    var history = useHistory();
     var [searchContent,setsearchContent] = useState("");
 
     const change_search_content = (event) => {
@@ -11,7 +13,7 @@ const SearchBar = (props) => {
     }
 
     const searchIt = () => {
-        window.location = `/result/${props.name}/${searchContent}/${props.message}/${props.type}`;
+        history.push(`/result/${searchContent}/${props.message}/${props.type}`);
         setsearchContent("");
     }
 

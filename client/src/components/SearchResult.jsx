@@ -10,7 +10,8 @@ import Fuse from "fuse.js";
 
 const Result = () => {
 
-    let { username,searchContent,message,type } = useParams();
+    var username = localStorage.getItem("username");
+    var { searchContent,message,type } = useParams();
     var [foundPosts,setfoundPosts] = useState([]);
 
     useEffect(() => {
@@ -98,14 +99,9 @@ const Result = () => {
     }
 
     return (<div>
-        <Navbar 
-            name = {username}
-            page = "result"
-        />
+        <Navbar page = "result"/>
         <Heading />
-        <div className="center-text">
-            <h2 className="margin"> Search Results </h2>
-        </div>
+        <div className="center-text"> <h2 className="margin"> Search Results </h2> </div>
         {foundPosts.reverse().map(createPost)}
         <div className="space"></div>
         <Footer />

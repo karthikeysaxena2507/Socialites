@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
 import Heading from "./Heading";
 
 const ResetPassword = () => {
 
-    let { username } = useParams();
-
+    var { username } = useParams();
+    var history = useHistory();
     var [password, setPassword] = useState({name: username, new: "", confirm:""});
-
     var [message, setMessage] = useState(" ");
 
     const change = (event) => {
@@ -27,7 +26,7 @@ const ResetPassword = () => {
                 try {
                     const response = await axios.post("/users/reset", password);
                     console.log(response.data);
-                    window.location = "/login";    
+                    history.push("/login");    
                 }
                 catch(error) {
                     console.log(error);

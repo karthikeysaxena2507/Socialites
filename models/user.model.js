@@ -3,10 +3,19 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const findOrCreate = require("mongoose-findorcreate");
 
 const userSchema = new mongoose.Schema({
-    username: String,
-    email: String,
+    username: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
     userId: String,
-    password: String,
     verified: Boolean,
     imageUrl: String
 });

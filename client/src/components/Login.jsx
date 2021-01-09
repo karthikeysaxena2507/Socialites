@@ -3,17 +3,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import Footer from "./Footer";
 import Heading from "./Heading";
+import { Link,useHistory } from "react-router-dom";
 
-const Login = () => {
+const Login = (props) => {
 
-    var [user, setUser] = useState({username:"", password:""});
-    // var [user, setUser] = useState({username:"", password:"", rememberMe:false});
+    let history = useHistory();
+
+    var [userDetails, setUserDetails] = useState({username:"", password:""});
     var [message, setMessage] = useState(" ");
 
     const change = (event) => {
         var {name, value} = event.target;
-
-        setUser((prevUser) => {
+        setUserDetails((prevUser) => {
         return {
           ...prevUser,
           [name]: value
@@ -25,12 +26,16 @@ const Login = () => {
         event.preventDefault();
         const drop = async() => {
             try {
-                const response = await axios.post("/users/", user);
-                if(response.data.verified) {
-                    window.location = `/allposts/${user.username}`;  
+                const response = await axios.post("/users/", userDetails);
+                console.log(response.data.user.email);
+                localStorage.setItem("username", response.data.user.username);
+                localStorage.setItem("email", response.data.user.email);
+                localStorage.setItem("token", response.data.token);
+                if(response.data.user.verified) {
+                    history.push(`/allposts`);
                 }
                 else {
-                    window.location = `/verify/${user.username}`;  
+                    history.push(`/verify/${userDetails.username}`);  
                 }
             }
             catch(error) {
@@ -41,10 +46,6 @@ const Login = () => {
         drop();
     }
 
-    // const changeRememberMe = () => {
-    //     setUser({username:user.username,password:user.password,rememberMe:!user.rememberMe});
-    // } 
-
     return (<div className="center-text">
         <Heading />
         <h2> Log In to Your Account </h2>
@@ -53,7 +54,7 @@ const Login = () => {
                 <input 
                     type="text" 
                     name="username" 
-                    value={user.username}
+                    value={userDetails.username}
                     className="margin width" 
                     onChange={change}
                     placeholder="Username" 
@@ -65,7 +66,7 @@ const Login = () => {
                 <input 
                     type="password" 
                     name="password" 
-                    value={user.password}
+                    value={userDetails.password}
                     onChange={change}
                     className="margin width" 
                     placeholder="Password" 
@@ -76,22 +77,21 @@ const Login = () => {
                 <p className="margin"> {message} </p>
             </div>
             <div className="margin">
-                {/* <input type="checkbox" className="margin" onClick={changeRememberMe}/> <span className="one"> Remember Me </span> */}
             </div>
             <div className="margin">
                 <input type="submit" className="btn btn-lg expand margin" value="Log In"/> 
             </div>
             <div className="margin">
-                New User ? <a href="/register"> Create a new account </a>
+                New User ? 
+                <Link to="/register"> Create a New account </Link>
             </div>
             <div className="margin">
-                <a href="/forgot"> Forgot Password </a>
+                <Link to="/forgot"> Forgot Password </Link>
             </div>
             <div className="margin">
                 <h3> OR </h3>
             </div>
-            <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
-            {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/facebook"><img src="https://img.icons8.com/fluent/32/000000/facebook-new.png"/> SignIn Using Facebook </a> </div> */}
+            <div className="margin"> <Link className="btn btn-lg expand" to="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </Link> </div>
         </form>
         <div className="space"></div>
         <Footer />

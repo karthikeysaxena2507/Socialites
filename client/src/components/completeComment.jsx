@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { useParams } from "react-router-dom";
+import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
 import liked from "./images/like.png";
 import loved from "./images/love.png";
@@ -12,10 +12,11 @@ import trash from "./images/trash.png";
 import Heading from "./Heading";
 
 const CompleteComment = () => {
-    let { username,commentId,id } = useParams();
 
+    var history = useHistory();
+    var username = localStorage.getItem("username");
+    var { commentId,id } = useParams();
     var [comment, setComment] = useState({});
-
     var [like,setlike] = useState(false);
     var [love,setlove] = useState(false);
     var [laugh,setlaugh] = useState(false);
@@ -86,7 +87,7 @@ const CompleteComment = () => {
             try {
                 const response = await axios.post(`/posts/remove/${id}`, comment);
                 console.log(response.data);
-                window.location = `/comment/${username}/${comment._id}/${id}`;        
+                history.push(`/comment/${comment._id}/${id}`);        
             }
             catch (error) {
                 console.log(error);
@@ -99,29 +100,19 @@ const CompleteComment = () => {
     var styling = (comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"};
 
     const renderUsers = (props, index) => {
-        const SeeProfile = (e) => {
-            window.location = `/profile/${e.target.innerText}/${username}`;
-        }
         return (<div className="container user" key={index}>
-            <li onClick={SeeProfile} className="profile"> {props.name} </li>
+            <li className="profile"> {props.name} </li>
         </div>);
     }
 
-    const SeeProfile = (e) => {
-        window.location = `/profile/${e.target.innerText}/${username}`;
-    }
-
     return (<div>
-    <Navbar 
-        name = {username}
-        page = "comment"
-    />
+    <Navbar page = "comment"/>
     <Heading />
     <div className="container">
         <div className="container margin">
         <div className="comment-name">
             <div> 
-                <span className="name author" onClick={SeeProfile}> {comment.name} </span>
+                <span className="name author"> {comment.name} </span>
             </div>
             <div>
                 <span className="move-right"> 

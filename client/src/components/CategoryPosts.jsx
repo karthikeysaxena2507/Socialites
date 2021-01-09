@@ -12,7 +12,8 @@ import SearchBar from "./SearchBar";
 
 const CategoryPosts = () => {
 
-    let { username,type } = useParams();
+    var username = localStorage.getItem("username");
+    var { type } = useParams();
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -64,24 +65,11 @@ const CategoryPosts = () => {
     }
     
     return <div>
-        <Navbar 
-            name = {username}
-            page = "home"
-        />
+        <Navbar page = "home"/>
         <Heading />
-        <div className="container center-text margin">
-            <h3 className="margin"> All Posts </h3>
-        </div>
-        <CategoryMenu
-            name = {username}
-            category_type = {type}
-            message = "all"
-        />
-        <SearchBar
-            name = {username}
-            type = {type}
-            message = "all"
-        />
+        <div className="container center-text margin"> <h3 className="margin"> All Posts </h3> </div>
+        <CategoryMenu category_type = {type} message = "all" />
+        <SearchBar type = {type} message = "all" />
         {posts.map(createPost)}
         <div className="space"></div>
         <Footer />

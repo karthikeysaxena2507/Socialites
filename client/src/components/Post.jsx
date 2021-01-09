@@ -7,9 +7,11 @@ import love from "./images/love.png";
 import laugh from "./images/laugh.png";
 import all from "./images/all.png";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const Post = (props) => {
 
+    var history = useHistory();
     var [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
 
     const change = (event) => {
@@ -29,7 +31,7 @@ const Post = (props) => {
                 try {
                     const response = await axios.post(`/posts/add/${props._id}`, comment);
                     console.log(response.data);
-                    window.location = `/complete/${props.name}/${props._id}`;
+                    history.push(`/complete/${props._id}`);
                 }
                 catch(error) {
                     console.log(error);
@@ -44,15 +46,11 @@ const Post = (props) => {
     }        
 
     const SeeAll = () => {
-        window.location = `/post/${props.name}/${props._id}`;
+        history.push(`/post/${props._id}`);
     }
 
     const SeeComplete = () => {
-        window.location = `/complete/${props.name}/${props._id}`;
-    }
-
-    const SeeProfile = (e) => {
-        window.location = `/profile/${e.target.innerText}/${props.name}`;
+        history.push(`/complete/${props._id}`);
     }
 
     var visibility = (props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"};
@@ -63,7 +61,7 @@ const Post = (props) => {
         <div className="post-title"> 
             <h2> {props.title} </h2>
             <span> by </span>
-            <span className="author expand" onClick={SeeProfile}> {props.author} </span>
+            <span className="author expand"> {props.author} </span>
             <span className="move-right"> <i> #{props.category} </i> </span>
         </div>
         <div className="post-content">

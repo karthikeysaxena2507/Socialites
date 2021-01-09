@@ -149,8 +149,9 @@ textarea {
   background-color: rgb(211, 115, 36);
 }
 
-.navbar a {
+.navbar span {
   color: white !important;
+  display: inline-block;
 }
 
 .navbar h3:hover {

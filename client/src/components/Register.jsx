@@ -1,18 +1,20 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import Footer from "./Footer";
 import Heading from "./Heading";
 
 const Register = () => {
 
-    var [user, setUser] = useState({username:"", email:"", password:""});
+    var history = useHistory();
+    var [userDetails, setuserDetails] = useState({username:"", email:"", password:""});
     var [message, setMessage] = useState(" ");
 
     const change = (event) => {
         var {name, value} = event.target;
 
-        setUser((prevUser) => {
+        setuserDetails((prevUser) => {
         return {
           ...prevUser,
           [name]: value
@@ -24,7 +26,7 @@ const Register = () => {
         event.preventDefault();
         const drop = async() => {
             try {
-                const response = await axios.post("/users/add", user);
+                const response = await axios.post("/users/add", userDetails);
                 if(response.data === "Username Already Exists") {
                     setMessage(response.data);
                 }
@@ -32,7 +34,7 @@ const Register = () => {
                     setMessage(response.data);
                 }
                 else {
-                    window.location = `/verify/${user.username}/${user.email}`;
+                    history.push(`/verify/${userDetails.email}`);
                 }
             }
             catch(error) {
@@ -50,7 +52,7 @@ const Register = () => {
                 <input 
                     type="text" 
                     name="username" 
-                    value={user.username}
+                    value={userDetails.username}
                     className="margin width" 
                     onChange={change}
                     placeholder="Username" 
@@ -62,7 +64,7 @@ const Register = () => {
                 <input 
                     type="email" 
                     name="email" 
-                    value={user.email}
+                    value={userDetails.email}
                     className="margin width" 
                     onChange={change}
                     placeholder="email" 
@@ -74,7 +76,7 @@ const Register = () => {
                 <input 
                     type="password" 
                     name="password" 
-                    value={user.password}
+                    value={userDetails.password}
                     onChange={change}
                     className="margin width" 
                     placeholder="Password" 
@@ -88,16 +90,16 @@ const Register = () => {
                 <input type="submit" className="btn btn-lg expand margin" value="Register"/> 
             </div>
             <div className="margin">
-                 Already have an account ? <a href="/login"> Login Here </a>
+                 Already have an account ? 
+                 <Link to="/login"> Login here </Link>
             </div>
         </form>
         <div className="margin">
             <h3> OR </h3>
         </div>
         <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
-        {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/facebook"><img src="https://img.icons8.com/fluent/32/000000/facebook-new.png"/> SignUp Using Facebook </a> </div> */}
-        <div className="space"></div>
-        <Footer />
+    <div className="space"></div>
+    <Footer />
 </div>);
 }
 

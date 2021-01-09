@@ -3,14 +3,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import Footer from "./Footer";
 import Heading from "./Heading";
 
 const Edit = () => {
 
-    let { username,id } = useParams();
-
+    var { id } = useParams();
+    var history = useHistory();
+    var username = localStorage.getItem("username");
     var [title, setTitle] = useState("");
     var [content, setContent] = useState("");
     var [category, setCategory] = useState("Select Category");
@@ -76,7 +77,7 @@ const Edit = () => {
         catch(error) {
             console.log(error);
         }
-        window.location = `/myposts/${username}`;
+        history.push(`/myposts`);
     }
 
     const removeImage = (e) => {

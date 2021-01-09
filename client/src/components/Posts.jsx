@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import Post from "./Post";
 import Footer from "./Footer";
@@ -12,7 +11,7 @@ import SearchBar from "./SearchBar";
 
 const Posts = () => {
 
-    let { username } = useParams();
+    var username = localStorage.getItem("username");
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -62,24 +61,11 @@ const Posts = () => {
     }
 
     return (<div>
-        <Navbar 
-            name = {username}
-            page = "home"
-        />
+        <Navbar page = "home"/>
         <Heading />
-        <div className="center-text">
-            <h3 className="margin"> All Posts </h3>
-        </div>
-        <CategoryMenu
-            name = {username}
-            category_type = "Select Category"
-            message = "all"
-        />
-        <SearchBar 
-            name = {username}
-            message = "all"
-            type = "none"
-        />
+        <div className="center-text"> <h3 className="margin"> All Posts </h3> </div>
+        <CategoryMenu category_type = "Select Category" message = "all" />
+        <SearchBar message = "all" type = "none" />
         {posts.map(createPost)}
         <div className="space"></div>
         <Footer />

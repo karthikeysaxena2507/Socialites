@@ -3,8 +3,34 @@ const router = require("express").Router();
 const passport = require("passport");
 let User = require("../models/user.model.js");
 const sgMail = require("@sendgrid/mail");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET;
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// MIDDLEWARE
+const verifyJWT = (req, res, next) => {
+    const token = req.headers["access-token"];
+    if(!token) {
+        res.json("Token need");
+    }
+    else {
+        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+            if(err) {
+                res.json("failed to authenticate");
+            }
+            else {
+                // res.json(token);
+                req.userId = decoded.id;
+                next();
+            }
+        })
+    }
+}
+
+router.get("/isUserAuth", verifyJWT, (req, res) => {
+    res.json("you are authenticated");
+})
 
 router.get("/", async(req, res, next) => {
     try {   
@@ -84,7 +110,11 @@ router.post("/", async(req, res, next) => {
             try {
                 const foundUser = await User.findOne({username: req.body.username});
                 passport.authenticate("local")(req, res, function() {
-                    res.json(foundUser);
+                    const id = foundUser._id;
+                    const token = jwt.sign({id}, JWT_SECRET, {
+                        expiresIn: 600,
+                    });
+                    res.json({user: foundUser, token});
                 });
             }
             catch(error) {

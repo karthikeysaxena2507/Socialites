@@ -1,18 +1,12 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Heading from "./Heading";
 
 const About = () => {
-
-    let { username } = useParams();
-
+    
     return (<div>
-        <Navbar 
-            name = {username}
-            page = "about"
-            />
+        <Navbar page = "about" />
         <Heading />
         <div className="container about">
             <div className="margin">

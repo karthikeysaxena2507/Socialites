@@ -1,20 +1,23 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 const CategoryMenu = (props) => {
 
+    let history = useHistory();
+
     const changeCategory = (event) => {
         if(event.target.innerText === "All" && props.message === "my") {
-            window.location = `/myposts/${props.name}`;
+            history.push(`/myposts`);
         }
         else if(event.target.innerText !== "All" && props.message === "my") {
-            window.location = `/mycategoryposts/${props.name}/${event.target.innerText}`;
+            history.push(`/mycategoryposts/${event.target.innerText}`);
         }
         else if(event.target.innerText === "All" && props.message === "all") {
-            window.location = `/allposts/${props.name}`;
+            history.push(`/allposts`);
         }
         else if(event.target.innerText !== "All" && props.message === "all") {
-            window.location = `/categoryposts/${props.name}/${event.target.innerText}`;
+            history.push(`/categoryposts/${event.target.innerText}`);
         }
     }
 
@@ -24,18 +27,18 @@ const CategoryMenu = (props) => {
             </button>
             <div
              className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a className="dropdown-item" href="#" onClick={changeCategory}> All </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> All </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Art </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Motivational </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Political </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Funny </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Music </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Food </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Fashion </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Travel </span>
+                <span className="dropdown-item" href="#" onClick={changeCategory}> Other </span>
             </div>
         </div>
 }

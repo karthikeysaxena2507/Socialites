@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import axios from "axios";
 import React, { useEffect,useState } from "react";
-import { useParams } from "react-router-dom";
 import Footer from "./Footer";
 import Heading from "./Heading";
 import search from "./images/search.png";
@@ -10,8 +9,6 @@ import Navbar from "./Navbar";
 import Fuse from "fuse.js";
 
 const Users = () => {
-
-    let { username } = useParams();
 
     var [allUsers, setAllUsers] = useState([]);
     var [users, setUsers] = useState([]);
@@ -22,6 +19,7 @@ const Users = () => {
         const fetch = async() => {
             try {
                 const response = await axios.get("/users/");
+                console.log(response);
                 setUsers(response.data);
                 setAllUsers(response.data);
             }
@@ -30,24 +28,29 @@ const Users = () => {
             }
         }
         fetch();
+        // axios.get("/users/", {
+        //     headers: {
+        //         "access-token": localStorage.getItem("token")
+        // }}).then((res) => {
+        //         console.log(res);
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // });
     },[]);
 
     const createUser = (props, index) => {
 
-        const SeeProfile = (e) => {
-            window.location = `/profile/${e.target.innerText}/${username}`;
-        }
-
         if(props.username !== undefined) {
             return (<div className="container user" key={index}>
-            <li onClick={SeeProfile} className="profile">
+            <li className="profile">
                 {props.username} 
             </li>
         </div>);
         } 
         else {
             return (<div className="container user" key={index}>
-            <li onClick={SeeProfile} className="profile">
+            <li className="profile">
                 {props.item.username} 
             </li>
         </div>);
@@ -77,14 +80,9 @@ const Users = () => {
     }
 
     return <div>
-    <Navbar 
-        name = {username}
-        page = "allusers"
-    />
+    <Navbar page = "allusers"/>
     <Heading />
-    <div className="center-text">
-        <h3 className="margin"> All Users </h3>
-    </div>
+    <div className="center-text"> <h3 className="margin"> All Users </h3> </div>
     <div className="container margin center-text">
         <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
         <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>

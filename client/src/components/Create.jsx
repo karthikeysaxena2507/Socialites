@@ -3,15 +3,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Heading from "./Heading";
 
 const Create = () => {
 
-    let { username } = useParams();
-
+    var username = localStorage.getItem("username");
+    var history = useHistory();
     var [title, setTitle] = useState("");
     var [content, setContent] = useState("");
     var [category, setCategory] = useState("Select Category");
@@ -57,7 +57,7 @@ const Create = () => {
                 }),
                 headers: {"Content-type": "application/json"}                
             });
-            window.location = `/allposts/${username}`
+            history.push(`/allposts`);
         }
         catch(error) {
             console.log(error);
@@ -72,10 +72,7 @@ const Create = () => {
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
     return (<div className="center-text">
-        <Navbar 
-            name = {username}
-            page = "create"
-        />
+        <Navbar page = "create"/>
         <Heading />
         <div> 
           <h1 className="margin"> Create Your Post Here </h1>

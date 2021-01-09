@@ -14,7 +14,7 @@ const Verified = () => {
             try {
                 const response = await axios.post("/users/verify/", user);
                 console.log(response.data);
-                window.location = "/allposts/" + username;
+                window.location = "/login";
             }
             catch(error) {
                 console.log(error);

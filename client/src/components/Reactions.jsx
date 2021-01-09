@@ -14,7 +14,8 @@ import Fuse from "fuse.js";
 
 const Reactions = () => {
 
-    let { username,id } = useParams();
+    var username = localStorage.getItem("username");
+    var { id } = useParams();
     var [like,setlike] = useState(false);
     var [love,setlove] = useState(false);
     var [laugh,setlaugh] = useState(false);
@@ -99,18 +100,15 @@ const Reactions = () => {
     }
 
     const renderUsers = (props, index) => {
-        const SeeProfile = (e) => {
-            window.location = `/profile/${e.target.innerText}/${username}`;
-        }
 
         if(props.name !== undefined) {
             return (<div className="container user" key={index}>
-            <li onClick={SeeProfile} className="profile"> {props.name} </li>
+            <li className="profile"> {props.name} </li>
         </div>);
         }
         else {
             return (<div className="container user" key={index}>
-            <li onClick={SeeProfile} className="profile"> {props.item.name} </li>
+            <li className="profile"> {props.item.name} </li>
         </div>);
         }
     }
@@ -152,10 +150,7 @@ const Reactions = () => {
     var style4 = (!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"} 
 
     return(<div>
-        <Navbar 
-            name={username}
-            page="reactions"
-        />
+        <Navbar page="reactions"/>
         <Heading />
         <div className="container">
             <Post 

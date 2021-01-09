@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { useParams } from "react-router-dom";
+import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
 import Post from "./Post";
 import trash from "./images/trash.png";
@@ -14,7 +14,9 @@ import SearchBar from "./SearchBar";
 
 const MyCategoryPosts = () => {
 
-    let { username,type } = useParams();
+    var username = localStorage.getItem("username");
+    var history = useHistory();
+    var { type } = useParams();
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
@@ -58,11 +60,11 @@ const MyCategoryPosts = () => {
                 }
             }
             del();
-            window.location = `/myposts/${username}`;
+            history.push(`/myposts`);
         }
 
         const update = () => {
-            window.location = `/edit/${username}/${props._id}`;
+            history.push(`/edit/${props._id}`);
         }
 
         return (<div className="container" key ={index}>
@@ -89,24 +91,11 @@ const MyCategoryPosts = () => {
     }
 
     return (<div>
-    <Navbar 
-            name = {username}
-            page = "myposts"
-        />
+    <Navbar page = "myposts"/>
     <Heading />
-    <div className="center-text">
-        <h3 className="margin"> My Posts </h3>
-    </div>
-    <CategoryMenu
-        name = {username}
-        category_type = {type}
-        message = "my"
-        />
-    <SearchBar 
-        name = {username}
-        type = {type}
-        message = "personal"
-    />
+    <div className="center-text"> <h3 className="margin"> My Posts </h3> </div>
+    <CategoryMenu category_type = {type} message = "my" />
+    <SearchBar type = {type} message = "personal"/>
     {posts.map(MyPost)}
     <div className="space"></div>
     <Footer />

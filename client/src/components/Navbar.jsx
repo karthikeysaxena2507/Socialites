@@ -1,17 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import axios from "axios";
 import React from "react";
-
+import { Link,useHistory } from "react-router-dom";
 const Navbar = (props) => {
 
-    var home_link = `/allposts/${props.name}`;
-    var about_link = `/about/${props.name}`;
-    var create_link = `/create/${props.name}`;
-    var myposts_link = `/myposts/${props.name}`;
-    // var profile_link = `/profile/${props.name}/${props.name}`;
-    var allusers_link = `/allusers/${props.name}`;
-
-    var current_page = props.page;
+    var history = useHistory();
 
     const change = () => {
       const drop = async() => {
@@ -24,7 +17,8 @@ const Navbar = (props) => {
         }
       }
       drop();
-      window.location = "/";
+      localStorage.clear();
+      history.push("/");
     }
 
     return <div className="center-text">
@@ -34,13 +28,22 @@ const Navbar = (props) => {
       </button>
       <div className="collapse navbar-collapse" id="navbarCollapse">
         <div className="navbar-nav">
-          <a href={home_link} className={"nav-item nav-link active " + ((current_page === "home") ? "nav-item-active" : "")}> Home </a>
-          <a href={about_link} className={"nav-item nav-link active " + ((current_page === "about") ? "nav-item-active" : "")}> About </a>
-          <a href={create_link} className={"nav-item nav-link active " + ((current_page === "create") ? "nav-item-active" : "")}> Create </a>
-          <a href={myposts_link} className={"nav-item nav-link active " + ((current_page === "myposts") ? "nav-item-active" : "")}> MyPosts </a>
-          {/* <a href={profile_link} className={"nav-item nav-link active " + ((current_page === "profile") ? "nav-item-active" : "")}> MyProfile </a> */}
-          <a href={allusers_link} className={"nav-item nav-link active " + ((current_page === "allusers") ? "nav-item-active" : "")}> AllUsers </a>
-          <a onClick={change} className={"nav-item nav-link active"}> Logout </a>
+        <Link to="/allposts">
+          <span className={"nav-item nav-link active expand " + ((props.page === "home") ? "nav-item-active" : "")}> Home </span>
+        </Link>
+        <Link to="/about">
+          <span className={"nav-item nav-link active expand " + ((props.page === "about") ? "nav-item-active" : "")}> About </span>
+        </Link>
+        <Link to="/create">
+          <span className={"nav-item nav-link active expand " + ((props.page === "create") ? "nav-item-active" : "")}> Create </span>
+        </Link>
+        <Link to="/myposts">
+          <span className={"nav-item nav-link active expand " + ((props.page === "myposts") ? "nav-item-active" : "")}> MyPosts </span>
+        </Link>
+        <Link to="/allusers">
+          <span className={"nav-item nav-link active expand " + ((props.page === "allusers") ? "nav-item-active" : "")}> AllUsers </span>
+        </Link>
+        <span onClick={change} className={"nav-item nav-link active expand"}> Logout </span>
         </div>
       </div>
     </nav>
