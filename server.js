@@ -80,7 +80,7 @@ app.get("/socialites-karthikey/auth/google/social", passport.authenticate("googl
     failureRedirect: "/login"
     }), (req, res) => {
         res.redirect("/allposts");
-        // localStorage.setItem("username",req.user.username);
+        localStorage.setItem("username",req.user.username);
         // const id = req.user.userId;
         // const token = jwt.sign({id}, process.env.JWT_SECRET, {
         //     expiresIn: 600,
