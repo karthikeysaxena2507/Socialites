@@ -27,16 +27,17 @@ const Login = (props) => {
         const drop = async() => {
             try {
                 const response = await axios.post("/users/", userDetails);
-                console.log(response.data.user.email);
-                localStorage.setItem("username", response.data.user.username);
-                localStorage.setItem("email", response.data.user.email);
-                localStorage.setItem("token", response.data.token);
-                if(response.data.user.verified) {
-                    window.location = `/allposts`;
+                // console.log(response.data.user.email);
+                localStorage.setItem("username", response.data.username);
+                localStorage.setItem("email", response.data.email);
+                // localStorage.setItem("token", response.data.token);
+                if(response.data.verified) {
+                    history.push(`/allposts`);
                 }
                 else {
                     history.push(`/verify/${userDetails.username}`);  
                 }
+                setMessage("");
             }
             catch(error) {
                 console.log(error);
@@ -81,6 +82,7 @@ const Login = (props) => {
             <div className="margin">
                 <input type="submit" className="btn btn-lg expand margin" value="Log In"/> 
             </div>
+        </form>
             <div className="margin">
                 New User ? 
                 <Link to="/register"> Create a New account </Link>
@@ -92,7 +94,6 @@ const Login = (props) => {
                 <h3> OR </h3>
             </div>
             <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
-        </form>
         <div className="space"></div>
         <Footer />
 </div>);

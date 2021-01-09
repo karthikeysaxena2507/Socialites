@@ -110,11 +110,12 @@ router.post("/", async(req, res, next) => {
             try {
                 const foundUser = await User.findOne({username: req.body.username});
                 passport.authenticate("local")(req, res, function() {
-                    const id = foundUser._id;
-                    const token = jwt.sign({id}, JWT_SECRET, {
-                        expiresIn: 600,
-                    });
-                    res.json({user: foundUser, token});
+                    // const id = foundUser._id;
+                    // const token = jwt.sign({id}, JWT_SECRET, {
+                    //     expiresIn: 600,
+                    // });
+                    // res.json({user: foundUser, token});
+                    res.json(foundUser)
                 });
             }
             catch(error) {

@@ -1,12 +1,13 @@
 import React from "react";
 import Footer from "./Footer";
-import { useParams } from "react-router-dom";
+import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
 import Heading from "./Heading";
 
 const Verified = () => {
 
-    let { username } = useParams();
+    var { username } = useParams();
+    var history = useHistory();
 
     const submit = () => {
         var user = {name: username};
@@ -14,7 +15,7 @@ const Verified = () => {
             try {
                 const response = await axios.post("/users/verify/", user);
                 console.log(response.data);
-                window.location = "/login";
+                history.push("/login");
             }
             catch(error) {
                 console.log(error);
