@@ -97,7 +97,7 @@ const Register = () => {
         <div className="margin">
             <h3> OR </h3>
         </div>
-        <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
+        {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div> */}
     <div className="space"></div>
     <Footer />
 </div>);
