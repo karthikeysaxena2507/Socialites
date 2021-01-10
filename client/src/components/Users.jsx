@@ -20,8 +20,7 @@ const Users = () => {
     useEffect( () => {
         const fetch = async() => {
             try {
-                const response = await axios.get("/users/");
-                console.log(response);
+                const response = await axios.get(`/users/get/${username}`);
                 setUsers(response.data);
                 setAllUsers(response.data);
             }
@@ -30,7 +29,7 @@ const Users = () => {
             }
         }
         fetch();
-    },[]);
+    },[username]);
 
     const createUser = (props, index) => {
 

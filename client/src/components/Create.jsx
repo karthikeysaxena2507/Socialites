@@ -7,7 +7,6 @@ import { useHistory } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Heading from "./Heading";
-import InvalidUser from "./InvalidUser";
 
 const Create = () => {
 
@@ -72,13 +71,6 @@ const Create = () => {
     var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
             return (<div className="text-center">
                 <Navbar page = "create"/>
                 <Heading />
@@ -165,11 +157,6 @@ const Create = () => {
             <div className="space"></div>
             <Footer />
         </div>);
-        }
-    }
-
-    return <Check />;
-
     
 }
 

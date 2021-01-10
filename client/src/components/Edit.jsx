@@ -89,13 +89,6 @@ const Edit = () => {
     var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
             return (<div>
                 <Navbar 
                     name = {username}
@@ -183,10 +176,6 @@ const Edit = () => {
             <div className="space"></div>
             <Footer />
         </div>);
-        }
-    }
-
-    return <Check />;
 }
 
 export default Edit;

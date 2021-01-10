@@ -6,8 +6,10 @@ const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-router.get("/", async(req, res, next) => {
-    try {   
+var currUser;
+
+router.get("/get/:username", async(req, res, next) => {
+    try {  
         const users = await User.find({});
         res.json(users);
     }
@@ -84,6 +86,7 @@ router.post("/", async(req, res, next) => {
             try {
                 const foundUser = await User.findOne({username: req.body.username});
                 passport.authenticate("local")(req, res, function() {
+                    currUser = user.username;
                     res.json(foundUser);
                 });
             }
