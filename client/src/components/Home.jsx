@@ -18,12 +18,12 @@ const Home = () => {
         <Heading />
             <h1> Welcome To the Socialites </h1>
             <Link to="/login">
-                <div className="margin"> <button className="btn btn-lg expand"> Login </button> </div>
+                <div className="mt-1"> <button className="btn btn-lg expand"> Login </button> </div>
             </Link>
             <Link to="/register">
-                <div className="margin"> <button className="btn btn-lg expand"> Register </button> </div>
+                <div className="mt-1"> <button className="btn btn-lg expand"> Register </button> </div>
             </Link>
-            <h4 className="margin"> No. of visits: {visits} </h4>
+            <h4 className="mt-3"> No. of visits: {visits} </h4>
         </div>
         <div className="space"></div>
         <Footer />

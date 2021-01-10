@@ -46,7 +46,7 @@ const Register = () => {
         drop();
     }
 
-    return (<div className="center-text">
+    return (<div className="text-center">
     <Heading />
     <h2> Register Your Account </h2>
         <form onSubmit={add}>

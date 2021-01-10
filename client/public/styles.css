@@ -14,10 +14,6 @@ body {
     padding: 0;
 } 
 
-.space {
-  margin-bottom: 100px;
-}
-
 footer {
     position: absolute;
     bottom: 0;
@@ -32,12 +28,20 @@ footer {
   margin-top: 12px;
 }
 
-.main {
-  font-family: 'PT Serif', serif;
+.space {
+  margin-bottom: 100px;
 }
 
 .upper-margin {
   margin-top: 100px;
+}
+
+.one {
+  margin-right: 8px;
+}
+
+.main {
+  font-family: 'PT Serif', serif;
 }
 
 .expand {
@@ -52,14 +56,6 @@ footer {
 ::placeholder {
   color: grey;
   opacity: 1;
-}
-
-.center-text {
-  text-align: center;
-}
-
-.one {
-  margin-right: 8px;
 }
 
 .move-right {
@@ -256,7 +252,7 @@ textarea {
   }
 
   .post-image {
-    width: 280px;
+    width: 260px;
     margin-bottom: 20px;
     border: 3px solid rgb(134, 63, 5);
     border-radius: 5px;

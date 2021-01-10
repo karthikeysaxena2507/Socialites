@@ -44,7 +44,7 @@ const Login = () => {
         drop();
     }
 
-    return (<div className="center-text">
+    return (<div className="text-center">
         <Heading />
         <h2> Log In to Your Account </h2>
         <form onSubmit={add}>

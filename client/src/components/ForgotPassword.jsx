@@ -24,7 +24,7 @@ const ForgotPassword = () => {
         drop();
     }
 
-    return (<div className="container center-text">
+    return (<div className="container text-center">
         <Heading />
         <h5 className="margin"> Enter your registered email to reset password </h5>
         <input 

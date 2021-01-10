@@ -43,7 +43,6 @@ function App() {
         <Route exact path="/reset/:username" component={ResetPassword} />
         <Route exact path="/comment/:commentId/:id" component={CompleteComment} />
         <Route exact path="/result/:searchContent/:message/:type" component={SearchResult} />
-        {/* <Route exact path="*" component={()=> "ERROR 404 PAGE NOT FOUND"} /> */}
   </Router>
   );
 }

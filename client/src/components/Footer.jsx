@@ -4,7 +4,7 @@ var date = new Date();
 var year = date.getFullYear();
 
 const Footer = () => {
-    return (<footer className="center-text container">
+    return (<footer className="text-center container">
         Copyright @ Karthikey Saxena {year}
     </footer>);
 }

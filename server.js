@@ -76,11 +76,23 @@ app.get("/auth/google", passport.authenticate("google", {
  })
 );
 
+var googleUser = "";
+
 app.get("/socialites-karthikey/auth/google/social", passport.authenticate("google", {
     failureRedirect: "/login"
     }), (req, res) => {
+        googleUser = req.user.username;
         res.redirect("/allposts");
 });
+
+app.get("/auth", async(req, res, next) => {
+    try {
+        res.json(googleUser);
+    }
+    catch(err) {
+        res.json(next(err));
+    }
+}) 
 
 app.post("/logout", (req, res) => {
     req.logOut();

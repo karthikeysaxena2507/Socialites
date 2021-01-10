@@ -82,12 +82,12 @@ const Users = () => {
             return <div>
             <Navbar page = "allusers"/>
             <Heading />
-            <div className="center-text"> <h3 className="margin"> All Users </h3> </div>
-            <div className="container margin center-text">
+            <div className="text-center"> <h3 className="margin"> All Users </h3> </div>
+            <div className="container margin text-center">
                 <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
                 <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
             </div>
-            <div className="margin center-text">
+            <div className="margin text-center">
                 <p className="margin"> {message} </p>
             </div>
             <div className="margin">

@@ -16,6 +16,7 @@ const Posts = () => {
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
+
         const fetch = async () => {
             try {
                 const response = await axios.get("/posts/");
@@ -26,6 +27,21 @@ const Posts = () => {
             }
         };
         fetch(); 
+    });
+
+    useEffect(() => {
+        if(username === null) {
+            const getGoogleUser = async() => {
+                try {
+                    const response = await axios.get("/auth");
+                    localStorage.setItem("username", response.data);
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            getGoogleUser();
+        }
     });
 
     const createPost = (props, index) => {
@@ -71,7 +87,7 @@ const Posts = () => {
             return (<div>
                 <Navbar page = "home"/>
                 <Heading />
-                <div className="center-text"> <h3 className="margin"> All Posts </h3> </div>
+                <div className="text-center"> <h3 className="margin"> All Posts </h3> </div>
                 <CategoryMenu category_type = "Select Category" message = "all" />
                 <SearchBar message = "all" type = "none" />
                 {posts.map(createPost)}

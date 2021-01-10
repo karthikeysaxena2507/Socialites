@@ -75,7 +75,7 @@ const CategoryPosts = () => {
             return <div>
         <Navbar page = "home"/>
         <Heading />
-        <div className="container center-text margin"> <h3 className="margin"> All Posts </h3> </div>
+        <div className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </div>
         <CategoryMenu category_type = {type} message = "all" />
         <SearchBar type = {type} message = "all" />
         {posts.map(createPost)}

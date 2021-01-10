@@ -23,7 +23,7 @@ const Verify = () => {
         alert("Link sent to email");
     }
 
-    return <div className="container center-text">
+    return <div className="container text-center">
         <Heading />
         <h3 className="margin">A verification link has been sent to your registered Email, please follow that link to verify your email and register your account </h3>
         <h5> To resend the link, <span onClick={send} className="send expand"> click here </span> </h5>

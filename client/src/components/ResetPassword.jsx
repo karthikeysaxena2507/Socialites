@@ -40,7 +40,7 @@ const ResetPassword = () => {
         }
     }
 
-    return (<div className="container center-text">
+    return (<div className="container text-center">
     <Heading />
         <h5 className="margin"> Set New Password </h5>
         <div>

@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import { Link } from "react-router-dom";
 
 const InvalidUser = () => {
-        return <div className="container center-text">
+        return <div className="container text-center">
         <Heading />
         <div className="margin">
             <h2> You Are Not logged In </h2>

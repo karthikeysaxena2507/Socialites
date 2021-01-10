@@ -24,7 +24,7 @@ const Verified = () => {
         drop();
     }
 
-    return <div className="container center-text">
+    return <div className="container text-center">
         <Heading />
         <div className="margin"> <button className="btn btn-lg expand" onClick={submit}> Verify Email and Register </button> </div>
         <div className="space"></div>

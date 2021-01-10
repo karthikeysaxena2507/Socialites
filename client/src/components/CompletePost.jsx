@@ -118,7 +118,7 @@ const CompletePost = () => {
             </div>
         </div>
         <div className="comment-content"> {props.content} </div>            
-        <div className="comment-options center-text" style={style1}>
+        <div className="comment-options text-center" style={style1}>
             <img src={trash} onClick={remove} className="expand one"/>
         </div>
     </div>
@@ -151,7 +151,7 @@ const CompletePost = () => {
                         show_comments = {false}
                         imageUrl = {post.imageUrl}
                 />
-                <h3 className="margin center-text"> Comments </h3>
+                <h3 className="margin text-center"> Comments </h3>
                 {post.comments.map(createComment)}
             </div>
             <div className="space"></div>

@@ -137,11 +137,11 @@ const CompleteComment = () => {
                         </div>
                     </div>
                     <div className="comment-content"> {comment.content} </div>            
-                    <div className="comment-options center-text" style={styling}>
+                    <div className="comment-options text-center" style={styling}>
                         <img src={trash} onClick={remove} className="expand one"/>
                     </div>
-                </div>
-                    <div className="margin center-text">
+                    </div>
+                    <div className="margin text-center">
                         <h2> Users who reacted: </h2>
                         <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
                         <button className="btn expand margin one" onClick={changeLike} style={style1}> <img src={liked} name="like" className="expand"/> </button> 

@@ -177,7 +177,7 @@ const Reactions = () => {
                             show_comments = {true}
                             imageUrl = {post.imageUrl}
                     />
-                    <div className="center-text">
+                    <div className="text-center">
                         <h2 className="margin"> Users who Reacted: </h2>
                         <div>
                             <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
@@ -191,7 +191,7 @@ const Reactions = () => {
                         </div>
                     </div>    
                 </div>
-                <div className="margin center-text">
+                <div className="margin text-center">
                     <p className="margin"> {message} </p>
                 </div>
                 <div className="margin">

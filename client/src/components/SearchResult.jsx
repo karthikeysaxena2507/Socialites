@@ -109,7 +109,7 @@ const Result = () => {
             return (<div>
                 <Navbar page = "result"/>
                 <Heading />
-                <div className="center-text"> <h2 className="margin"> Search Results </h2> </div>
+                <div className="text-center"> <h2 className="margin"> Search Results </h2> </div>
                 {foundPosts.reverse().map(createPost)}
                 <div className="space"></div>
                 <Footer />

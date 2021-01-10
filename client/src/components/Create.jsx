@@ -79,13 +79,13 @@ const Create = () => {
             )
         }
         else {
-            return (<div className="center-text">
+            return (<div className="text-center">
                 <Navbar page = "create"/>
                 <Heading />
                 <div> 
                 <h1 className="margin"> Create Your Post Here </h1>
                 </div> 
-                <div className="dropdown container center-text">
+                <div className="dropdown container text-center">
                     <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {category}
                     </button>
@@ -104,7 +104,7 @@ const Create = () => {
                     </div>
                 </div>
                 <form onSubmit={handleSubmitFile}>
-                    <div className="center-text margin">
+                    <div className="text-center margin">
                         <textarea
                             name="title"
                             value={title}
@@ -115,7 +115,7 @@ const Create = () => {
                             required
                         />
                     </div>
-                    <div className="center-text margin">
+                    <div className="text-center margin">
                         <textarea
                             name="content"
                             value={content}
@@ -127,13 +127,13 @@ const Create = () => {
                         />
                     </div>
                     <div className="margin">
-                    <div className="center-text">
+                    <div className="text-center">
                         <label for="file"> 
                             <span className="btn expand"> 
                                 Select Image 
                             </span>
                         </label>
-                        <span className="center-text margin">
+                        <span className="text-center margin">
                             <span className="btn expand" onClick={removeImage}> Remove Image </span> 
                         </span>
                     </div>
@@ -145,11 +145,11 @@ const Create = () => {
                             onChange={handleFileInputChange}
                         />
                     </div>
-                    <div className="margin center-text"> Current Image </div>
-                    <div className="margin center-text" style={styling}>
+                    <div className="margin text-center"> Current Image </div>
+                    <div className="margin text-center" style={styling}>
                         Image preview will be shown here
                     </div>
-                    <div className="center-text">
+                    <div className="text-center">
                     <img 
                         src={preview} 
                         alt="invalid image" 
@@ -157,7 +157,7 @@ const Create = () => {
                         style={previewStyling} 
                         />
                     </div>
-                    <div className="center-text margin">
+                    <div className="text-center margin">
                         <button className="btn btn-lg expand margin" type="submit"> Create </button> 
                     </div>
                 </form>

@@ -102,10 +102,10 @@ const Edit = () => {
                     page = "edit"
                 />
                 <Heading />
-                <div className="center-text"> 
+                <div className="text-center"> 
                     <h1 className="margin"> Edit Your Post Here </h1> 
                 </div> 
-                <div className="dropdown container center-text">
+                <div className="dropdown container text-center">
                     <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {category}
                     </button>
@@ -124,7 +124,7 @@ const Edit = () => {
                     </div>
                 </div>
                 <form onSubmit={handleSubmitFile}>
-                    <div className="center-text margin">
+                    <div className="text-center margin">
                         <textarea
                             name="title"
                             value={title}
@@ -135,7 +135,7 @@ const Edit = () => {
                             required
                         />
                     </div>
-                    <div className="center-text margin">
+                    <div className="text-center margin">
                         <textarea
                             name="content"
                             value={content}
@@ -147,7 +147,7 @@ const Edit = () => {
                         />
                     </div>
                     <div className="margin">
-                    <div className="center-text">
+                    <div className="text-center">
                         <label for="file"> 
                             <span className="btn expand"> Select Image </span>
                         </label>
@@ -163,11 +163,11 @@ const Edit = () => {
                             onChange={handleFileInputChange}
                         />
                     </div>
-                    <div className="margin center-text"> Current Image </div>
-                    <div className="margin center-text" style={styling}>
+                    <div className="margin text-center"> Current Image </div>
+                    <div className="margin text-center" style={styling}>
                         Image preview will be shown here
                     </div>
-                    <div className="center-text">
+                    <div className="text-center">
                     <img 
                         src={preview} 
                         alt="invalid image" 
@@ -175,7 +175,7 @@ const Edit = () => {
                         style={previewStyling} 
                         />
                     </div>
-                    <div className="center-text margin">
+                    <div className="text-center margin">
                         <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
                     </div>
                 </form>

@@ -66,7 +66,7 @@ const Post = (props) => {
         </div>
         <div className="post-content">
             {props.content}
-            <div className="margin center-text">
+            <div className="margin text-center">
                 <img src={props.imageUrl} style={image} className="post-image" alt="image not found"/>
             </div>
         </div>

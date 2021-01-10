@@ -84,7 +84,7 @@ const MyCategoryPosts = () => {
                 show_comments = {true}
                 imageUrl = {props.imageUrl}
         />
-        <div className="post-options center-text">
+        <div className="post-options text-center">
             <img src={trash} onClick={remove} className="expand one"/>
             <img src={edit} onClick={update} className="expand"/>
         </div>
@@ -101,7 +101,7 @@ const MyCategoryPosts = () => {
             return (<div>
                 <Navbar page = "myposts"/>
                 <Heading />
-                <div className="center-text"> <h3 className="margin"> My Posts </h3> </div>
+                <div className="text-center"> <h3 className="margin"> My Posts </h3> </div>
                 <CategoryMenu category_type = {type} message = "my" />
                 <SearchBar type = {type} message = "personal"/>
                 {posts.map(MyPost)}

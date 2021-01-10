@@ -21,7 +21,7 @@ const Navbar = (props) => {
       history.push("/");
     }
 
-    return <div className="center-text">
+    return <div className="text-center">
     <nav className="navbar navbar-expand-md navbar-light bg-dark text-white fixed-top" id="bar">
       <button type="button" className="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span className="navbar-toggler-icon"> </span>

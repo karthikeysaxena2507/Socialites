@@ -19,11 +19,11 @@ const About = () => {
                 <Navbar page = "about" />
                 <Heading />
                 <div className="container about">
-                    <div className="margin">
-                        <h2 className="margin"> About Socialites </h2>
+                    <div className="mt-3">
+                        <h2> About Socialites </h2>
                     </div>
-                    <div className="margin">
-                        <p className="margin"> Welcome to Socialites - A social media web application. Here Users can: </p>
+                    <div className="mt-3">
+                        <p > Welcome to Socialites - A social media web application. Here Users can: </p>
                             <ul>
                                 <li> Create a Post related to any Category </li>
                                 <li> Edit their Post. </li>
@@ -38,8 +38,8 @@ const About = () => {
                                 <li> Users can start by simply registering on the site locally or with google </li>
                             </ul>
                     </div>
-                    <div className="margin">
-                        <h4 className="margin"> Made By: Karthikey Saxena </h4>
+                    <div className="mt-3">
+                        <h4> Made By: Karthikey Saxena </h4>
                     </div>
                 </div>
                 <div className="space"></div>
