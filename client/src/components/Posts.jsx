@@ -16,20 +16,6 @@ const Posts = () => {
     var [posts,setPosts] = useState([]);
 
     useEffect(() => {
-
-        const fetch = async () => {
-            try {
-                const response = await axios.get("/posts/");
-                setPosts(response.data.reverse());
-            }
-            catch (err) {
-                console.log(err);
-            }
-        };
-        fetch(); 
-    });
-
-    useEffect(() => {
         if(username === null) {
             const getGoogleUser = async() => {
                 try {
@@ -42,6 +28,20 @@ const Posts = () => {
             }
             getGoogleUser();
         }
+    },[username]);
+
+    useEffect(() => {
+
+        const fetch = async () => {
+            try {
+                const response = await axios.get("/posts/");
+                setPosts(response.data.reverse());
+            }
+            catch (err) {
+                console.log(err);
+            }
+        };
+        fetch(); 
     });
 
     const createPost = (props, index) => {
