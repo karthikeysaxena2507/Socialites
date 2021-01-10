@@ -98,6 +98,7 @@ const MyPosts = () => {
             return (<div>
                 <Navbar page = "myposts"/>
                 <Heading />
+                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="text-center"><h3 className="margin"> My Posts </h3> </div>
                 <CategoryMenu category_type = "Select Category" message = "my"/>
                 <SearchBar message = "personal" type = "none" />

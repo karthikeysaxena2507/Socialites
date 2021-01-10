@@ -21,24 +21,24 @@ const CategoryMenu = (props) => {
         }
     }
 
-    return <div className="dropdown container text-center">
-            <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    return <div className="dropdown text-center">
+            <button className="btn dropdown-toggle" type="button" data-toggle="dropdown">
                 {props.category_type}
             </button>
             <div
-             className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <span className="dropdown-item" href="#" onClick={changeCategory}> All </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Art </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Motivational </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Political </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Funny </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Music </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Food </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Fashion </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Travel </span>
-                <span className="dropdown-item" href="#" onClick={changeCategory}> Other </span>
+             className="dropdown-menu">
+                <a className="dropdown-item" href="#" onClick={changeCategory}> All </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
             </div>
         </div>
 }

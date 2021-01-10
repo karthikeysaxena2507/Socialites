@@ -18,6 +18,7 @@ const About = () => {
             return (<div>
                 <Navbar page = "about" />
                 <Heading />
+                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="container about">
                     <div className="mt-3">
                         <h2> About Socialites </h2>

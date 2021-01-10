@@ -134,6 +134,7 @@ const CompletePost = () => {
             return (<div className="container">
             <Navbar page = "complete" />
             <Heading />
+            <h4 className="margin text-center"> Hello {username} </h4>
             <div>
                 <Post 
                         key = {id}

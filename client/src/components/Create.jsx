@@ -82,14 +82,15 @@ const Create = () => {
             return (<div className="text-center">
                 <Navbar page = "create"/>
                 <Heading />
+                <h4 className="margin text-center"> Hello {username} </h4>
                 <div> 
                 <h1 className="margin"> Create Your Post Here </h1>
                 </div> 
-                <div className="dropdown container text-center">
-                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div className="dropdown text-center">
+                    <button className="btn dropdown-toggle" type="button" data-toggle="dropdown">
                         {category}
                     </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div className="dropdown-menu">
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>

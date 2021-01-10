@@ -160,6 +160,7 @@ const Reactions = () => {
             return(<div>
                 <Navbar page="reactions"/>
                 <Heading />
+                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="container">
                     <Post 
                             key = {post._id}

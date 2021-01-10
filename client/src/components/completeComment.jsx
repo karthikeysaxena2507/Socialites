@@ -116,6 +116,7 @@ const CompleteComment = () => {
             return (<div>
                 <Navbar page = "comment"/>
                 <Heading />
+                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="container">
                     <div className="container margin">
                     <div className="comment-name">
