@@ -64,15 +64,34 @@ const Result = () => {
             }
             fetch();
         }
-    });
+    },[message, searchContent, type, username]);
 
     const createPost = (props, index) => {
 
         const changepost = (event, post) => {
             const drop = async() => {
                 try {
-                    const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(response.data);
+                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
+                    console.log(res.data);
+                    var response;
+                    if(message === "all") {
+                        response = await axios.get("/posts");
+                    }
+                    else if(message === "personal") {
+                        response = await axios.get(`/posts/list/${username}`);
+                    }
+                    const fuse = new Fuse(response.data, {
+                        keys: ['author', 'title', 'content'],
+                        includeScore: true,
+                        includeMatches: true
+                    });
+                    const results = fuse.search(searchContent);
+                    setfoundPosts(results.reverse());
+                    if(type !== "none") {
+                        setfoundPosts(results.filter((post) => {
+                            return (post.item.category === type);
+                        }));
+                    }
                 }
                 catch(error) {
                     console.log(error);

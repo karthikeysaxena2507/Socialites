@@ -31,13 +31,15 @@ const CompletePost = () => {
             }
         }
         fetch();
-    });
+    },[id]);
 
     const changepost = (event, post) => {
         const drop = async() => {
             try {
-                const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                console.log(response.data);
+                const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
+                console.log(res.data);
+                const response = await axios.get(`/posts/${id}`);
+                setPost(response.data[0]);
             }
             catch(error) {
                 console.log(error);
@@ -51,8 +53,10 @@ const CompletePost = () => {
         const reactToComment = (event) => {
             const drop = async() => {
                 try {
-                    const response = await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
-                    console.log(response.data);
+                    const res = await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
+                    console.log(res.data);
+                    const response = await axios.get(`/posts/${id}`);
+                    setPost(response.data[0]);
                 }
                 catch(error) {
                     console.log(error);

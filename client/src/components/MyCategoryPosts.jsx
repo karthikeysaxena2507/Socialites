@@ -33,15 +33,19 @@ const MyCategoryPosts = () => {
             }
         }
         fetch();
-    });
+    },[type, username]);
 
     const MyPost = (props, index) => {
 
         const changepost = (event, post) => {
             const drop = async() => {
                 try {
-                    const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(response.data);
+                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
+                    console.log(res.data);
+                    const response = await axios.get(`/posts/list/${username}`);
+                    setPosts(response.data.reverse().filter((post) => {
+                        return (post.category === type);
+                    }));
                 }   
                 catch(error) {
                     console.log(error);

@@ -33,7 +33,6 @@ const Posts = () => {
     },[username]);
 
     useEffect(() => {
-
         const fetch = async () => {
             try {
                 const response = await axios.get("/posts/");
@@ -44,7 +43,7 @@ const Posts = () => {
             }
         };
         fetch(); 
-    });
+    },[]);
 
     const createPost = (props, index) => {
 
@@ -52,7 +51,9 @@ const Posts = () => {
             const drop = async() => {
                 try {
                     const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(response.data);    
+                    const res = await axios.get("/posts/");
+                    setPosts(res.data);  
+                    console.log(response.data);
                 }
                 catch(error) {
                     console.log(error);

@@ -87,7 +87,7 @@ const Create = () => {
                 <h1 className="margin"> Create Your Post Here </h1>
                 </div> 
                 <div className="dropdown text-center">
-                    <button className="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                         {category}
                     </button>
                     <div className="dropdown-menu">

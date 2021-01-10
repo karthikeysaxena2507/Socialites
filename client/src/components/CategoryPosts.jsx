@@ -30,7 +30,7 @@ const CategoryPosts = () => {
             }
         }
         fetch();
-    });
+    },[type]);
 
     const createPost = (props, index) => {
 
@@ -38,6 +38,10 @@ const CategoryPosts = () => {
             const drop = async() => {
                 try{
                     const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
+                    const res = await axios.get("/posts");
+                    setPosts(res.data.reverse().filter((post) => {
+                        return (post.category === type);
+                    }));
                     console.log(response.data);
                 }
                 catch(error) {
@@ -72,17 +76,18 @@ const CategoryPosts = () => {
             )
         }
         else {
-            return <div>
-        <Navbar page = "home"/>
-        <Heading />
-        <h4 className="margin text-center"> Hello {username} </h4>
-        <div className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </div>
-        <CategoryMenu category_type = {type} message = "all" />
-        <SearchBar type = {type} message = "all" />
-        {posts.map(createPost)}
-        <div className="space"></div>
-        <Footer />
-    </div>
+            return (
+            <div>
+                <Navbar page = "home"/>
+                <Heading />
+                <h4 className="margin text-center"> Hello {username} </h4>
+                <div className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </div>
+                <CategoryMenu category_type = {type} message = "all" />
+                <SearchBar type = {type} message = "all" />
+                {posts.map(createPost)}
+                <div className="space"></div>
+                <Footer />
+        </div>)
         }
     }
 

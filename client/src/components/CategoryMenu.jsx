@@ -22,7 +22,7 @@ const CategoryMenu = (props) => {
     }
 
     return <div className="dropdown text-center">
-            <button className="btn dropdown-toggle" type="button" data-toggle="dropdown">
+            <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                 {props.category_type}
             </button>
             <div
@@ -41,6 +41,7 @@ const CategoryMenu = (props) => {
                 <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
             </div>
         </div>
+
 }
 
 export default CategoryMenu;
