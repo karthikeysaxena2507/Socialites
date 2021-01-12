@@ -3,6 +3,7 @@ import axios from "axios";
 import Heading from "./Heading";
 import Navbar from "./Navbar";
 import ScrollToBottom from 'react-scroll-to-bottom';
+import Footer from "./Footer";
 
 import "./Input.css";
 import "./Chat.css";
@@ -29,7 +30,7 @@ const Chat = () => {
             }
         }
         fetch();
-    },[room]);
+    });
 
     const changeMessage = (e) => {
         setMessage(e.target.value);
@@ -102,6 +103,8 @@ const Chat = () => {
             </form>
             </div>
         </div>
+        <div className="space"></div>
+        <Footer />
     </div>
     )
 }
