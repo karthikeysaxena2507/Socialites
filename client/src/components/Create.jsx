@@ -44,7 +44,7 @@ const Create = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        if(username !== "Guest") {
+        if(username !== "Guest" && username !== null) {
             try {
                 console.log(imageSource);
                 await fetch("/posts/add", {

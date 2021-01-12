@@ -6,7 +6,6 @@ import Navbar from "./Navbar";
 import { useParams, useHistory } from "react-router-dom";
 import Footer from "./Footer";
 import Heading from "./Heading";
-import InvalidUser from "./InvalidUser";
 
 const Edit = () => {
 
@@ -61,24 +60,29 @@ const Edit = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        try {
-            console.log(imageSource);
-            await fetch(`/posts/edit/${id}`, {
-                method: "POST",
-                body: JSON.stringify({
-                    data: imageSource,
-                    author: username,
-                    title: title,
-                    content: content,
-                    category: category
-                }),
-                headers: {"Content-type": "application/json"}                
-            });
+        if(username !== "Guest" && username !== null) {
+            try {
+                console.log(imageSource);
+                await fetch(`/posts/edit/${id}`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        data: imageSource,
+                        author: username,
+                        title: title,
+                        content: content,
+                        category: category
+                    }),
+                    headers: {"Content-type": "application/json"}                
+                });
+            }
+            catch(error) {
+                console.log(error);
+            }
+            history.push(`/myposts`);
         }
-        catch(error) {
-            console.log(error);
+        else {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
-        history.push(`/myposts`);
     }
 
     const removeImage = (e) => {

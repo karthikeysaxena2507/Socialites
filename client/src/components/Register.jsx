@@ -39,7 +39,6 @@ const Register = () => {
                     setMessage(response.data);
                 }
                 else {
-                    // console.log(response.data);
                     history.push(`/verify/${userDetails.email}`);
                     setMessage("");
                 }
