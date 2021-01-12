@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Footer from "./Footer";
 import Heading from "./Heading";
 const countapi = require('countapi-js');
@@ -13,6 +13,13 @@ const Home = () => {
         });  
     },[]);
 
+    var history = useHistory();
+
+    const guestLogin = () => {
+        localStorage.setItem("username", "Guest");
+        history.push(`/allposts`);
+    }
+
     return(<div>
         <div className="heading">
         <Heading />
@@ -22,6 +29,10 @@ const Home = () => {
             </Link>
             <Link to="/register">
                 <div className="mt-1"> <button className="btn btn-lg expand"> Register </button> </div>
+            </Link>
+            <h3> OR </h3>
+            <Link to="/allposts">
+                <div className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </div>
             </Link>
             <h4 className="mt-3"> No. of visits: {visits} </h4>
         </div>

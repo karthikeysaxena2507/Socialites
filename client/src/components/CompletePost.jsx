@@ -34,26 +34,10 @@ const CompletePost = () => {
     },[id]);
 
     const changepost = (event, post) => {
-        const drop = async() => {
-            try {
-                const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                console.log(res.data);
-                const response = await axios.get(`/posts/${id}`);
-                setPost(response.data[0]);
-            }
-            catch(error) {
-                console.log(error);
-            }
-        }
-        drop();
-    }
-
-    const createComment = (props, index) => {
-
-        const reactToComment = (event) => {
+        if(username !== "Guest") {
             const drop = async() => {
                 try {
-                    const res = await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
+                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                     console.log(res.data);
                     const response = await axios.get(`/posts/${id}`);
                     setPost(response.data[0]);
@@ -64,18 +48,49 @@ const CompletePost = () => {
             }
             drop();
         }
+        else {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+        }
+    }
+
+    const createComment = (props, index) => {
+
+        const reactToComment = (event) => {
+            if(username !== "Guest") {
+                const drop = async() => {
+                    try {
+                        const res = await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
+                        console.log(res.data);
+                        const response = await axios.get(`/posts/${id}`);
+                        setPost(response.data[0]);
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                }
+                drop();
+            }
+            else {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            }
+        }
 
         const remove = () => {
-            const drop = async() => {
-                try {
-                    const response = await axios.post(`/posts/remove/${id}`, props);
-                    console.log(response.data);
+            if(username !== "Guest") {
+                const drop = async() => {
+                    try {
+                        const response = await axios.post(`/posts/remove/${id}`, props);
+                        console.log(response.data);
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
                 }
-                catch(error) {
-                    console.log(error);
-                }
+                drop();
             }
-            drop();
+            else {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            }
         }
 
         const SeeAll = () => {

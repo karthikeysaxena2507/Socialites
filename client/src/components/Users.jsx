@@ -32,20 +32,22 @@ const Users = () => {
     },[username]);
 
     const createUser = (props, index) => {
-
-        if(props.username !== undefined) {
-            return (<div className="container user" key={index}>
-            <li className="profile">
-                {props.username} 
-            </li>
-        </div>);
-        } 
-        else {
-            return (<div className="container user" key={index}>
-            <li className="profile">
-                {props.item.username} 
-            </li>
-        </div>);
+        if(props.username !== "Guest")
+        {
+            if(props.username !== undefined) {
+                return (<div className="container user" key={index}>
+                <li className="profile">
+                    {props.username} 
+                </li>
+            </div>);
+            } 
+            else {
+                return (<div className="container user" key={index}>
+                <li className="profile">
+                    {props.item.username} 
+                </li>
+            </div>);
+            }
         }
     }
 

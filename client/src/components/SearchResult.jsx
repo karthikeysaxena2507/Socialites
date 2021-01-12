@@ -69,35 +69,40 @@ const Result = () => {
     const createPost = (props, index) => {
 
         const changepost = (event, post) => {
-            const drop = async() => {
-                try {
-                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(res.data);
-                    var response;
-                    if(message === "all") {
-                        response = await axios.get("/posts");
+            if(username !== "Guest") {
+                const drop = async() => {
+                    try {
+                        const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
+                        console.log(res.data);
+                        var response;
+                        if(message === "all") {
+                            response = await axios.get("/posts");
+                        }
+                        else if(message === "personal") {
+                            response = await axios.get(`/posts/list/${username}`);
+                        }
+                        const fuse = new Fuse(response.data, {
+                            keys: ['author', 'title', 'content'],
+                            includeScore: true,
+                            includeMatches: true
+                        });
+                        const results = fuse.search(searchContent);
+                        setfoundPosts(results.reverse());
+                        if(type !== "none") {
+                            setfoundPosts(results.filter((post) => {
+                                return (post.item.category === type);
+                            }));
+                        }
                     }
-                    else if(message === "personal") {
-                        response = await axios.get(`/posts/list/${username}`);
-                    }
-                    const fuse = new Fuse(response.data, {
-                        keys: ['author', 'title', 'content'],
-                        includeScore: true,
-                        includeMatches: true
-                    });
-                    const results = fuse.search(searchContent);
-                    setfoundPosts(results.reverse());
-                    if(type !== "none") {
-                        setfoundPosts(results.filter((post) => {
-                            return (post.item.category === type);
-                        }));
+                    catch(error) {
+                        console.log(error);
                     }
                 }
-                catch(error) {
-                    console.log(error);
-                }
+                drop();
             }
-            drop();
+            else {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            }
         }
 
         return <Post 

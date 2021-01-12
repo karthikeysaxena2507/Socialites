@@ -35,20 +35,25 @@ const CategoryPosts = () => {
     const createPost = (props, index) => {
 
         const changepost = (event, post) => {
-            const drop = async() => {
-                try{
-                    const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-                    const res = await axios.get("/posts");
-                    setPosts(res.data.reverse().filter((post) => {
-                        return (post.category === type);
-                    }));
-                    console.log(response.data);
+            if(username !== "Guest") {
+                const drop = async() => {
+                    try{
+                        const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
+                        const res = await axios.get("/posts");
+                        setPosts(res.data.reverse().filter((post) => {
+                            return (post.category === type);
+                        }));
+                        console.log(response.data);
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
                 }
-                catch(error) {
-                    console.log(error);
-                }
+                drop();
             }
-            drop();
+            else {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            }
         }
 
         return <Post 

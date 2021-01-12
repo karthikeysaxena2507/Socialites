@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 const Post = (props) => {
 
     var history = useHistory();
+    var username = localStorage.getItem("username");
     var [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
 
     const change = (event) => {
@@ -26,18 +27,26 @@ const Post = (props) => {
     }
 
     const addComment = (event) => {
-        if(comment.content !== "") {
-            const drop = async() => {
-                try {
-                    const response = await axios.post(`/posts/add/${props._id}`, comment);
-                    console.log(response.data);
-                    history.push(`/complete/${props._id}`);
+        if(username !== "Guest") {
+            if(comment.content !== "") {
+                const drop = async() => {
+                    try {
+                        const response = await axios.post(`/posts/add/${props._id}`, comment);
+                        console.log(response.data);
+                        history.push(`/complete/${props._id}`);
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
                 }
-                catch(error) {
-                    console.log(error);
-                }
+                drop();
             }
-            drop();
+            else {
+                alert("comment cannot be empty");
+            }
+        }
+        else {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
     }
 

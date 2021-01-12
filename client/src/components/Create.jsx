@@ -44,23 +44,28 @@ const Create = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        try {
-            console.log(imageSource);
-            await fetch("/posts/add", {
-                method: "POST",
-                body: JSON.stringify({
-                    data: imageSource,
-                    author: username,
-                    title: title,
-                    content: content,
-                    category: category
-                }),
-                headers: {"Content-type": "application/json"}                
-            });
-            history.push(`/allposts`);
+        if(username !== "Guest") {
+            try {
+                console.log(imageSource);
+                await fetch("/posts/add", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        data: imageSource,
+                        author: username,
+                        title: title,
+                        content: content,
+                        category: category
+                    }),
+                    headers: {"Content-type": "application/json"}                
+                });
+                history.push(`/allposts`);
+            }
+            catch(error) {
+                console.log(error);
+            }
         }
-        catch(error) {
-            console.log(error);
+        else {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
     }
 

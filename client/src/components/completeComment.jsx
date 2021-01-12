@@ -84,17 +84,22 @@ const CompleteComment = () => {
     var style4 = (!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"} 
 
     const remove = () => {
-        const drop = async() => {
-            try {
-                const response = await axios.post(`/posts/remove/${id}`, comment);
-                console.log(response.data);
-                history.push(`/comment/${comment._id}/${id}`);        
+        if(username !== "Guest") {
+            const drop = async() => {
+                try {
+                    const response = await axios.post(`/posts/remove/${id}`, comment);
+                    console.log(response.data);
+                    history.push(`/comment/${comment._id}/${id}`);        
+                }
+                catch (error) {
+                    console.log(error);
+                }
             }
-            catch (error) {
-                console.log(error);
-            }
+            drop();
         }
-        drop();
+        else {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+        }
     }
 
 
