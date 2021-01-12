@@ -157,6 +157,8 @@ textarea {
 
 .profile {
   cursor: pointer;
+  padding: 5px 10px;
+  height: 45px;
 }
 
 /* POSTS DESIGNING */
@@ -332,3 +334,11 @@ textarea {
     cursor: pointer;
     color: brown;
   }
+
+  .messages {
+    padding: 5% 0;
+    overflow: auto;
+    flex: auto;
+  }
+
+  

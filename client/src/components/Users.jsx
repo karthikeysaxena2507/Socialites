@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import axios from "axios";
 import React, { useEffect,useState } from "react";
+import { useHistory } from "react-router-dom";
 import Footer from "./Footer";
 import Heading from "./Heading";
 import search from "./images/search.png";
@@ -12,6 +13,7 @@ import InvalidUser from "./InvalidUser";
 const Users = () => {
 
     var username = localStorage.getItem("username");
+    var history = useHistory();
     var [allUsers, setAllUsers] = useState([]);
     var [users, setUsers] = useState([]);
     var [searchContent,setsearchContent] = useState("");
@@ -32,12 +34,20 @@ const Users = () => {
     },[username]);
 
     const createUser = (props, index) => {
+
+        const createRoom = (e) => {
+            localStorage.setItem("otheruser", props.username);
+            history.push(`/chat/`);   
+        }
+
+
         if(props.username !== "Guest")
         {
             if(props.username !== undefined) {
                 return (<div className="container user" key={index}>
                 <li className="profile">
                     {props.username} 
+                    <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
             } 

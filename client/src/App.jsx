@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import  {BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React from "react";
+import  {BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./components/Home";
 import About from "./components/About";
 import Posts from "./components/Posts";
@@ -19,6 +19,7 @@ import ResetPassword from "./components/ResetPassword";
 import CategoryPosts from "./components/CategoryPosts";
 import MyCategoryPosts from "./components/MyCategoryPosts";
 import Users from "./components/Users";
+import Chat from "./components/Chat";
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
         <Route exact path="/register" component={Register} />
         <Route exact path="/about" component={About}/>
         <Route exact path="/allposts" component={Posts} />
+        <Route exact path="/chat" component={Chat} />
         <Route exact path="/allusers" component={Users} />
         <Route exact path="/create" component={Create} />
         <Route exact path="/myposts" component={MyPosts} />

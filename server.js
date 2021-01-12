@@ -40,9 +40,11 @@ mongoose.connect(uri, {
 
 const postsRouter = require("./routes/posts.js");
 const usersRouter = require("./routes/users.js");
+const chatsRouter = require("./routes/chats.js");
 
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
+app.use("/chats", chatsRouter);
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(function(user, done) {
