@@ -41,7 +41,7 @@ const Navbar = (props) => {
           <span className={"nav-item nav-link active expand " + ((props.page === "myposts") ? "nav-item-active" : "")}> MyPosts </span>
         </Link>
         <Link to="/allusers">
-          <span className={"nav-item nav-link active expand " + ((props.page === "allusers") ? "nav-item-active" : "")}> AllUsers </span>
+          <span className={"nav-item nav-link active expand " + ((props.page === "allusers") ? "nav-item-active" : "")}> Chat </span>
         </Link>
         <span onClick={change} className={"nav-item nav-link active expand"}> Logout </span>
         </div>

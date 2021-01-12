@@ -29,7 +29,7 @@
   .sentText {
     display: flex;
     align-items: center;
-    color: #828282;
+    color: black;
     letter-spacing: 0.3px;
     padding-left: 10px;
   }
@@ -63,5 +63,5 @@
   }
   
   .backgroundLight {
-    background: #F3F3F3;
+    background: rgb(185, 122, 70);
   }

@@ -38,7 +38,7 @@ const Chat = () => {
 
     const sendMessage = (e) => {
         e.preventDefault();
-        if(user1 === null) {
+        if(user1 === null || user1 === "Guest") {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
         else {
@@ -72,7 +72,7 @@ const Chat = () => {
             <div key={index}>
                 <div className="messageContainer justifyStart">
                     <div className="messageBox backgroundLight">
-                        <p className="messageText colorDark">{props.content}</p>
+                        <p className="messageText colorLight">{props.content}</p>
                     </div>
                     <p className="sentText pl-10 ">{user2}</p>
                 </div>
