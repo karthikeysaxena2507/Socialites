@@ -5,11 +5,6 @@ import Navbar from "./Navbar";
 import ScrollToBottom from 'react-scroll-to-bottom';
 import Footer from "./Footer";
 
-import "./Input.css";
-import "./Chat.css";
-import "./Message.css";
-
-
 const Chat = () => {
 
     var user1 = localStorage.getItem("username");
@@ -92,12 +87,12 @@ const Chat = () => {
             </ScrollToBottom>
             <form className="form">
                 <input
-                className="input"
-                type="text"
-                placeholder="Type a message..."
-                value={message}
-                onChange={changeMessage}
-                onKeyPress={event => event.key === "Enter" ? sendMessage(event) : null}
+                    className="input"
+                    type="text"
+                    placeholder="Type a message..."
+                    value={message}
+                    onChange={changeMessage}
+                    onKeyPress={event => event.key === "Enter" ? sendMessage(event) : null}
                 />
                 <button type="submit" className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
             </form>
