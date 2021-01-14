@@ -5,6 +5,7 @@ import { Link,useHistory } from "react-router-dom";
 const Navbar = (props) => {
 
     var history = useHistory();
+    var username = localStorage.getItem("username");
 
     const change = () => {
       const drop = async() => {
@@ -41,11 +42,12 @@ const Navbar = (props) => {
           <span className={"nav-item nav-link active expand " + ((props.page === "myposts") ? "nav-item-active" : "")}> MyPosts </span>
         </Link>
         <Link to="/allusers">
-          <span className={"nav-item nav-link active expand " + ((props.page === "allusers") ? "nav-item-active" : "")}> Chat </span>
+          <span className={"nav-item nav-link active expand " + ((props.page === "allusers") ? "nav-item-active" : "")}> Chats </span>
         </Link>
-        <span onClick={change} className={"nav-item nav-link active expand"}> Logout </span>
+          <span onClick={change} className={"nav-item nav-link active expand"}> Logout </span>
         </div>
       </div>
+      <span className="move-right nav-item nav-link active expand profilename"> {username} </span>        
     </nav>
   </div>
 }

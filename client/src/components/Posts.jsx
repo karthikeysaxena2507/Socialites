@@ -95,7 +95,6 @@ const Posts = () => {
             return (<div>
                 <Navbar page = "home"/>
                 <Heading />
-                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="text-center"> <h3 className="margin"> All Posts </h3> </div>
                 <CategoryMenu category_type = "Select Category" message = "all" />
                 <SearchBar message = "all" type = "none" />

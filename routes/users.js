@@ -6,8 +6,6 @@ const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-var currUser;
-
 router.get("/get/:username", async(req, res, next) => {
     try {  
         const users = await User.find({});

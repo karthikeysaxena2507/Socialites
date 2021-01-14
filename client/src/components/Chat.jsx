@@ -4,6 +4,7 @@ import Heading from "./Heading";
 import Navbar from "./Navbar";
 import ScrollToBottom from 'react-scroll-to-bottom';
 import Footer from "./Footer";
+import ReactEmoji from 'react-emoji';
 
 const Chat = () => {
 
@@ -16,9 +17,11 @@ const Chat = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
-                const response = await axios.get(`/chats/get/${room}`);
-                console.log(response);
-                setMessages(response.data);
+                if(user1 !== "Guest") {
+                    const response = await axios.get(`/chats/get/${room}`);
+                    console.log(response);  
+                    setMessages(response.data);
+                }
             }
             catch(error) {
                 console.log(error);
@@ -57,7 +60,7 @@ const Chat = () => {
                 <div className="messageContainer justifyEnd">
                     <div className="sentText pr-10">{user1}</div>
                     <div className="messageBox backgroundBlue">
-                        <p className="messageText colorWhite"> {props.content} </p>
+                        <p className="messageText colorWhite"> {ReactEmoji.emojify(props.content)} </p>
                     </div>
                 </div>
             </div>);
@@ -67,7 +70,7 @@ const Chat = () => {
             <div key={index}>
                 <div className="messageContainer justifyStart">
                     <div className="messageBox backgroundLight">
-                        <p className="messageText colorLight">{props.content}</p>
+                        <p className="messageText colorLight"> {ReactEmoji.emojify(props.content)} </p>
                     </div>
                     <p className="sentText pl-10 ">{user2}</p>
                 </div>
@@ -78,7 +81,6 @@ const Chat = () => {
     return (<div>
         <Navbar page = "chats"/>
         <Heading />
-        <h4 className="margin text-center"> Hello {user1} </h4>
         <div className="text-center"> <h5 className="margin"> Chat with {user2} </h5> </div>
         <div className="outerContainer">
             <div className="innerContainer">

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Navbar from "./Navbar"; 
 import liked from "./images/like.png"
 import loved from "./images/love.png";
@@ -12,11 +12,11 @@ import Post from "./Post";
 import Heading from "./Heading";
 import Fuse from "fuse.js";
 import InvalidUser from "./InvalidUser";
-import { set } from "mongoose";
 
 const Reactions = () => {
 
     var username = localStorage.getItem("username");
+    var history = useHistory();
     var { id } = useParams();
     var [like,setlike] = useState(false);
     var [love,setlove] = useState(false);
@@ -104,13 +104,27 @@ const Reactions = () => {
     const renderUsers = (props, index) => {
 
         if(props.name !== undefined) {
+            const createRoom = (e) => {
+                localStorage.setItem("otheruser", props.name);
+                history.push(`/chat/`);   
+            }
             return (<div className="container user" key={index}>
-            <li className="profile"> {props.name} </li>
+            <li className="profile"> 
+                {props.name}
+                <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+            </li>
         </div>);
         }
         else {
+            const createRoom = (e) => {
+                localStorage.setItem("otheruser", props.item.name);
+                history.push(`/chat/`);   
+            }
             return (<div className="container user" key={index}>
-            <li className="profile"> {props.item.name} </li>
+            <li className="profile"> 
+                {props.item.name} 
+                <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+            </li>
         </div>);
         }
     }
@@ -170,7 +184,6 @@ const Reactions = () => {
             return(<div>
                 <Navbar page="reactions"/>
                 <Heading />
-                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="container">
                     <Post 
                             key = {post._id}

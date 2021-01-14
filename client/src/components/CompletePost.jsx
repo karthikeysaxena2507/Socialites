@@ -97,12 +97,18 @@ const CompletePost = () => {
             history.push(`/comment/${props._id}/${id}`);
         }
 
+        const createRoom = (e) => {
+            localStorage.setItem("otheruser", props.name);
+            history.push(`/chat/`);   
+        }
+
         var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
 
         return <div className="container margin" key={index}>
         <div className="comment-name">
             <div> 
                 <span className="name author"> {props.name} </span>
+                <button onClick={createRoom} className="move-right btn-dark expand"> Message {props.name} </button>
             </div>
             <div>
                 <span className="move-right"> 
@@ -153,7 +159,6 @@ const CompletePost = () => {
             return (<div className="container">
             <Navbar page = "complete" />
             <Heading />
-            <h4 className="margin text-center"> Hello {username} </h4>
             <div>
                 <Post 
                         key = {id}

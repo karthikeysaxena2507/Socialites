@@ -93,7 +93,6 @@ const Users = () => {
             return <div>
             <Navbar page = "allusers"/>
             <Heading />
-            <h4 className="margin text-center"> Hello {username} </h4>
             <div className="text-center"> <h3 className="margin"> All Users </h3> </div>
             <div className="container margin text-center">
                 <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search Users" autoComplete="off"/>

@@ -1,5 +1,5 @@
 {
-  "name": "yourpost",
+  "name": "socialites",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,6 +14,7 @@
     "js-cookie": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-emoji": "^0.5.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1",
     "react-scroll-to-bottom": "^4.1.0",

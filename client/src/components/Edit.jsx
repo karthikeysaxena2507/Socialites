@@ -99,7 +99,6 @@ const Edit = () => {
                     page = "edit"
                 />
                 <Heading />
-                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="text-center"> 
                     <h1 className="margin"> Edit Your Post Here </h1> 
                 </div> 

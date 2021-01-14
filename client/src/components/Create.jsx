@@ -79,7 +79,6 @@ const Create = () => {
             return (<div className="text-center">
                 <Navbar page = "create"/>
                 <Heading />
-                <h4 className="margin text-center"> Hello {username} </h4>
                 <div> 
                 <h1 className="margin"> Create Your Post Here </h1>
                 </div> 

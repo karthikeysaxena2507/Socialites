@@ -106,8 +106,16 @@ const CompleteComment = () => {
     var styling = (comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"};
 
     const renderUsers = (props, index) => {
+
+        const createRoom = (e) => {
+            localStorage.setItem("otheruser", props.name);
+            history.push(`/chat/`);   
+        }
+
         return (<div className="container user" key={index}>
-            <li className="profile"> {props.name} </li>
+            <li className="profile"> {props.name} 
+            <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+            </li>
         </div>);
     }
 
@@ -121,7 +129,6 @@ const CompleteComment = () => {
             return (<div>
                 <Navbar page = "comment"/>
                 <Heading />
-                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="container">
                     <div className="container margin">
                     <div className="comment-name">

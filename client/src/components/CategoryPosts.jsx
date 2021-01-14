@@ -85,7 +85,6 @@ const CategoryPosts = () => {
             <div>
                 <Navbar page = "home"/>
                 <Heading />
-                <h4 className="margin text-center"> Hello {username} </h4>
                 <div className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </div>
                 <CategoryMenu category_type = {type} message = "all" />
                 <SearchBar type = {type} message = "all" />
