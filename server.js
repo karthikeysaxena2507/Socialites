@@ -119,7 +119,6 @@ webpush.setVapidDetails('mailto:test@test.com', publicVapidKey, privateVapidKey)
 // Subscribe Route
 app.post("/subscribe", (req, res) => {
     const subscription = req.body;
-    console.log(subscription);
     res.status(201).json({});
     const payload = JSON.stringify({ title: "Push test"});
     webpush.sendNotification(subscription, payload).catch(err => console.log(err));
