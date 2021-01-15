@@ -34,6 +34,6 @@ router.post("/add/:room", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-})
+});
 
 module.exports = router;

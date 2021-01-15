@@ -8,9 +8,16 @@ const session = require("express-session");
 const User = require("./models/user.model");
 var LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const jwt = require("jsonwebtoken");
+const http = require("http");
 
 const app = express();
+const server = http.createServer(app);
+
+const io = require('socket.io')(server, {
+    cors: {
+      origin: '*',
+    }
+});
 
 const port = process.env.PORT || 5000;
 
@@ -41,10 +48,12 @@ mongoose.connect(uri, {
 const postsRouter = require("./routes/posts.js");
 const usersRouter = require("./routes/users.js");
 const chatsRouter = require("./routes/chats.js");
+const roomsRouter = require("./routes/rooms.js");
 
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/chats", chatsRouter);
+app.use("/rooms", roomsRouter);
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(function(user, done) {
@@ -101,6 +110,23 @@ app.post("/logout", (req, res) => {
     res.json("logged out");
 });
 
+app.get("/lala", (req, res) => {
+    res.send("hello");
+});
+
+// HANDLING CHAT EVENTS WITH SOCKET.IO
+io.on("connection", (socket) => {
+
+    socket.on('join', (data) => {
+        console.log(data); 
+    });
+
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+    })
+});
+
+// HANDLING THE PRODUCTION BUILD
 if(process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
     const path = require("path");
@@ -109,7 +135,7 @@ if(process.env.NODE_ENV === "production") {
     });
 };
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`server is ready on ${port}`);
 });
 

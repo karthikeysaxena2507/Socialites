@@ -20,6 +20,7 @@ import CategoryPosts from "./components/CategoryPosts";
 import MyCategoryPosts from "./components/MyCategoryPosts";
 import Users from "./components/Users";
 import Chat from "./components/Chat";
+import Room from "./components/Room";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Route exact path="/about" component={About}/>
         <Route exact path="/allposts" component={Posts} />
         <Route exact path="/chat" component={Chat} />
+        <Route exact path="/room" component={Room} />
         <Route exact path="/allusers" component={Users} />
         <Route exact path="/create" component={Create} />
         <Route exact path="/myposts" component={MyPosts} />

@@ -8,7 +8,7 @@ import Heading from "./Heading";
 import search from "./images/search.png";
 import Navbar from "./Navbar";
 import Fuse from "fuse.js";
-import InvalidUser from "./InvalidUser";
+// import InvalidUser from "./InvalidUser";
 
 const Users = () => {
 
@@ -18,8 +18,11 @@ const Users = () => {
     var [users, setUsers] = useState([]);
     var [searchContent,setsearchContent] = useState("");
     var [message, setMessage] = useState("");
+    var [roomId, setRoomId] = useState("");
+    var [roomMessage, setRoomMessage] = useState("");
+    var [state, setState] = useState("");
 
-    useEffect( () => {
+    useEffect(() => {
         const fetch = async() => {
             try {
                 const response = await axios.get(`/users/get/${username}`);
@@ -39,7 +42,6 @@ const Users = () => {
             localStorage.setItem("otheruser", props.username);
             history.push(`/chat/`);   
         }
-
 
         if(props.username !== "Guest")
         {
@@ -61,10 +63,6 @@ const Users = () => {
         }
     }
 
-    const change = (event) => {
-        setsearchContent(event.target.value);
-    }
-
     const searchIt = (event) => {
         event.preventDefault();
         if(searchContent === "") {
@@ -83,34 +81,73 @@ const Users = () => {
         }
     }
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
+    const createRoom = () => {
+        if(username === null || username === "Guest") {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
         else {
-            return <div>
-            <Navbar page = "allusers"/>
-            <Heading />
-            <div className="text-center"> <h3 className="margin"> All Users </h3> </div>
-            <div className="container margin text-center">
-                <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search Users" autoComplete="off"/>
-                <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
-            </div>
-            <div className="margin text-center">
-                <p className="margin"> {message} </p>
-            </div>
-            <div className="margin">
-                {users.map(createUser)}
-            </div>
-            <div className="space"></div>
-            <Footer />
-        </div>
+            const drop = async() => {
+                try {
+                    const response = await axios.post("/rooms/create", {username});
+                    console.log(response.data);
+                    localStorage.setItem("roomId", response.data.roomId);
+                    history.push("/room");
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
     }
 
-    return <Check />;
+    const joinRoom = () => {
+        if(username === null || username === "Guest") {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+        }
+        else {
+            const drop = async() => {
+                try {
+                    const response = await axios.post("/rooms/join", {roomId, username});
+                    if(response.data === "invalid") {
+                        setRoomMessage("invalid Room Id");
+                    }
+                    console.log(response.data);
+                    localStorage.setItem("roomId", response.data.roomId);
+                    history.push("/room");
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
+        }
+    }
+
+    return <div>
+        <Navbar page = "allusers"/>
+        <Heading />
+        <div className="container margin text-center">
+            <h3 className="margin"> All Users </h3>
+            <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width" placeholder="Search Users" autoComplete="off"/>
+            <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+            <div>
+                <button className="btn expand" onClick={createRoom}> Create a room </button>
+                <button className="btn expand" onClick={() => {setState("Join"); setRoomId("")}}> Join a room </button>
+            </div>
+            <div style={(state==="") ? {visibility: "hidden"} : null}>
+                <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Id" autoComplete="off"/>
+                <button className="btn expand" onClick={joinRoom}> {state} </button>
+            </div>
+            <p className="margin"> {roomMessage} </p>
+            <p className="margin"> {message} </p>
+        </div>
+        <div className="margin">
+            {users.map(createUser)}
+        </div>
+        <div className="space"></div>
+        <Footer />
+    </div>
 }
 
 export default Users;
