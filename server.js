@@ -9,6 +9,10 @@ const User = require("./models/user.model");
 var LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const http = require("http");
+const webpush = require("web-push");
+
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
 const app = express();
 const server = http.createServer(app);
@@ -110,9 +114,17 @@ app.post("/logout", (req, res) => {
     res.json("logged out");
 });
 
-app.get("/lala", (req, res) => {
-    res.send("hello");
+webpush.setVapidDetails('mailto:test@test.com', publicVapidKey, privateVapidKey);
+
+// Subscribe Route
+app.post("/subscribe", (req, res) => {
+    const subscription = req.body;
+    console.log(subscription);
+    res.status(201).json({});
+    const payload = JSON.stringify({ title: "Push test"});
+    webpush.sendNotification(subscription, payload).catch(err => console.log(err));
 });
+
 
 // HANDLING CHAT EVENTS WITH SOCKET.IO
 io.on("connection", (socket) => {

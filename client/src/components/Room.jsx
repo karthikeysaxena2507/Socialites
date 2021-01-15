@@ -6,7 +6,6 @@ import Heading from "./Heading";
 import ReactEmoji from 'react-emoji';
 import ScrollToBottom from "react-scroll-to-bottom";
 
-
 const Room = () => {
 
     const username = localStorage.getItem("username");
