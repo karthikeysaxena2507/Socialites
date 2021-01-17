@@ -5,7 +5,6 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Heading from "./Heading";
 import { useParams, useHistory } from 'react-router-dom';
-import { Container, Row, Col } from "react-bootstrap";
 import axios from 'axios';
 import like from "./images/like.png";
 import love from "./images/love.png";
