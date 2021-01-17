@@ -260,37 +260,37 @@ const Profile = () => {
         <Navbar page = "profile"/>
         <Heading />
         <div className="text-center"> <h3 className="margin"> {user}'s Profile </h3> </div>
-            <Container className="mt-5">
-                <Row>
-                    <Col sm={6} >
-                    <div className="margin text-center" style={imageUrl === "" ? {display: "none"} : null}>
-                        <img src={imageUrl} className="profile-pic" alt="image not found"/>
-                    </div>
-                    <div style={imageUrl !== "" ? {display: "none"} : null}>
-                        <img src={blank} className="profile-pic" alt="image not found"/>
-                    </div>
-                    <form onSubmit={handleSubmitFile}>
-                    <div className="text-center">
-                        <div> <button style={ (!show) ? {display: "none"} : null } className="btn mt-1 expand"> Save </button> </div>
-                        <div style={(username !== user) ? {display: "none"} : null}>
-                            <label for="file"> 
-                                <span className="btn expand"> Select Image </span>
-                            </label>
-                            <span className="text-center margin">
-                                <span className="btn expand" onClick={removeImage}> Remove Image </span> 
-                            </span>
+            <div className="mt-5 container">
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="margin text-center" style={imageUrl === "" ? {display: "none"} : null}>
+                            <img src={imageUrl} className="profile-pic" alt="image not found"/>
                         </div>
+                        <div style={imageUrl !== "" ? {display: "none"} : null}>
+                            <img src={blank} className="profile-pic" alt="image not found"/>
+                        </div>
+                        <form onSubmit={handleSubmitFile}>
+                        <div className="text-center">
+                            <div> <button style={ (!show) ? {display: "none"} : null } className="btn mt-1 expand"> Save </button> </div>
+                            <div style={(username !== user) ? {display: "none"} : null}>
+                                <label for="file"> 
+                                    <span className="btn expand"> Select Image </span>
+                                </label>
+                                <span className="text-center margin">
+                                    <span className="btn expand" onClick={removeImage}> Remove Image </span> 
+                                </span>
+                            </div>
+                        </div>
+                            <input
+                                type="file" 
+                                name="image" 
+                                style={{visibility: "hidden"}}
+                                id="file"
+                                onChange={handleFileInputChange}
+                            />
+                        </form>
                     </div>
-                        <input
-                            type="file" 
-                            name="image" 
-                            style={{visibility: "hidden"}}
-                            id="file"
-                            onChange={handleFileInputChange}
-                        />
-                    </form>
-                    </Col>
-                    <Col sm={6} className="text-left pl-5 pr-5 userinfo">
+                    <div className="col-md-6 text-left pl-5 pr-5 userinfo">
                         <h4 className="text-center"> About {user} </h4>
                         <div className="bio" style={(edit === "Back") ? {display: "none"} : null}> 
                             {about} 
@@ -306,14 +306,14 @@ const Profile = () => {
                             <button style={ (user !== username) ? {display: "none"} : null } onClick={changeEdit} className="btn mt-1 expand"> {edit} </button>
                             <button style={ (edit === "Edit") ? {display: "none"} : null } onClick={updateBio} className="btn mt-1 expand"> Save </button>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
+                    </div>
+                </div>
+            </div>
             <div className="text-center"> <button onClick={changeState} className="btn mt-3 expand"> {state} Stats </button> </div>
-            <Container className="text-center mt-5 userinfo container" style={(state==="Show") ? {display: "none"} : null}>
+            <div className="text-center mt-5 userinfo container" style={(state==="Show") ? {display: "none"} : null}>
                 <h3 className="margin"> {user}'s Socialites Stats </h3>
-                <Row>
-                    <Col md={6}>
+                <div className="row">
+                    <div className="col-md-6">
                         <ul className="text-left mt-5 ml-2">
                             <li className="mt-1"> No. of Posts : {postCount} </li>
                             <li className="mt-1"> Total Comments on Posts : {comments} </li>
@@ -322,8 +322,8 @@ const Profile = () => {
                             <li className="mt-1"> No. of <img className="ml-2 mr-2" src={laugh} /> on Posts:  {laughs} </li>
                             <li className="mt-1"> Total Reactions on Posts: {likes + loves + laughs} </li>
                         </ul>
-                    </Col>
-                    <Col md={6}>
+                    </div>
+                    <div className="col-md-6">
                         <Pie
                             data={chartData}
                             options={{
@@ -337,9 +337,9 @@ const Profile = () => {
                                 }
                             }}
                         />
-                    </Col>
-               </Row>
-            </Container>
+                    </div>
+               </div>
+            </div>
             <div className="text-center mt-5"> <h3 className="margin"> {user}'s Posts </h3> </div>
             {posts.map(MyPost)}
             <div className="space"></div>
