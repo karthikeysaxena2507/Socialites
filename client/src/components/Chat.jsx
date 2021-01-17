@@ -36,7 +36,7 @@ const Chat = () => {
             }
         }
         fetch();
-    },[room, user1]);
+    });
 
     const sendMessage = (e) => {
         e.preventDefault();

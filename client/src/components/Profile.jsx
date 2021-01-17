@@ -81,7 +81,7 @@ const Profile = () => {
                         lvct+=post.love;
                         lgct+=post.laugh;
                     });
-                    console.log(cmct, lkct, lvct, lgct);
+                    setData((data) => {return [...data, lkct, lvct, lgct, cmct, lkct + lvct + lgct]});
                     setLikes(lkct);
                     setLoves(lvct);
                     setLaughs(lgct);
@@ -144,20 +144,8 @@ const Profile = () => {
         labels: ["Likes", "Loves", "Laughs", "Comments", "Reactions"],
             datasets: [
                 {
-                    backgroundColor: [
-                        '#B21F00',
-                        '#C9DE00',
-                        '#2FDE00',
-                        '#00A6B4',
-                        '#6800B4'
-                    ],
-                    hoverBackgroundColor: [
-                      '#501800',
-                      '#4B5000',
-                      '#175000',
-                      '#003350',
-                      '#35014F'
-                    ],
+                    backgroundColor: ['#B21F00','#C9DE00','#2FDE00','#00A6B4','#6800B4'],
+                    hoverBackgroundColor: ['#501800','#4B5000','#175000','#003350','#35014F'],
                     data: data
                 }
             ]

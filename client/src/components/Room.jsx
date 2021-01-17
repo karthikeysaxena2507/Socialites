@@ -27,7 +27,7 @@ const Room = () => {
             }
         }
         fetch();
-    },[roomId]);
+    });
     
     const sendMessage = (e) => {
         e.preventDefault();
