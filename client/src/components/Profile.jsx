@@ -149,18 +149,23 @@ const Profile = () => {
     }
 
     const updateBio = () => {
-        const drop = async() => {
-            try {
-                const userData = await axios.post(`/users/updatebio`,{user, text});
-                console.log(userData);
-                setAbout(userData.data);
-                setEdit("Edit");
+        if(username !== "Guest" && username !== null) {
+            const drop = async() => {
+                try {
+                    const userData = await axios.post(`/users/updatebio`,{user, text});
+                    console.log(userData);
+                    setAbout(userData.data);
+                    setEdit("Edit");
+                }
+                catch(error) {
+                    console.log(error);
+                }
             }
-            catch(error) {
-                console.log(error);
-            }
+            drop();
         }
-        drop();
+        else {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+        }
     }
 
     const handleFileInputChange = (e) => {
