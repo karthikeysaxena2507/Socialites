@@ -97,7 +97,7 @@ app.get("/socialites-karthikey/auth/google/social", passport.authenticate("googl
     failureRedirect: "/login"
     }), (req, res) => {
         googleUser = req.user.username;
-        res.redirect(`/profile/${req.user.username}`);
+        res.redirect("/allposts");
 });
 
 app.get("/auth", async(req, res, next) => {

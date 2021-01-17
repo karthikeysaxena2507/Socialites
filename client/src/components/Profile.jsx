@@ -230,7 +230,7 @@ const Profile = () => {
         <div className="text-center"> <h3 className="margin"> {user}'s Profile </h3> </div>
             <Container className="mt-5">
                 <Row>
-                    <Col xs={12} sm={6} >
+                    <Col sm={6} >
                     <div className="margin text-center" style={imageUrl === "" ? {display: "none"} : null}>
                         <img src={imageUrl} className="profile-pic" alt="image not found"/>
                     </div>
@@ -258,7 +258,7 @@ const Profile = () => {
                         />
                     </form>
                     </Col>
-                    <Col xs={12} sm={6} className="text-left pl-5 pr-5 userinfo">
+                    <Col sm={6} className="text-left pl-5 pr-5 userinfo">
                         <h4 className="text-center"> About {user} </h4>
                         <div className="bio" style={(edit === "Back") ? {display: "none"} : null}> 
                             {about} 
@@ -281,13 +281,13 @@ const Profile = () => {
                 <button onClick={changeState} className="btn mt-3 expand"> {state} Stats </button>
                 <div style={(state==="Show") ? {display: "none"} : null}>
                     <h3 className="margin"> {user}'s Socialites Stats </h3>
-                    <ul className="text-left mt-5 ml-5">
+                    <ul className="text-left mt-5 ml-2">
                         <li className="mt-1"> No. of Posts : {postCount} </li>
-                        <li className="mt-1"> Total No. Comments on Posts : {comments} </li>
+                        <li className="mt-1"> Total Comments on Posts : {comments} </li>
                         <li className="mt-1"> No. of <img className="ml-2 mr-2" src={like} /> on Posts:  {likes} </li>
                         <li className="mt-1"> No. of <img className="ml-2 mr-2" src={love} /> on Posts:  {loves} </li>
                         <li className="mt-1"> No. of <img className="ml-2 mr-2" src={laugh} /> on Posts:  {laughs} </li>
-                        <li className="mt-1"> Total No. of Reactions on Posts: {likes + loves + laughs} </li>
+                        <li className="mt-1"> Total Reactions on Posts: {likes + loves + laughs} </li>
                     </ul>
                </div>
             </div>
