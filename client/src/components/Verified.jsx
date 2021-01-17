@@ -15,6 +15,7 @@ const Verified = () => {
             try {
                 const response = await axios.post("/users/verify/", user);
                 console.log(response.data);
+                alert("email Verifed, you can now Login to socialites");
                 history.push("/login");
             }
             catch(error) {

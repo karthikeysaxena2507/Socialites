@@ -102,12 +102,16 @@ const CompletePost = () => {
             history.push(`/chat/`);   
         }
 
+        const SeeProfile = (e) => {
+            history.push(`/profile/${e.target.innerText}`);
+        }
+
         var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
 
         return <div className="container margin" key={index}>
         <div className="comment-name">
             <div> 
-                <span className="name author"> {props.name} </span>
+                <span className="name author" onClick={SeeProfile}> {props.name} </span>
                 <button onClick={createRoom} className="move-right btn-dark expand"> Message {props.name} </button>
             </div>
             <div>

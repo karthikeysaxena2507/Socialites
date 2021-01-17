@@ -62,6 +62,10 @@ const Post = (props) => {
         history.push(`/complete/${props._id}`);
     }
 
+    const SeeProfile = (e) => {
+        history.push(`/profile/${e.target.innerText}`);
+    }
+
     var visibility = (props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"};
 
     var image = (props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"};
@@ -70,7 +74,7 @@ const Post = (props) => {
         <div className="post-title"> 
             <h2> {props.title} </h2>
             <span> by </span>
-            <span className="author expand"> {props.author} </span>
+            <span className="author expand" onClick={SeeProfile}> {props.author} </span>
             <span className="move-right"> <i> #{props.category} </i> </span>
         </div>
         <div className="post-content">

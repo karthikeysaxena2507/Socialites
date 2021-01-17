@@ -47,7 +47,7 @@ const Navbar = (props) => {
           <span onClick={change} className={"nav-item nav-link active expand"}> Logout </span>
         </div>
       </div>
-      <span className="move-right nav-item nav-link active expand profilename"> {username} </span>        
+        <span className={"move-right nav-item nav-link active expand profilename " + ((props.page === "profile") ? "nav-item-active" : "")} onClick={() => {history.push(`/profile/${username}`)}}> {username} </span>        
     </nav>
   </div>
 }

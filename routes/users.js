@@ -3,6 +3,7 @@ const router = require("express").Router();
 const passport = require("passport");
 let User = require("../models/user.model.js");
 const sgMail = require("@sendgrid/mail");
+const { cloudinary } = require("../utils/cloudinary");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -18,8 +19,41 @@ router.get("/get/:username", async(req, res, next) => {
 
 router.get("/find/:username", async(req, res, next) => {
     try {
-        const user = await User.find({username: req.params.username});
+        const user = await User.findOne({username: req.params.username});
         res.json(user);
+    }
+    catch(error) {
+        res.json(next(error));
+    }
+});
+
+router.post("/updateimage", async(req, res, next) => {
+    try {
+        const user = await User.findOne({username: req.body.user});
+        var imageUrl = "";
+        if(req.body.data !== "") {
+            var fileStr = req.body.data;
+            var uploadedResponse = await cloudinary.uploader.
+            upload(fileStr, {
+                upload_preset: "socialites"
+            });
+            imageUrl = uploadedResponse.url;
+        }
+        user.imageUrl = imageUrl;
+        user.save();
+        res.json(user);
+    }
+    catch(error) {
+        res.json(next(error));
+    }
+})
+
+router.post("/updatebio", async(req, res, next) => {
+    try {
+        const user = await User.findOne({username: req.body.user});
+        user.about = req.body.text;
+        user.save();
+        res.json(user.about);
     }
     catch(error) {
         res.json(next(error));
@@ -146,7 +180,13 @@ router.post("/add", async(req, res, next) => {
         if(foundUser === null) {
             const user = await User.findOne({email: req.body.email});
             if(user === null) {
-                User.register({username: req.body.username, email: req.body.email, verified: newUser.verified},
+                User.register({
+                    username: req.body.username, 
+                    email: req.body.email, 
+                    verified: newUser.verified, 
+                    imageUrl: "", 
+                    about: `Hello, ${req.body.username} here`
+                },
                     req.body.password, async(err,foundUser) => {
                         try {
                             passport.authenticate("local")(req, res, () => {

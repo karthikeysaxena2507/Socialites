@@ -8,7 +8,7 @@ import Heading from "./Heading";
 import search from "./images/search.png";
 import Navbar from "./Navbar";
 import Fuse from "fuse.js";
-// import InvalidUser from "./InvalidUser";
+import { Button } from "react-bootstrap";
 
 const Users = () => {
 
@@ -39,8 +39,17 @@ const Users = () => {
     const createUser = (props, index) => {
 
         const createRoom = (e) => {
-            localStorage.setItem("otheruser", props.username);
+            if(props.username !== undefined) {
+                localStorage.setItem("otheruser", props.username);
+            }
+            else {
+                localStorage.setItem("otheruser", props.item.username);
+            }
             history.push(`/chat/`);   
+        }
+
+        const SeeProfile = (e) => {
+            history.push(`/profile/${e.target.innerText}`);
         }
 
         if(props.username !== "Guest")
@@ -48,7 +57,7 @@ const Users = () => {
             if(props.username !== undefined) {
                 return (<div className="container user" key={index}>
                 <li className="profile">
-                    {props.username} 
+                    <span onClick={SeeProfile}> {props.username} </span>
                     <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
@@ -56,7 +65,8 @@ const Users = () => {
             else {
                 return (<div className="container user" key={index}>
                 <li className="profile">
-                    {props.item.username} 
+                    <span onClick={SeeProfile}> {props.item.username} </span>
+                    <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
             }
@@ -123,21 +133,20 @@ const Users = () => {
             drop();
         }
     }
-
     return <div>
         <Navbar page = "allusers"/>
         <Heading />
         <div className="container margin text-center">
             <h3 className="margin"> All Users </h3>
             <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width" placeholder="Search Users" autoComplete="off"/>
-            <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+            <Button className="btn expand" onClick={searchIt}> <img src={search} /> </Button>
             <div>
-                <button className="btn expand" onClick={createRoom}> Create a room </button>
-                <button className="btn expand" onClick={() => {setState("Join"); setRoomId("")}}> Join a room </button>
+                <Button className="btn expand" onClick={createRoom}> Create a room </Button>
+                <Button className="btn expand" onClick={() => {setState("Join"); setRoomId("")}}> Join a room </Button>
             </div>
             <div style={(state==="") ? {visibility: "hidden"} : null}>
                 <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Id" autoComplete="off"/>
-                <button className="btn expand" onClick={joinRoom}> {state} </button>
+                <Button className="btn expand" onClick={joinRoom}> {state} </Button>
             </div>
             <p className="margin"> {roomMessage} </p>
             <p className="margin"> {message} </p>

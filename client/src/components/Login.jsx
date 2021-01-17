@@ -29,7 +29,7 @@ const Login = () => {
                 const response = await axios.post("/users/", userDetails);
                 localStorage.setItem("username", response.data.username);
                 if(response.data.verified) {
-                    history.push(`/allposts`);
+                    history.push(`/profile/${response.data.username}`);
                 }
                 else {
                     history.push(`/verify/${userDetails.username}`);  

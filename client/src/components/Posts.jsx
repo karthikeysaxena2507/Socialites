@@ -9,7 +9,6 @@ import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
 import SearchBar from "./SearchBar";
 import InvalidUser from "./InvalidUser";
-import { send } from "../utils/Push.js";
 
 const Posts = () => {
 
@@ -24,7 +23,6 @@ const Posts = () => {
                     if(response.data !== "") {
                         localStorage.setItem("username", response.data);
                     }
-                    send("Push Notifications", "Push notification successfully sent to the browser! Check it out!")
                 }
                 catch(error) {
                     console.log(error);

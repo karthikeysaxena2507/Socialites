@@ -10,6 +10,7 @@ import CategoryMenu from "./CategoryMenu";
 import Heading from "./Heading";
 import SearchBar from "./SearchBar";
 import InvalidUser from "./InvalidUser";
+import { Container } from "react-bootstrap";
 
 const CategoryPosts = () => {
 
@@ -85,7 +86,7 @@ const CategoryPosts = () => {
             <div>
                 <Navbar page = "home"/>
                 <Heading />
-                <div className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </div>
+                <Container className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </Container>
                 <CategoryMenu category_type = {type} message = "all" />
                 <SearchBar type = {type} message = "all" />
                 {posts.map(createPost)}

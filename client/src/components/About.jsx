@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Heading from "./Heading";
 import InvalidUser from "./InvalidUser";
+import { Container } from "react-bootstrap";
 
 const About = () => {
 
@@ -18,7 +19,7 @@ const About = () => {
             return (<div>
                 <Navbar page = "about" />
                 <Heading />
-                <div className="container about">
+                <Container className="about">
                     <div className="mt-3">
                         <h2> About Socialites </h2>
                     </div>
@@ -43,7 +44,7 @@ const About = () => {
                     <div className="mt-3">
                         <h4> Made By: Karthikey Saxena </h4>
                     </div>
-                </div>
+                </Container>
                 <div className="space"></div>
                 <Footer />
             </div>);
