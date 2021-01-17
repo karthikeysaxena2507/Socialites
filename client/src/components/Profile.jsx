@@ -14,6 +14,7 @@ import trash from "./images/trash.png";
 import editIcon from "./images/edit.png";
 import Post from "./Post";
 import blank from "./images/blank.png";
+import { Pie } from "react-chartjs-2";
 
 
 const Profile = () => {
@@ -21,6 +22,7 @@ const Profile = () => {
     const username = localStorage.getItem("username");
     let { user } = useParams();
     var [imageUrl, setImageUrl] = useState("");
+    var [data, setData] = useState([]);
     var [posts, setPosts] = useState([]);
     var [postCount, setPostCount] = useState(0);
     var [likes, setLikes] = useState(0);
@@ -33,7 +35,7 @@ const Profile = () => {
     var [edit, setEdit] = useState("Edit");
     var [text, setText] = useState("");
     var [show, setShow] = useState(false);
-
+    
     useEffect(() => {
         const fetch = async() => {
             try {
@@ -51,6 +53,7 @@ const Profile = () => {
                     lvct+=post.love;
                     lgct+=post.laugh;
                 });
+                setData((data) => {return [...data, lkct, lvct, lgct, cmct, lkct + lvct + lgct]});
                 setLikes(lkct);
                 setLoves(lvct);
                 setLaughs(lgct);
@@ -138,9 +141,33 @@ const Profile = () => {
         history.push(`/chat/`);   
     }
 
+    var chartData = {
+        labels: ["Likes", "Loves", "Laughs", "Comments", "Reactions"],
+            datasets: [
+                {
+                    backgroundColor: [
+                        '#B21F00',
+                        '#C9DE00',
+                        '#2FDE00',
+                        '#00A6B4',
+                        '#6800B4'
+                    ],
+                    hoverBackgroundColor: [
+                      '#501800',
+                      '#4B5000',
+                      '#175000',
+                      '#003350',
+                      '#35014F'
+                    ],
+                    data: data
+                }
+            ]
+    }
+
     const changeState = () => {
         if(state === "Show") setState("Hide");
         else setState("Show");
+        console.log(data);
     }
 
     const changeEdit = () => {
@@ -282,20 +309,37 @@ const Profile = () => {
                     </Col>
                 </Row>
             </Container>
-            <div className="text-center mt-5 userinfo container"> 
-                <button onClick={changeState} className="btn mt-3 expand"> {state} Stats </button>
-                <div style={(state==="Show") ? {display: "none"} : null}>
-                    <h3 className="margin"> {user}'s Socialites Stats </h3>
-                    <ul className="text-left mt-5 ml-2">
-                        <li className="mt-1"> No. of Posts : {postCount} </li>
-                        <li className="mt-1"> Total Comments on Posts : {comments} </li>
-                        <li className="mt-1"> No. of <img className="ml-2 mr-2" src={like} /> on Posts:  {likes} </li>
-                        <li className="mt-1"> No. of <img className="ml-2 mr-2" src={love} /> on Posts:  {loves} </li>
-                        <li className="mt-1"> No. of <img className="ml-2 mr-2" src={laugh} /> on Posts:  {laughs} </li>
-                        <li className="mt-1"> Total Reactions on Posts: {likes + loves + laughs} </li>
-                    </ul>
-               </div>
-            </div>
+            <div className="text-center"> <button onClick={changeState} className="btn mt-3 expand"> {state} Stats </button> </div>
+            <Container className="text-center mt-5 userinfo container" style={(state==="Show") ? {display: "none"} : null}>
+                <h3 className="margin"> {user}'s Socialites Stats </h3>
+                <Row>
+                    <Col md={6}>
+                        <ul className="text-left mt-5 ml-2">
+                            <li className="mt-1"> No. of Posts : {postCount} </li>
+                            <li className="mt-1"> Total Comments on Posts : {comments} </li>
+                            <li className="mt-1"> No. of <img className="ml-2 mr-2" src={like} /> on Posts:  {likes} </li>
+                            <li className="mt-1"> No. of <img className="ml-2 mr-2" src={love} /> on Posts:  {loves} </li>
+                            <li className="mt-1"> No. of <img className="ml-2 mr-2" src={laugh} /> on Posts:  {laughs} </li>
+                            <li className="mt-1"> Total Reactions on Posts: {likes + loves + laughs} </li>
+                        </ul>
+                    </Col>
+                    <Col md={6}>
+                        <Pie
+                            data={chartData}
+                            options={{
+                                title:{
+                                display:true,
+                                fontSize:20
+                                },
+                                legend:{
+                                display:true,
+                                position:'right'
+                                }
+                            }}
+                        />
+                    </Col>
+               </Row>
+            </Container>
             <div className="text-center mt-5"> <h3 className="margin"> {user}'s Posts </h3> </div>
             {posts.map(MyPost)}
             <div className="space"></div>
