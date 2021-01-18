@@ -107,9 +107,20 @@ const CompleteComment = () => {
 
     const renderUsers = (props, index) => {
 
-        const createRoom = (e) => {
-            localStorage.setItem("otheruser", props.name);
-            history.push(`/chat/`);   
+        const createRoom = () => {
+            const drop = async() => {
+                try {
+                    var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
+                    const response = await axios.post("/rooms/chat",{roomId: room})
+                    localStorage.setItem("roomId", room);
+                    history.push(`/room`);
+                    console.log(response.data);
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
 
         return (<div className="container user" key={index}>

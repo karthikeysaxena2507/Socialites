@@ -1,16 +1,18 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Heading from "./Heading";
 import ReactEmoji from 'react-emoji';
 import ScrollToBottom from "react-scroll-to-bottom";
+import io from "socket.io-client";
+const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 
 const Room = () => {
 
+    var socket = useRef(null);
     const username = localStorage.getItem("username");
     const roomId = localStorage.getItem("roomId");
-    var [creator, setCreator] = useState("");
     var [message, setMessage] = useState("");
     var [messages,setMessages] = useState([]);
 
@@ -19,15 +21,23 @@ const Room = () => {
             try {
                 const response = await axios.get(`/rooms/get/${roomId}`);
                 setMessages(response.data.messages);
-                setCreator(response.data.users[0].name);
                 console.log(response.data);
+                socket.current = io(ENDPOINT);
+                socket.current.emit("join", {name: username, room: roomId}, () => {});
+                socket.current.on("message", (data) => {
+                    setMessages((prev) => {return [...prev, data]});
+                });
+                return () => {
+                    socket.current.emit("disconnect");
+                    socket.current.off();
+                }
             }
             catch(error) {
                 console.log(error);
             }
         }
         fetch();
-    });
+    },[roomId, username]);
     
     const sendMessage = (e) => {
         e.preventDefault();
@@ -35,24 +45,15 @@ const Room = () => {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
         else {
-            console.log(message);
-            const drop = async() => {
-                try {
-                    const response = await axios.post("/rooms/add", {roomId, username, message});
-                    console.log(response.data); 
-                    setMessages(response.data.messages);
-                }
-                catch(error) {
-                    console.log(error);
-                }
+            if(message) {
+                socket.current.emit("sendmessage", {message, name: username, room: roomId}, () => {});
+                setMessage("");
             }
-            drop();
-            setMessage("");
         }
     }
 
     const createMessage = (props, index) => {
-        if(props.username === username) {
+        if(props.name === username) {
             return (
             <div key={index}>
                 <div className="messageContainer justifyEnd">
@@ -70,7 +71,7 @@ const Room = () => {
                     <div className="messageBox backgroundLight">
                         <p className="messageText colorLight"> {ReactEmoji.emojify(props.content)} </p>
                     </div>
-                    <p className="sentText pl-10">{props.username}</p>
+                    <p className="sentText pl-10">{props.name}</p>
                 </div>
             </div>);
         }
@@ -82,7 +83,6 @@ const Room = () => {
         <Heading />
         <div className="text-center"> 
             <h5 className="margin"> Room ID: {roomId} </h5>
-            <h5 className="margin"> Room Creator: {creator} </h5> 
         </div>
         <div className="outerContainer">
             <div className="innerContainer">

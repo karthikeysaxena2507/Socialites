@@ -97,10 +97,22 @@ const CompletePost = () => {
             history.push(`/comment/${props._id}/${id}`);
         }
 
-        const createRoom = (e) => {
-            localStorage.setItem("otheruser", props.name);
-            history.push(`/chat/`);   
+        const createRoom = () => {
+            const drop = async() => {
+                try {
+                    var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
+                    const response = await axios.post("/rooms/chat",{roomId: room})
+                    localStorage.setItem("roomId", room);
+                    history.push(`/room`);
+                    console.log(response.data);
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
         }
+
 
         const SeeProfile = (e) => {
             history.push(`/profile/${e.target.innerText}`);

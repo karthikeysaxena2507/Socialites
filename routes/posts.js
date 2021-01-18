@@ -227,6 +227,7 @@ router.post("/remove/:id", async(req, res, next) => {
 router.delete("/delete/:id", async(req, res, next) => {
     try {
         const response = await Post.deleteOne({_id: req.params.id});
+        res.json(response);
     }
     catch(error) {
         res.json(next(error));

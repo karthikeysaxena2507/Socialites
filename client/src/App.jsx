@@ -19,7 +19,6 @@ import ResetPassword from "./components/ResetPassword";
 import CategoryPosts from "./components/CategoryPosts";
 import MyCategoryPosts from "./components/MyCategoryPosts";
 import Users from "./components/Users";
-import Chat from "./components/Chat";
 import Room from "./components/Room";
 import Profile from "./components/Profile";
 
@@ -36,7 +35,6 @@ function App() {
         <Route exact path="/about" component={About}/>
         <Route exact path="/allposts" component={Posts} />
         <Route exact path="/profile/:user" component={Profile} />
-        <Route exact path="/chat" component={Chat} />
         <Route exact path="/room" component={Room} />
         <Route exact path="/allusers" component={Users} />
         <Route exact path="/create" component={Create} />

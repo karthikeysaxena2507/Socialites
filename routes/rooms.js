@@ -1,7 +1,5 @@
 const router = require("express").Router();
 const Room = require("../models/room.model");
-const Message = require("../models/message.model");
-const Users = require("../models/users.model");
 const { v4: uuidv4 } = require("uuid");
 
 router.get("/get/:id", async(req, res, next) => {
@@ -14,16 +12,22 @@ router.get("/get/:id", async(req, res, next) => {
     }
 });
 
-router.post("/add", async(req, res, next) => {
+router.post("/chat", async(req, res, next) => {
     try {
         const room = await Room.findOne({roomId: req.body.roomId});
-        const message = new Message({
-            username: req.body.username,
-            content: req.body.message
-        });
-        room.messages.push(message);
-        room.save();
-        res.json(room);
+        if(room === null) {
+            const room = new Room({
+                roomId: req.body.roomId,
+                messages: []
+            });
+            const message = {name: "Admin", content: `Hello Users`};
+            room.messages.push(message);
+            room.save();
+            res.json(room);
+        }
+        else {
+            res.json(room);
+        }
     }
     catch(error) {
         res.json(next(error));
@@ -32,7 +36,7 @@ router.post("/add", async(req, res, next) => {
 
 router.post("/join", async(req, res, next) => {
     try {
-        const room = await Room.findOne({roomId: req.body.roomId});
+        const room = await Room.findOne({roomId: req.body.roomId, roomName: req.body.roomId});
         if(room === null) {
             res.json("invalid");
         }
@@ -48,15 +52,13 @@ router.post("/join", async(req, res, next) => {
 router.post("/create", async(req, res, next) => {
     try {
         const roomId = uuidv4().replace(/-/g,'').substring(0,6);
-        const room = new Room({
+        const room = await new Room({
             roomId: roomId,
-            messages: [],
-            users: []
+            roomName: roomId,
+            messages: []
         });
-        const user = new Users({
-            name: req.body.username
-        });
-        room.users.push(user);
+        const message = {name: "Admin", content: `Hello Users`};
+        room.messages.push(message);
         room.save();
         res.json(room);
     }
