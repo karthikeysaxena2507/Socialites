@@ -66,6 +66,7 @@ passport.deserializeUser(function(id, done) {
         done(err, user);
     });
 });
+// SETTING UP GOOGLE AUTH
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -108,7 +109,7 @@ app.post("/logout", (req, res) => {
     res.json("logged out");
 });
 
-// SOCKET.IO FOR REAL TIME CHAT FEATURE
+// SETTING UP SOCKET.IO FOR REAL TIME CHATS
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
 const io = require('socket.io')(server, {
@@ -116,7 +117,6 @@ const io = require('socket.io')(server, {
       origin: '*',
     }
 });
-
 io.on("connection", (socket) => {
     socket.on("join", async(data) => {
         try {
@@ -148,6 +148,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", async() => {
         try {
             console.log("disconnected");
+            const response = await Chat.deleteOne({id: socket.id});
         }
         catch(error) {
             console.log(error);
@@ -164,6 +165,7 @@ if(process.env.NODE_ENV === "production") {
     });
 };
 
+// LISTENTING THE SERVER ON DEFINED PORT 
 server.listen(port, () => {
     console.log(`server is ready on ${port}`);
 });
