@@ -135,9 +135,20 @@ const Profile = () => {
     </div>);
     }
 
-    const createRoom = (e) => {
-        localStorage.setItem("otheruser", user);
-        history.push(`/chat/`);   
+    const createRoom = () => {
+        const drop = async() => {
+            try {
+                var room = (username < user) ? (username + "-" + user) : (user + "-" + username);
+                const response = await axios.post("/rooms/chat",{roomId: room})
+                localStorage.setItem("roomId", room);
+                history.push(`/room`);
+                console.log(response.data);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        drop();
     }
 
     var chartData = {
