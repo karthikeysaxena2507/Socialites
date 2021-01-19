@@ -98,6 +98,10 @@ app.get("/socialites-karthikey/auth/google/social", passport.authenticate("googl
 });
 app.get("/auth", async(req, res, next) => {
     try {
+        const user = await User.findOne({username: googleUser});
+        user.about = `Hello, ${googleUser} here`
+        user.imageUrl = "";
+        user.save();
         res.json(googleUser);
     }
     catch(err) {

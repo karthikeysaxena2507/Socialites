@@ -253,7 +253,7 @@ const Profile = () => {
                         <div className="margin text-center" style={imageUrl === "" ? {display: "none"} : null}>
                             <img src={imageUrl} className="profile-pic" alt="image not found"/>
                         </div>
-                        <div style={imageUrl !== "" ? {display: "none"} : null}>
+                        <div className="margin text-center" style={imageUrl !== "" ? {display: "none"} : null}>
                             <img src={blank} className="profile-pic" alt="image not found"/>
                         </div>
                         <form onSubmit={handleSubmitFile}>

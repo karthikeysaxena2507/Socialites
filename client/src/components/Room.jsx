@@ -21,7 +21,6 @@ const Room = () => {
             try {
                 const response = await axios.get(`/rooms/get/${roomId}`);
                 setMessages(response.data.messages);
-                console.log(response.data);
                 socket.current = io(ENDPOINT);
                 socket.current.emit("join", {name: username, room: roomId}, () => {});
                 socket.current.on("message", (data) => {
