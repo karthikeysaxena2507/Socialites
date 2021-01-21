@@ -204,9 +204,24 @@ router.post("/reset", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({username: req.body.username});
         if(foundUser) {
-            foundUser.setPassword(req.body.newPassword, () => {
-                foundUser.save();
-                res.json("password reset successfull");
+            brcypt.genSalt(10, (err, salt) => {
+                if(!err) {
+                    brcypt.hash(newPassword, salt, (err, hash) => {
+                        if(err) {
+                            res.json(err);
+                        }
+                        else {
+                            foundUser.password = hash;
+                            foundUser.save()
+                            .then((user) => {
+                                res.json(user);
+                            })
+                            .catch((error) => {
+                                res.json(error);
+                            });
+                        }
+                    })
+                }
             });
         }
         else {
