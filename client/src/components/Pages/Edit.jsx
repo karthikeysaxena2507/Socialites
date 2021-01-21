@@ -12,7 +12,7 @@ const Edit = () => {
 
     var { id } = useParams();
     var history = useHistory();
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var [title, setTitle] = useState("");
     var [content, setContent] = useState("");
     var [category, setCategory] = useState("Select Category");
@@ -22,6 +22,13 @@ const Edit = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
                 const response = await axios.get(`/posts/edit/${id}`);
                 setTitle(response.data.title);
                 setContent(response.data.content);
@@ -31,6 +38,8 @@ const Edit = () => {
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
@@ -63,7 +72,7 @@ const Edit = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        if(username !== "Guest" && username !== null) {
+        if(username !== "Guest") {
             try {
                 console.log(imageSource);
                 await fetch(`/posts/edit/${id}`, {

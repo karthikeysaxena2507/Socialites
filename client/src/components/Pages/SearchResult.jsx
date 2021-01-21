@@ -7,12 +7,11 @@ import Post from "../Post";
 import Footer from "../Footer";
 import Heading from "../Heading";
 import Fuse from "fuse.js";
-import InvalidUser from "../InvalidUser";
 import { Spinner } from "react-bootstrap";
 
 const Result = () => {
 
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var { searchContent,message,type } = useParams();
     var [foundPosts,setfoundPosts] = useState([]);
     var [loading, setLoading] = useState(true);
@@ -22,6 +21,13 @@ const Result = () => {
         if(message === "all") {
             const fetch = async() => {
                 try {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
                     const response = await axios.get("/posts");
                     setLoading(false);
                     const fuse = new Fuse(response.data, {
@@ -39,6 +45,8 @@ const Result = () => {
                 }
                 catch(error) {
                     console.log(error);
+                    localStorage.clear();
+                    window.location = "/login";
                 }
             }
             fetch();
@@ -46,6 +54,13 @@ const Result = () => {
         else if(message === "personal") {
             const fetch = async() => {
                 try {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
                     const response = await axios.get(`/posts/list/${username}`);
                     setLoading(false);
                     const fuse = new Fuse(response.data, {
@@ -126,24 +141,6 @@ const Result = () => {
             />
     }
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
-            return (<div>
-                <Navbar page = "result"/>
-                <Heading />
-                <div className="text-center"> <h2 className="margin"> Search Results </h2> </div>
-                {foundPosts.reverse().map(createPost)}
-                <div className="space"></div>
-                <Footer />
-        </div>);
-        }
-    }
-
     if(loading) {
         return (<div className="text-center upper-margin"> 
         <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -154,7 +151,16 @@ const Result = () => {
         <span> </span>
     </div>)
     }
-    else return <Check />;
+    else {
+        return (<div>
+            <Navbar name={username} page = "result"/>
+            <Heading />
+            <div className="text-center"> <h2 className="margin"> Search Results </h2> </div>
+            {foundPosts.reverse().map(createPost)}
+            <div className="space"></div>
+            <Footer />
+    </div>);
+    }
 }
 
 export default Result;

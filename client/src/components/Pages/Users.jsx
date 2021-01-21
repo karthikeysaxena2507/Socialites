@@ -12,7 +12,7 @@ import { Spinner } from "react-bootstrap";
 
 const Users = () => {
 
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var history = useHistory();
     var [allUsers, setAllUsers] = useState([]);
     var [users, setUsers] = useState([]);
@@ -21,22 +21,31 @@ const Users = () => {
     var [roomId, setRoomId] = useState("");
     var [roomMessage, setRoomMessage] = useState("");
     var [state, setState] = useState("");
-    var [loading, setLoading] = useState(true);
+    var [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetch = async() => {
             try {
-                const response = await axios.get(`/users/get/${username}`);
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
+                const response = await axios.get(`/users/get/${user.data.username}`);
                 setUsers(response.data);
                 setAllUsers(response.data);
                 setLoading(false);
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
-    },[username]);
+    },[]);
 
     const createUser = (props, index) => {
 
@@ -152,40 +161,40 @@ const Users = () => {
 
     if(loading) {
         return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
         <span> </span>
     </div>)
     }
     else {
-
-    return <div>
-        <Navbar page = "allusers"/>
-        <Heading />
-        <div className="container margin text-center">
-            <h3 className="margin"> All Users </h3>
-            <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width" placeholder="Search Users" autoComplete="off"/>
-            <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
-            <div>
-                <button className="btn expand" onClick={createRoom}> Create a room </button>
-                <button className="btn expand" onClick={() => {setState("Join"); setRoomId("")}}> Join a room </button>
+        return (<div>
+            <Navbar name={username} page = "allusers"/>
+            <Heading />
+            <div className="container margin text-center">
+                <h3 className="margin"> All Users </h3>
+                <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width" placeholder="Search Users" autoComplete="off"/>
+                <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                <div>
+                    <button className="btn expand" onClick={createRoom}> Create a room </button>
+                    <button className="btn expand" onClick={() => {setState("Join"); setRoomId("")}}> Join a room </button>
+                </div>
+                <div style={(state==="") ? {visibility: "hidden"} : null}>
+                    <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Id" autoComplete="off"/>
+                    <button className="btn expand" onClick={joinRoom}> {state} </button>
+                </div>
+                <p className="margin"> {roomMessage} </p>
+                <p className="margin"> {message} </p>
             </div>
-            <div style={(state==="") ? {visibility: "hidden"} : null}>
-                <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Id" autoComplete="off"/>
-                <button className="btn expand" onClick={joinRoom}> {state} </button>
+            <div className="margin">
+                {users.map(createUser)}
             </div>
-            <p className="margin"> {roomMessage} </p>
-            <p className="margin"> {message} </p>
-        </div>
-        <div className="margin">
-            {users.map(createUser)}
-        </div>
-        <div className="space"></div>
-        <Footer />
-    </div>}
+            <div className="space"></div>
+            <Footer />
+        </div>);
+    }
 }
 
 export default Users;

@@ -10,13 +10,12 @@ import loved from "../images/love.png";
 import laughed from "../images/laugh.png";
 import trash from "../images/trash.png";
 import Heading from "../Heading";
-import InvalidUser from "../InvalidUser";
 import { Spinner } from "react-bootstrap";
 
 const CompleteComment = () => {
 
     var history = useHistory();
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var { commentId,id } = useParams();
     var [comment, setComment] = useState({});
     var [like,setlike] = useState(false);
@@ -29,6 +28,13 @@ const CompleteComment = () => {
     useEffect(() => {
         const fetch = async() => {
             try{
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
                 const response = await axios.get(`/posts/getcomment/${commentId}/${id}`);
                 console.log(response.data);
                 setComment(response.data)
@@ -38,6 +44,8 @@ const CompleteComment = () => {
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
@@ -133,15 +141,19 @@ const CompleteComment = () => {
         </div>);
     }
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
-            return (<div>
-                <Navbar page = "comment"/>
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+            <span> </span>
+        </div>)
+    }
+    else {
+        return (<div>
+                <Navbar name={username} page = "comment"/>
                 <Heading />
                 <div className="container">
                     <div className="container margin">
@@ -181,22 +193,8 @@ const CompleteComment = () => {
                 </div>    
                 <div className="space"></div>
                 <Footer />
-            </div>);
-        }
+        </div>);
     }
-
-    if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
-    }
-    else return <Check />;
-
 }
 
 export default CompleteComment;

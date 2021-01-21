@@ -8,42 +8,50 @@ import Footer from "../Footer";
 import CategoryMenu from "../CategoryMenu";
 import Heading from "../Heading";
 import SearchBar from "../SearchBar";
-import InvalidUser from "../InvalidUser";
 import { Spinner } from "react-bootstrap";
 
 const Posts = () => {
 
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if(username === null) {
-            const getGoogleUser = async() => {
-                try {
-                    const response = await axios.get("/auth");
-                    if(response.data !== "") {
-                        localStorage.setItem("username", response.data);
-                    }
-                    setLoading(false);
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            }
-            getGoogleUser();
-        }
-    },[username]);
+    // useEffect(() => {
+    //     if(username === null) {
+    //         const getGoogleUser = async() => {
+    //             try {
+    //                 const response = await axios.get("/auth");
+    //                 if(response.data !== "") {
+    //                     localStorage.setItem("username", response.data);
+    //                 }
+    //                 setLoading(false);
+    //             }
+    //             catch(error) {
+    //                 console.log(error);
+    //             }
+    //         }
+    //         getGoogleUser();
+    //     }
+    // },[username]);
 
     useEffect(() => {
         const fetch = async () => {
             try {
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
                 const response = await axios.get("/posts/");
                 setPosts(response.data.reverse());
                 setLoading(false);
             }
-            catch (err) {
-                console.log(err);
+            catch (error) {
+                console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         };
         fetch(); 
@@ -89,26 +97,6 @@ const Posts = () => {
         />
     }
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
-            return (<div>
-                <Navbar page = "home"/>
-                <Heading />
-                <div className="text-center"> <h3 className="margin"> All Posts </h3> </div>
-                <CategoryMenu category_type = "Select Category" message = "all" />
-                <SearchBar message = "all" type = "none" />
-                {posts.map(createPost)}
-                <div className="space"></div>
-                <Footer />
-        </div>);
-        }
-    }
-
     if(loading) {
         return (<div className="text-center upper-margin"> 
         <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -119,7 +107,18 @@ const Posts = () => {
         <span> </span>
     </div>)
     }
-    else return <Check />;
+    else {
+        return (<div>
+            <Navbar name={username} page = "home"/>
+            <Heading />
+            <div className="text-center"> <h3 className="margin"> All Posts </h3> </div>
+            <CategoryMenu category_type = "Select Category" message = "all" />
+            <SearchBar message = "all" type = "none" />
+            {posts.map(createPost)}
+            <div className="space"></div>
+            <Footer />
+    </div>);
+    }
 }
 
 export default Posts;

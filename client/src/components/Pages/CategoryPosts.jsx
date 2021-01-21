@@ -9,12 +9,11 @@ import Post from "../Post";
 import CategoryMenu from "../CategoryMenu";
 import Heading from "../Heading";
 import SearchBar from "../SearchBar";
-import InvalidUser from "../InvalidUser";
 import { Container,Spinner } from "react-bootstrap";
 
 const CategoryPosts = () => {
 
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var { type } = useParams();
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
@@ -22,6 +21,13 @@ const CategoryPosts = () => {
     useEffect(() => {
         const fetch = async() => {
             try{
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
                 const response = await axios.get("/posts");
                 setPosts(response.data.reverse().filter((post) => {
                     return (post.category === type);
@@ -30,6 +36,8 @@ const CategoryPosts = () => {
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
@@ -77,27 +85,6 @@ const CategoryPosts = () => {
         />
     }
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
-            return (
-            <div>
-                <Navbar page = "home"/>
-                <Heading />
-                <Container className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </Container>
-                <CategoryMenu category_type = {type} message = "all" />
-                <SearchBar type = {type} message = "all" />
-                {posts.map(createPost)}
-                <div className="space"></div>
-                <Footer />
-        </div>)
-        }
-    }
-
     if(loading) {
         return (<div className="text-center upper-margin"> 
         <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -108,7 +95,19 @@ const CategoryPosts = () => {
         <span> </span>
     </div>)
     }
-    else return <Check />;
+    else {
+        return (
+        <div>
+            <Navbar page = "home"/>
+            <Heading />
+            <Container className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </Container>
+            <CategoryMenu category_type = {type} message = "all" />
+            <SearchBar type = {type} message = "all" />
+            {posts.map(createPost)}
+            <div className="space"></div>
+            <Footer />
+        </div>)
+    }
 }
 
 export default CategoryPosts;

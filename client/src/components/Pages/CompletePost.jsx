@@ -11,13 +11,12 @@ import laugh from "../images/laugh.png";
 import trash from "../images/trash.png";
 import Footer from "../Footer";
 import Heading from "../Heading";
-import InvalidUser from "../InvalidUser";
 import { Spinner } from "react-bootstrap";
 
 const CompletePost = () => {
     
     var history = useHistory();
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var { id } = useParams();
     var [loading, setLoading] = useState(true);
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
@@ -25,12 +24,21 @@ const CompletePost = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
                 const response = await axios.get(`/posts/${id}`);
                 setPost(response.data[0]);
                 setLoading(false);
             }
             catch (error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
@@ -168,42 +176,6 @@ const CompletePost = () => {
     </div>
     }
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
-            return (<div className="container">
-            <Navbar page = "complete" />
-            <Heading />
-            <div>
-                <Post 
-                        key = {id}
-                        name = {username}
-                        _id = {id}
-                        author = {post.author}
-                        title = {post.title}
-                        content = {post.content}
-                        category = {post.category}
-                        like = {post.like}
-                        love = {post.love}
-                        laugh = {post.laugh}
-                        comment_count = {post.comments.length}
-                        change = {changepost}
-                        show_comments = {false}
-                        imageUrl = {post.imageUrl}
-                />
-                <h3 className="margin text-center"> Comments </h3>
-                {post.comments.map(createComment)}
-            </div>
-            <div className="space"></div>
-            <Footer />
-            </div>);
-        }
-    }
-
     if(loading) {
         return (<div className="text-center upper-margin"> 
         <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -214,7 +186,34 @@ const CompletePost = () => {
         <span> </span>
     </div>)
     }
-    else return <Check />;
+    else {
+        return (<div className="container">
+        <Navbar name={username} page = "complete" />
+        <Heading />
+        <div>
+            <Post 
+                    key = {id}
+                    name = {username}
+                    _id = {id}
+                    author = {post.author}
+                    title = {post.title}
+                    content = {post.content}
+                    category = {post.category}
+                    like = {post.like}
+                    love = {post.love}
+                    laugh = {post.laugh}
+                    comment_count = {post.comments.length}
+                    change = {changepost}
+                    show_comments = {false}
+                    imageUrl = {post.imageUrl}
+            />
+            <h3 className="margin text-center"> Comments </h3>
+            {post.comments.map(createComment)}
+        </div>
+        <div className="space"></div>
+        <Footer />
+        </div>);
+    }
 }
 
 export default CompletePost;

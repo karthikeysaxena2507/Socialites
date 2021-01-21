@@ -18,7 +18,7 @@ import { Spinner } from "react-bootstrap";
 
 const Profile = () => {
 
-    const username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     let { user } = useParams();
     var [imageUrl, setImageUrl] = useState("");
     var [data, setData] = useState([]);
@@ -39,10 +39,16 @@ const Profile = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
-                const userData = await axios.get(`/users/find/${user}`)
-                setImageUrl(userData.data.imageUrl);
-                setAbout(userData.data.about);
-                setText(userData.data.about);
+                const response = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(response.data.username);
+                setImageUrl(response.data.imageUrl);
+                setAbout(response.data.about);
+                setText(response.data.about);
                 const postData = await axios.get(`/posts/list/${user}`)
                 setPostCount(postData.data.length);
                 setPosts(postData.data.reverse());
@@ -62,6 +68,8 @@ const Profile = () => {
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
@@ -270,7 +278,7 @@ const Profile = () => {
     else {
         return (
             <div>
-            <Navbar page = "profile"/>
+            <Navbar name={username} page = "profile"/>
             <Heading />
             {loading}
             <div className="text-center"> <h3 className="margin"> {user}'s Profile </h3> </div>

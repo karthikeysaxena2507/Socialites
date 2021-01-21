@@ -35,14 +35,11 @@ const Register = () => {
             const drop = async() => {
                 try {
                     const response = await axios.post("/users/add", {username, email, password});
-                    if(response.data === "Username Already Exists") {
-                        setMessage(response.data);
-                    }
-                    else if(response.data === "Account with given Email Already Exists") {
+                    if(response.data === "Username Already Exists" || response.data === "Email already exists") {
                         setMessage(response.data);
                     }
                     else {
-                        history.push(`/verify/${username}`);
+                        history.push(`/verify/${response.data.username}`);
                         setMessage("");
                     }
                 }

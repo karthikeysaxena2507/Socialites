@@ -12,7 +12,7 @@ const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 const Room = () => {
 
     var socket = useRef(null);
-    const username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     const roomId = localStorage.getItem("roomId");
     var [message, setMessage] = useState("");
     var [messages,setMessages] = useState([]);
@@ -21,11 +21,18 @@ const Room = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
                 const response = await axios.get(`/rooms/get/${roomId}`);
                 setLoading(false);
                 setMessages(response.data.messages);
                 socket.current = io(ENDPOINT);
-                socket.current.emit("join", {name: username, room: roomId}, () => {});
+                socket.current.emit("join", {name: user.data.username, room: roomId}, () => {});
                 socket.current.on("message", (data) => {
                     setMessages((prev) => {return [...prev, data]});
                 });
@@ -36,10 +43,12 @@ const Room = () => {
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
-    },[roomId, username]);
+    },[roomId]);
     
     const sendMessage = (e) => {
         e.preventDefault();
@@ -90,36 +99,34 @@ const Room = () => {
     </div>)
     }
     else {
-
-    return (
-    <div>
-        <Navbar page = "allusers"/>
-        <Heading />
-        <div className="text-center"> 
-            <h5 className="margin"> Room ID: {roomId} </h5>
-        </div>
-        <div className="outerContainer">
-            <div className="innerContainer">
-            <ScrollToBottom className="messages">
-                {messages.map(createMessage)}
-            </ScrollToBottom>
-            <form className="form">
-                <input
-                    className="input"
-                    type="text"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => {setMessage(e.target.value)}}
-                    onKeyPress={event => event.key === "Enter" ? sendMessage(event) : null}
-                />
-                <button type="submit" className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
-            </form>
+        return (
+        <div>
+            <Navbar name={username} page = "allusers"/>
+            <Heading />
+            <div className="text-center"> 
+                <h5 className="margin"> Room ID: {roomId} </h5>
             </div>
-        </div>
-        <div className="space"></div>
-        <Footer />
-    </div>
-    )
+            <div className="outerContainer">
+                <div className="innerContainer">
+                <ScrollToBottom className="messages">
+                    {messages.map(createMessage)}
+                </ScrollToBottom>
+                <form className="form">
+                    <input
+                        className="input"
+                        type="text"
+                        placeholder="Type a message..."
+                        value={message}
+                        onChange={(e) => {setMessage(e.target.value)}}
+                        onKeyPress={event => event.key === "Enter" ? sendMessage(event) : null}
+                    />
+                    <button type="submit" className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
+                </form>
+                </div>
+            </div>
+            <div className="space"></div>
+            <Footer />
+        </div>);
     }
 }
 

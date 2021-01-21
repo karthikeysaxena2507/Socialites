@@ -2,20 +2,44 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import Heading from "../Heading";
+import { Spinner } from "react-bootstrap";
 
 const Create = () => {
 
-    var username = localStorage.getItem("username");
     var history = useHistory();
+    var [username, setUsername] = useState("");
+    var [loading, setLoading] = useState(true);
     var [title, setTitle] = useState("");
     var [content, setContent] = useState("");
     var [category, setCategory] = useState("Select Category");
     var [preview, setPreview] = useState(""); 
+
+    useEffect(()=> {
+        const fetch = async() => {
+            try {
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
+                setLoading(false);
+            }
+            catch(error) {
+                console.log(error);
+                localStorage.clear();
+                window.location = "/login";
+            }
+        }
+        fetch();
+    },[]);
     
     const changeCategory = (e) => {
         setCategory(e.target.innerText);
@@ -44,7 +68,7 @@ const Create = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        if(username !== "Guest" && username !== null) {
+        if(username !== "Guest") {
             try {
                 console.log(imageSource);
                 await fetch("/posts/add", {
@@ -76,91 +100,103 @@ const Create = () => {
     var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
-            return (<div className="text-center">
-                <Navbar page = "create"/>
-                <Heading />
-                <div> 
-                <h1 className="margin"> Create Your Post Here </h1>
-                </div> 
-                <div className="dropdown text-center">
-                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                        {category}
-                    </button>
-                    <div className="dropdown-menu">
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
-                    </div>
-                </div>
-                <form onSubmit={handleSubmitFile}>
-                    <div className="text-center margin">
-                        <textarea
-                            name="title"
-                            value={title}
-                            placeholder="Title of your Post"
-                            rows="1"
-                            cols="50"
-                            onChange={changeTitle}
-                            required
-                        />
-                    </div>
-                    <div className="text-center margin">
-                        <textarea
-                            name="content"
-                            value={content}
-                            placeholder="Content of your Post"
-                            rows="9"
-                            cols="50"
-                            onChange={changeContent}
-                            required
-                        />
-                    </div>
-                    <div className="margin">
-                    <div className="text-center">
-                        <label for="file"> 
-                            <span className="btn expand"> 
-                                Select Image 
-                            </span>
-                        </label>
-                        <span className="text-center margin">
-                            <span className="btn expand" onClick={removeImage}> Remove Image </span> 
-                        </span>
-                    </div>
-                        <input
-                            type="file" 
-                            name="image" 
-                            style={{visibility: "hidden"}}
-                            id="file"
-                            onChange={handleFileInputChange}
-                        />
-                    </div>
-                    <div className="margin text-center"> Current Image </div>
-                    <div className="margin text-center" style={styling}>
-                        Image preview will be shown here
-                    </div>
-                    <div className="text-center">
-                    <img 
-                        src={preview} 
-                        alt="invalid image" 
-                        className="preview margin"
-                        style={previewStyling} 
-                        />
-                    </div>
-                    <div className="text-center margin">
-                        <button className="btn btn-lg expand margin" type="submit"> Create </button> 
-                    </div>
-                </form>
-            <div className="space"></div>
-            <Footer />
-        </div>);
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else {
+        return (<div className="text-center">
+        <Navbar name={username} page = "create"/>
+        <Heading />
+        <div> 
+        <h1 className="margin"> Create Your Post Here </h1>
+        </div> 
+        <div className="dropdown text-center">
+            <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                {category}
+            </button>
+            <div className="dropdown-menu">
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
+            </div>
+        </div>
+        <form onSubmit={handleSubmitFile}>
+            <div className="text-center margin">
+                <textarea
+                    name="title"
+                    value={title}
+                    placeholder="Title of your Post"
+                    rows="1"
+                    cols="50"
+                    onChange={changeTitle}
+                    required
+                />
+            </div>
+            <div className="text-center margin">
+                <textarea
+                    name="content"
+                    value={content}
+                    placeholder="Content of your Post"
+                    rows="9"
+                    cols="50"
+                    onChange={changeContent}
+                    required
+                />
+            </div>
+            <div className="margin">
+            <div className="text-center">
+                <label for="file"> 
+                    <span className="btn expand"> 
+                        Select Image 
+                    </span>
+                </label>
+                <span className="text-center margin">
+                    <span className="btn expand" onClick={removeImage}> Remove Image </span> 
+                </span>
+            </div>
+                <input
+                    type="file" 
+                    name="image" 
+                    style={{visibility: "hidden"}}
+                    id="file"
+                    onChange={handleFileInputChange}
+                />
+            </div>
+            <div className="margin text-center"> Current Image </div>
+            <div className="margin text-center" style={styling}>
+                Image preview will be shown here
+            </div>
+            <div className="text-center">
+            <img 
+                src={preview} 
+                alt="invalid image" 
+                className="preview margin"
+                style={previewStyling} 
+                />
+            </div>
+            <div className="text-center margin">
+                <button className="btn btn-lg expand margin" type="submit"> Create </button> 
+            </div>
+        </form>
+    <div className="space"></div>
+    <Footer />
+    </div>);        
+}
     
 }
 

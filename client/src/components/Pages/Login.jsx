@@ -9,7 +9,7 @@ const Login = () => {
 
     let history = useHistory();
 
-    var [userDetails, setUserDetails] = useState({username:"", password:""});
+    var [userDetails, setUserDetails] = useState({email:"", password:""});
     var [message, setMessage] = useState(" ");
 
     const change = (event) => {
@@ -27,14 +27,15 @@ const Login = () => {
         const drop = async() => {
             try {
                 const response = await axios.post("/users/", userDetails);
-                localStorage.setItem("username", response.data.username);
-                if(response.data.verified) {
-                    history.push(`/profile/${response.data.username}`);
+                console.log(response.data);
+                setMessage(" ");
+                localStorage.setItem("token", response.data.token);
+                if(response.data.user.verified) {
+                    history.push(`/profile/${response.data.user.username}`);
                 }
                 else {
                     history.push(`/verify/${userDetails.username}`);  
                 }
-                setMessage("");
             }
             catch(error) {
                 console.log(error);
@@ -55,12 +56,12 @@ const Login = () => {
         <form onSubmit={add}>
             <div>
                 <input 
-                    type="text" 
-                    name="username" 
-                    value={userDetails.username}
+                    type="email" 
+                    name="email" 
+                    value={userDetails.email}
                     className="margin width" 
                     onChange={change}
-                    placeholder="Username" 
+                    placeholder="Email" 
                     autoComplete="off" 
                     required 
                 />

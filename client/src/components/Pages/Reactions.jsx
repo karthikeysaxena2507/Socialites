@@ -11,12 +11,11 @@ import Footer from "../Footer";
 import Post from "../Post";
 import Heading from "../Heading";
 import Fuse from "fuse.js";
-import InvalidUser from "../InvalidUser";
 import { Spinner } from "react-bootstrap";
 
 const Reactions = () => {
 
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var history = useHistory();
     var { id } = useParams();
     var [like,setlike] = useState(false);
@@ -33,6 +32,13 @@ const Reactions = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
                 const response = await axios.get(`/posts/${id}`);
                 console.log(response.data[0].reacts.reverse());
                 setallreactions(response.data[0].reacts.reverse());
@@ -43,6 +49,8 @@ const Reactions = () => {
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
@@ -194,64 +202,6 @@ const Reactions = () => {
         drop();
     }
 
-    var style1 = (like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
-    var style2 = (love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
-    var style3 = (laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
-    var style4 = (!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"} 
-
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
-            return(<div>
-                <Navbar page="reactions"/>
-                <Heading />
-                <div className="container">
-                    <Post 
-                            key = {post._id}
-                            name = {username}
-                            _id = {post._id}
-                            author = {post.author}
-                            title = {post.title}
-                            content = {post.content}
-                            category = {post.category}
-                            like = {post.like}
-                            love = {post.love}
-                            laugh = {post.laugh}
-                            comment_count = {post.comments.length}
-                            change = {changepost}
-                            show_comments = {true}
-                            imageUrl = {post.imageUrl}
-                    />
-                    <div className="text-center">
-                        <h2 className="margin"> Users who Reacted: </h2>
-                        <div>
-                            <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
-                            <button className="btn expand margin one" onClick={changeLike} style={style1}> <img src={liked} name="like" className="expand"/> </button> 
-                            <button className="btn expand margin one" onClick={changeLove} style={style2}> <img src={loved} name="love" className="expand"/> </button> 
-                            <button className="btn expand margin one" onClick={changeLaugh} style={style3}> <img src={laughed} name="laugh" className="expand"/> </button> 
-                        </div>
-                        <div>
-                            <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
-                            <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
-                        </div>
-                    </div>    
-                </div>
-                <div className="margin text-center">
-                    <p className="margin"> {message} </p>
-                </div>
-                <div className="margin">
-                    {reactions.map(renderUsers)}    
-                </div>
-                <div className="space"></div>
-                <Footer />
-            </div>);
-        }
-    }
-
     if(loading) {
         return (<div className="text-center upper-margin"> 
         <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -262,7 +212,51 @@ const Reactions = () => {
         <span> </span>
     </div>)
     }
-    else return <Check />;
+    else {
+        return(<div>
+            <Navbar name={username} page="reactions"/>
+            <Heading />
+            <div className="container">
+                <Post 
+                        key = {post._id}
+                        name = {username}
+                        _id = {post._id}
+                        author = {post.author}
+                        title = {post.title}
+                        content = {post.content}
+                        category = {post.category}
+                        like = {post.like}
+                        love = {post.love}
+                        laugh = {post.laugh}
+                        comment_count = {post.comments.length}
+                        change = {changepost}
+                        show_comments = {true}
+                        imageUrl = {post.imageUrl}
+                />
+                <div className="text-center">
+                    <h2 className="margin"> Users who Reacted: </h2>
+                    <div>
+                        <button className="btn expand margin one allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
+                        <button className="btn expand margin one" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
+                        <button className="btn expand margin one" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
+                        <button className="btn expand margin one" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
+                    </div>
+                    <div>
+                        <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
+                        <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                    </div>
+                </div>    
+            </div>
+            <div className="margin text-center">
+                <p className="margin"> {message} </p>
+            </div>
+            <div className="margin">
+                {reactions.map(renderUsers)}    
+            </div>
+            <div className="space"></div>
+            <Footer />
+        </div>);
+    }
 }
 
 export default Reactions;

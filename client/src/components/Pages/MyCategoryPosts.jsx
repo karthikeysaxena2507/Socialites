@@ -11,12 +11,11 @@ import edit from "../images/edit.png";
 import CategoryMenu from "../CategoryMenu";
 import Heading from "../Heading";
 import SearchBar from "../SearchBar";
-import InvalidUser from "../InvalidUser";
 import { Spinner } from "react-bootstrap";
 
 const MyCategoryPosts = () => {
 
-    var username = localStorage.getItem("username");
+    var [username, setUsername] = useState("");
     var history = useHistory();
     var { type } = useParams();
     var [posts,setPosts] = useState([]);
@@ -25,7 +24,14 @@ const MyCategoryPosts = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
-                const response = await axios.get(`/posts/list/${username}`);
+                const user = await axios.get("/users/auth",{
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": localStorage.getItem("token")
+                    }
+                });
+                setUsername(user.data.username);
+                const response = await axios.get(`/posts/list/${user.data.username}`);
                 setPosts(response.data.reverse().filter((post) => {
                     return (post.category === type);
                 }));
@@ -33,6 +39,8 @@ const MyCategoryPosts = () => {
             }
             catch(error) {
                 console.log(error);
+                localStorage.clear();
+                window.location = "/login";
             }
         }
         fetch();
@@ -98,27 +106,6 @@ const MyCategoryPosts = () => {
     </div>);
     }
 
-    const Check = () => {
-        if(username === null) {
-            return (
-                <InvalidUser />
-            )
-        }
-        else {
-            return (<div>
-                <Navbar page = "myposts"/>
-                <Heading />
-                <div className="text-center"> <h3 className="margin"> My Posts </h3> </div>
-                <CategoryMenu category_type = {type} message = "my" />
-                <SearchBar type = {type} message = "personal"/>
-                {posts.map(MyPost)}
-                <div className="space"></div>
-                <Footer />
-                </div>
-            );
-        }
-    }
-
     if(loading) {
         return (<div className="text-center upper-margin"> 
         <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -129,7 +116,19 @@ const MyCategoryPosts = () => {
         <span> </span>
     </div>)
     }
-    else return <Check />;
+    else {
+        return (<div>
+            <Navbar name={username} page = "myposts"/>
+            <Heading />
+            <div className="text-center"> <h3 className="margin"> My Posts </h3> </div>
+            <CategoryMenu category_type = {type} message = "my" />
+            <SearchBar type = {type} message = "personal"/>
+            {posts.map(MyPost)}
+            <div className="space"></div>
+            <Footer />
+            </div>
+        );
+    }
 }
 
 export default MyCategoryPosts;

@@ -5,7 +5,7 @@ import { Link,useHistory } from "react-router-dom";
 const Navbar = (props) => {
 
     var history = useHistory();
-    var username = localStorage.getItem("username");
+    var username = props.name;
 
     const change = () => {
       const drop = async() => {
