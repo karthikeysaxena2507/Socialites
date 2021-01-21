@@ -331,7 +331,7 @@ router.post("/send", async(req, res, next) => {
 
         const foundUser = await User.findOne({verifyToken: req.body.token});
         if(foundUser && foundUser.expiresIn >= Date.now()) {
-            var link = "https://socialites-karthikey.herokuapp.com/verified/" + foundUser.username;
+            var link = "https://socialites-karthikey.herokuapp.com/verified/" + foundUser.verifyToken;
             const msg = {
                 to: foundUser.email,
                 from: "karthikeysaxena@outlook.com", 
