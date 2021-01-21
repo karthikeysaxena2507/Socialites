@@ -1,8 +1,8 @@
 import React from "react";
-import Footer from "./Footer";
+import Footer from "../Footer";
 import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
-import Heading from "./Heading";
+import Heading from "../Heading";
 
 const Verified = () => {
 

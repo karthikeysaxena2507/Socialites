@@ -2,24 +2,26 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
-import Footer from "./Footer";
-import Heading from "./Heading";
+import Footer from "../Footer";
+import Heading from "../Heading";
 
 const Register = () => {
 
     var history = useHistory();
-    var [userDetails, setuserDetails] = useState({username:"", email:"", password:""});
+    var [username, setUsername] = useState("");
+    var [email, setEmail] = useState("");
+    var [password, setPassword] = useState("");
     var [message, setMessage] = useState(" ");
+    var [correct, setCorrect] = useState(false);
 
-    const change = (event) => {
-        var {name, value} = event.target;
-
-        setuserDetails((prevUser) => {
-        return {
-          ...prevUser,
-          [name]: value
-        };
-      });
+    const check = (e) => {
+        setPassword(e.target.value);
+        if(e.target.value.length >= 8) {
+            setCorrect(true);
+        }
+        else {
+            setCorrect(false);
+        }
     }
 
     const guestLogin = () => {
@@ -29,25 +31,27 @@ const Register = () => {
 
     const add = (event) => {
         event.preventDefault();
-        const drop = async() => {
-            try {
-                const response = await axios.post("/users/add", userDetails);
-                if(response.data === "Username Already Exists") {
-                    setMessage(response.data);
+        if(password.length >=8) {
+            const drop = async() => {
+                try {
+                    const response = await axios.post("/users/add", {username, email, password});
+                    if(response.data === "Username Already Exists") {
+                        setMessage(response.data);
+                    }
+                    else if(response.data === "Account with given Email Already Exists") {
+                        setMessage(response.data);
+                    }
+                    else {
+                        history.push(`/verify/${username}`);
+                        setMessage("");
+                    }
                 }
-                else if(response.data === "Account with given Email Already Exists") {
-                    setMessage(response.data);
-                }
-                else {
-                    history.push(`/verify/${userDetails.email}`);
-                    setMessage("");
+                catch(error) {
+                    console.log(error);
                 }
             }
-            catch(error) {
-                console.log(error);
-            }
+            drop();
         }
-        drop();
     }
 
     return (<div className="text-center">
@@ -58,9 +62,9 @@ const Register = () => {
                 <input 
                     type="text" 
                     name="username" 
-                    value={userDetails.username}
+                    value={username}
                     className="margin width" 
-                    onChange={change}
+                    onChange={(e) => setUsername(e.target.value)}
                     placeholder="Username" 
                     autoComplete="off" 
                     required 
@@ -70,9 +74,9 @@ const Register = () => {
                 <input 
                     type="email" 
                     name="email" 
-                    value={userDetails.email}
+                    value={email}
                     className="margin width" 
-                    onChange={change}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="email" 
                     autoComplete="off" 
                     required 
@@ -82,13 +86,14 @@ const Register = () => {
                 <input 
                     type="password" 
                     name="password" 
-                    value={userDetails.password}
-                    onChange={change}
+                    value={password}
+                    onChange={check}
                     className="margin width" 
                     placeholder="Password" 
                     required 
                 />
             </div>
+            <p className="text-danger" style={correct ? {display: "none"} : null}> Password must be at least 8 characters long </p>
             <div>
                 <p className="margin"> {message} </p>
             </div>
@@ -116,4 +121,3 @@ const Register = () => {
 }
 
 export default Register;
-

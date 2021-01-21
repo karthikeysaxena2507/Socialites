@@ -1,22 +1,23 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Navbar from "../Navbar";
+import Footer from "../Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Post from "./Post";
-import CategoryMenu from "./CategoryMenu";
-import Heading from "./Heading";
-import SearchBar from "./SearchBar";
-import InvalidUser from "./InvalidUser";
-import { Container } from "react-bootstrap";
+import Post from "../Post";
+import CategoryMenu from "../CategoryMenu";
+import Heading from "../Heading";
+import SearchBar from "../SearchBar";
+import InvalidUser from "../InvalidUser";
+import { Container,Spinner } from "react-bootstrap";
 
 const CategoryPosts = () => {
 
     var username = localStorage.getItem("username");
     var { type } = useParams();
     var [posts,setPosts] = useState([]);
+    var [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetch = async() => {
@@ -25,6 +26,7 @@ const CategoryPosts = () => {
                 setPosts(response.data.reverse().filter((post) => {
                     return (post.category === type);
                 }));
+                setLoading(false);
             }
             catch(error) {
                 console.log(error);
@@ -96,7 +98,17 @@ const CategoryPosts = () => {
         }
     }
 
-    return <Check />;
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else return <Check />;
 }
 
 export default CategoryPosts;

@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from 'react'
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import Heading from "./Heading";
+import Navbar from "../Navbar";
+import Footer from "../Footer";
+import Heading from "../Heading";
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import like from "./images/like.png";
-import love from "./images/love.png";
-import laugh from "./images/laugh.png";
-import trash from "./images/trash.png";
-import editIcon from "./images/edit.png";
-import Post from "./Post";
-import blank from "./images/blank.png";
+import like from "../images/like.png";
+import love from "../images/love.png";
+import laugh from "../images/laugh.png";
+import trash from "../images/trash.png";
+import editIcon from "../images/edit.png";
+import Post from "../Post";
+import blank from "../images/blank.png";
 import { Pie } from "react-chartjs-2";
-
+import { Spinner } from "react-bootstrap";
 
 const Profile = () => {
 
@@ -34,6 +34,7 @@ const Profile = () => {
     var [edit, setEdit] = useState("Edit");
     var [text, setText] = useState("");
     var [show, setShow] = useState(false);
+    var [loading, setLoading] = useState(true);
     
     useEffect(() => {
         const fetch = async() => {
@@ -57,6 +58,7 @@ const Profile = () => {
                 setLoves(lvct);
                 setLaughs(lgct);
                 setComments(cmct);
+                setLoading(false);
             }
             catch(error) {
                 console.log(error);
@@ -254,94 +256,109 @@ const Profile = () => {
         }
     } 
 
-    return (<div>
-        <Navbar page = "profile"/>
-        <Heading />
-        <div className="text-center"> <h3 className="margin"> {user}'s Profile </h3> </div>
-            <div className="mt-5 container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="margin text-center" style={imageUrl === "" ? {display: "none"} : null}>
-                            <img src={imageUrl} className="profile-pic" alt="image not found"/>
-                        </div>
-                        <div className="margin text-center" style={imageUrl !== "" ? {display: "none"} : null}>
-                            <img src={blank} className="profile-pic" alt="image not found"/>
-                        </div>
-                        <form onSubmit={handleSubmitFile}>
-                        <div className="text-center">
-                            <div> <button style={ (!show) ? {display: "none"} : null } className="btn mt-1 expand"> Save </button> </div>
-                            <div style={(username !== user) ? {display: "none"} : null}>
-                                <label for="file"> 
-                                    <span className="btn expand"> Select Image </span>
-                                </label>
-                                <span className="text-center margin">
-                                    <span className="btn expand" onClick={removeImage}> Remove Image </span> 
-                                </span>
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+
+    else {
+        return (
+            <div>
+            <Navbar page = "profile"/>
+            <Heading />
+            {loading}
+            <div className="text-center"> <h3 className="margin"> {user}'s Profile </h3> </div>
+                <div className="mt-5 container">
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="margin text-center" style={imageUrl === "" ? {display: "none"} : null}>
+                                <img src={imageUrl} className="profile-pic" alt="image not found"/>
                             </div>
+                            <div className="margin text-center" style={imageUrl !== "" ? {display: "none"} : null}>
+                                <img src={blank} className="profile-pic" alt="image not found"/>
+                            </div>
+                            <form onSubmit={handleSubmitFile}>
+                            <div className="text-center">
+                                <div> <button style={ (!show) ? {display: "none"} : null } className="btn mt-1 expand"> Save </button> </div>
+                                <div style={(username !== user) ? {display: "none"} : null}>
+                                    <label for="file"> 
+                                        <span className="btn expand"> Select Image </span>
+                                    </label>
+                                    <span className="text-center margin">
+                                        <span className="btn expand" onClick={removeImage}> Remove Image </span> 
+                                    </span>
+                                </div>
+                            </div>
+                                <input
+                                    type="file" 
+                                    name="image" 
+                                    style={{visibility: "hidden"}}
+                                    id="file"
+                                    onChange={handleFileInputChange}
+                                />
+                            </form>
                         </div>
-                            <input
-                                type="file" 
-                                name="image" 
-                                style={{visibility: "hidden"}}
-                                id="file"
-                                onChange={handleFileInputChange}
+                        <div className="col-md-6 text-left pl-5 pr-5 userinfo">
+                            <h4 className="text-center"> About {user} </h4>
+                            <div className="bio" style={(edit === "Back") ? {display: "none"} : null}> 
+                                {about} 
+                            </div>
+                            <textarea 
+                                className="bio-text" 
+                                style={(edit === "Edit") ? {display: "none"} : null}
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
                             />
-                        </form>
-                    </div>
-                    <div className="col-md-6 text-left pl-5 pr-5 userinfo">
-                        <h4 className="text-center"> About {user} </h4>
-                        <div className="bio" style={(edit === "Back") ? {display: "none"} : null}> 
-                            {about} 
-                        </div>
-                        <textarea 
-                            className="bio-text" 
-                            style={(edit === "Edit") ? {display: "none"} : null}
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                        />
-                        <div className="text-center mt-3">
-                            <button style={ (user === username) ? {display: "none"} : null } onClick={createRoom} className="btn mt-1 expand"> Message {user} </button>
-                            <button style={ (user !== username) ? {display: "none"} : null } onClick={changeEdit} className="btn mt-1 expand"> {edit} </button>
-                            <button style={ (edit === "Edit") ? {display: "none"} : null } onClick={updateBio} className="btn mt-1 expand"> Save </button>
+                            <div className="text-center mt-3">
+                                <button style={ (user === username) ? {display: "none"} : null } onClick={createRoom} className="btn mt-1 expand"> Message {user} </button>
+                                <button style={ (user !== username) ? {display: "none"} : null } onClick={changeEdit} className="btn mt-1 expand"> {edit} </button>
+                                <button style={ (edit === "Edit") ? {display: "none"} : null } onClick={updateBio} className="btn mt-1 expand"> Save </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="text-center"> <button onClick={changeState} className="btn mt-3 expand"> {state} Stats </button> </div>
-            <div className="text-center mt-5 userinfo container" style={(state==="Show") ? {display: "none"} : null}>
-                <h3 className="margin"> {user}'s Socialites Stats </h3>
-                <div className="row">
-                    <div className="col-md-6">
-                        <ul className="text-left mt-5 ml-2">
-                            <li className="mt-1"> No. of Posts : {postCount} </li>
-                            <li className="mt-1"> Total Comments on Posts : {comments} </li>
-                            <li className="mt-1"> No. of <img className="ml-2 mr-2" src={like} /> on Posts:  {likes} </li>
-                            <li className="mt-1"> No. of <img className="ml-2 mr-2" src={love} /> on Posts:  {loves} </li>
-                            <li className="mt-1"> No. of <img className="ml-2 mr-2" src={laugh} /> on Posts:  {laughs} </li>
-                            <li className="mt-1"> Total Reactions on Posts: {likes + loves + laughs} </li>
-                        </ul>
-                    </div>
-                    <div className="col-md-6">
-                        <Pie
-                            data={chartData}
-                            options={{
-                                title:{
-                                display:true,
-                                fontSize:20
-                                },
-                                legend:{
-                                display:true,
-                                position:'right'
-                                }
-                            }}
-                        />
-                    </div>
-               </div>
-            </div>
-            <div className="text-center mt-5"> <h3 className="margin"> {user}'s Posts </h3> </div>
-            {posts.map(MyPost)}
-            <div className="space"></div>
-            <Footer />
-    </div>);
+                <div className="text-center"> <button onClick={changeState} className="btn mt-3 expand"> {state} Stats </button> </div>
+                <div className="text-center mt-5 userinfo container" style={(state==="Show") ? {display: "none"} : null}>
+                    <h3 className="margin"> {user}'s Socialites Stats </h3>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <ul className="text-left mt-5 ml-2">
+                                <li className="mt-1"> No. of Posts : {postCount} </li>
+                                <li className="mt-1"> Total Comments on Posts : {comments} </li>
+                                <li className="mt-1"> No. of <img className="ml-2 mr-2" src={like} /> on Posts:  {likes} </li>
+                                <li className="mt-1"> No. of <img className="ml-2 mr-2" src={love} /> on Posts:  {loves} </li>
+                                <li className="mt-1"> No. of <img className="ml-2 mr-2" src={laugh} /> on Posts:  {laughs} </li>
+                                <li className="mt-1"> Total Reactions on Posts: {likes + loves + laughs} </li>
+                            </ul>
+                        </div>
+                        <div className="col-md-6">
+                            <Pie
+                                data={chartData}
+                                options={{
+                                    title:{
+                                    display:true,
+                                    fontSize:20
+                                    },
+                                    legend:{
+                                    display:true,
+                                    position:'right'
+                                    }
+                                }}
+                            />
+                        </div>
+                </div>
+                </div>
+                <div className="text-center mt-5"> <h3 className="margin"> {user}'s Posts </h3> </div>
+                {posts.map(MyPost)}
+                <div className="space"></div>
+                <Footer />
+        </div>);
+    }
 }
 export default Profile;

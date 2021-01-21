@@ -2,18 +2,20 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-import Navbar from "./Navbar";
-import Post from "./Post";
-import Footer from "./Footer";
-import CategoryMenu from "./CategoryMenu";
-import Heading from "./Heading";
-import SearchBar from "./SearchBar";
-import InvalidUser from "./InvalidUser";
+import Navbar from "../Navbar";
+import Post from "../Post";
+import Footer from "../Footer";
+import CategoryMenu from "../CategoryMenu";
+import Heading from "../Heading";
+import SearchBar from "../SearchBar";
+import InvalidUser from "../InvalidUser";
+import { Spinner } from "react-bootstrap";
 
 const Posts = () => {
 
     var username = localStorage.getItem("username");
     var [posts,setPosts] = useState([]);
+    var [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if(username === null) {
@@ -23,6 +25,7 @@ const Posts = () => {
                     if(response.data !== "") {
                         localStorage.setItem("username", response.data);
                     }
+                    setLoading(false);
                 }
                 catch(error) {
                     console.log(error);
@@ -37,6 +40,7 @@ const Posts = () => {
             try {
                 const response = await axios.get("/posts/");
                 setPosts(response.data.reverse());
+                setLoading(false);
             }
             catch (err) {
                 console.log(err);
@@ -105,7 +109,17 @@ const Posts = () => {
         }
     }
 
-    return <Check />;
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else return <Check />;
 }
 
 export default Posts;

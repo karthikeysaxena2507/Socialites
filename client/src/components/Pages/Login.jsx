@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import axios from "axios";
-import Footer from "./Footer";
-import Heading from "./Heading";
+import Footer from "../Footer";
+import Heading from "../Heading";
 import { Link,useHistory } from "react-router-dom";
 
 const Login = () => {
@@ -108,4 +108,3 @@ const Login = () => {
 }
 
 export default Login;
-

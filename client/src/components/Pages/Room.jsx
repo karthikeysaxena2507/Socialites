@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import Heading from "./Heading";
+import Navbar from "../Navbar";
+import Footer from "../Footer";
+import Heading from "../Heading";
 import ReactEmoji from 'react-emoji';
 import ScrollToBottom from "react-scroll-to-bottom";
 import io from "socket.io-client";
+import { Spinner } from "react-bootstrap";
 const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 
 const Room = () => {
@@ -15,11 +16,13 @@ const Room = () => {
     const roomId = localStorage.getItem("roomId");
     var [message, setMessage] = useState("");
     var [messages,setMessages] = useState([]);
+    var [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetch = async() => {
             try {
                 const response = await axios.get(`/rooms/get/${roomId}`);
+                setLoading(false);
                 setMessages(response.data.messages);
                 socket.current = io(ENDPOINT);
                 socket.current.emit("join", {name: username, room: roomId}, () => {});
@@ -76,6 +79,18 @@ const Room = () => {
         }
     }
 
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else {
+
     return (
     <div>
         <Navbar page = "allusers"/>
@@ -105,6 +120,7 @@ const Room = () => {
         <Footer />
     </div>
     )
+    }
 }
 
 export default Room;

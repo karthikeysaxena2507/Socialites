@@ -1,38 +1,22 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable no-lone-blocks */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Navbar from "./Navbar";
-import { useParams, useHistory } from "react-router-dom";
-import Footer from "./Footer";
-import Heading from "./Heading";
+/* eslint-disable jsx-a11y/alt-text */
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import Navbar from "../Navbar";
+import Footer from "../Footer";
+import Heading from "../Heading";
 
-const Edit = () => {
+const Create = () => {
 
-    var { id } = useParams();
-    var history = useHistory();
     var username = localStorage.getItem("username");
+    var history = useHistory();
     var [title, setTitle] = useState("");
     var [content, setContent] = useState("");
     var [category, setCategory] = useState("Select Category");
     var [preview, setPreview] = useState(""); 
-
-    useEffect(() => {
-        const fetch = async() => {
-            try {
-                const response = await axios.get(`/posts/edit/${id}`);
-                setTitle(response.data.title);
-                setContent(response.data.content);
-                setCategory(response.data.category);
-                setPreview(response.data.imageUrl);
-            }
-            catch(error) {
-                console.log(error);
-            }
-        }
-        fetch();
-    },[id]);
-
+    
     const changeCategory = (e) => {
         setCategory(e.target.innerText);
     }
@@ -63,7 +47,7 @@ const Edit = () => {
         if(username !== "Guest" && username !== null) {
             try {
                 console.log(imageSource);
-                await fetch(`/posts/edit/${id}`, {
+                await fetch("/posts/add", {
                     method: "POST",
                     body: JSON.stringify({
                         data: imageSource,
@@ -74,11 +58,11 @@ const Edit = () => {
                     }),
                     headers: {"Content-type": "application/json"}                
                 });
+                history.push(`/allposts`);
             }
             catch(error) {
                 console.log(error);
             }
-            history.push(`/myposts`);
         }
         else {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
@@ -86,27 +70,23 @@ const Edit = () => {
     }
 
     const removeImage = (e) => {
-        e.preventDefault();
         setPreview("");
     }
 
     var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
-            return (<div>
-                <Navbar 
-                    name = {username}
-                    page = "edit"
-                />
+            return (<div className="text-center">
+                <Navbar page = "create"/>
                 <Heading />
-                <div className="text-center"> 
-                    <h1 className="margin"> Edit Your Post Here </h1> 
+                <div> 
+                <h1 className="margin"> Create Your Post Here </h1>
                 </div> 
-                <div className="dropdown container text-center">
-                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div className="dropdown text-center">
+                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                         {category}
                     </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div className="dropdown-menu">
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
@@ -146,10 +126,12 @@ const Edit = () => {
                     <div className="margin">
                     <div className="text-center">
                         <label for="file"> 
-                            <span className="btn expand"> Select Image </span>
+                            <span className="btn expand"> 
+                                Select Image 
+                            </span>
                         </label>
-                        <span className="center-text margin">
-                            <button className="btn expand" onClick={removeImage}> Remove Image </button> 
+                        <span className="text-center margin">
+                            <span className="btn expand" onClick={removeImage}> Remove Image </span> 
                         </span>
                     </div>
                         <input
@@ -173,12 +155,13 @@ const Edit = () => {
                         />
                     </div>
                     <div className="text-center margin">
-                        <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
+                        <button className="btn btn-lg expand margin" type="submit"> Create </button> 
                     </div>
                 </form>
             <div className="space"></div>
             <Footer />
         </div>);
+    
 }
 
-export default Edit;
+export default Create;

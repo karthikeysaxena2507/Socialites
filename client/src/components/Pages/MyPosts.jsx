@@ -3,27 +3,30 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import Navbar from "./Navbar";
-import Post from "./Post";
-import trash from "./images/trash.png";
-import edit from "./images/edit.png";
-import Footer from "./Footer";
-import CategoryMenu from "./CategoryMenu";
-import Heading from "./Heading";
-import SearchBar from "./SearchBar";
-import InvalidUser from "./InvalidUser";
+import Navbar from "../Navbar";
+import Post from "../Post";
+import trash from "../images/trash.png";
+import edit from "../images/edit.png";
+import Footer from "../Footer";
+import CategoryMenu from "../CategoryMenu";
+import Heading from "../Heading";
+import SearchBar from "../SearchBar";
+import InvalidUser from "../InvalidUser";
+import { Spinner } from "react-bootstrap";
 
 const MyPosts = () => {
 
     var history = useHistory();
     var username = localStorage.getItem("username");
     var [posts,setPosts] = useState([]);
+    var [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetch = async() => {
             try {
                 const response = await axios.get(`/posts/list/${username}`);
                 setPosts(response.data.reverse());
+                setLoading(false);
             }
             catch(error) {
                 console.log(error);
@@ -110,7 +113,17 @@ const MyPosts = () => {
         }
     }
 
-    return <Check />;
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else return <Check />;
 }
 
 export default MyPosts;

@@ -1,21 +1,40 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-/* eslint-disable no-lone-blocks */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import Heading from "./Heading";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Navbar from "../Navbar";
+import { useParams, useHistory } from "react-router-dom";
+import Footer from "../Footer";
+import Heading from "../Heading";
+import { Spinner } from "react-bootstrap";
 
-const Create = () => {
+const Edit = () => {
 
-    var username = localStorage.getItem("username");
+    var { id } = useParams();
     var history = useHistory();
+    var username = localStorage.getItem("username");
     var [title, setTitle] = useState("");
     var [content, setContent] = useState("");
     var [category, setCategory] = useState("Select Category");
     var [preview, setPreview] = useState(""); 
+    var [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetch = async() => {
+            try {
+                const response = await axios.get(`/posts/edit/${id}`);
+                setTitle(response.data.title);
+                setContent(response.data.content);
+                setCategory(response.data.category);
+                setPreview(response.data.imageUrl);
+                setLoading(false);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        fetch();
+    },[id]);
 
     const changeCategory = (e) => {
         setCategory(e.target.innerText);
@@ -47,7 +66,7 @@ const Create = () => {
         if(username !== "Guest" && username !== null) {
             try {
                 console.log(imageSource);
-                await fetch("/posts/add", {
+                await fetch(`/posts/edit/${id}`, {
                     method: "POST",
                     body: JSON.stringify({
                         data: imageSource,
@@ -58,11 +77,11 @@ const Create = () => {
                     }),
                     headers: {"Content-type": "application/json"}                
                 });
-                history.push(`/allposts`);
             }
             catch(error) {
                 console.log(error);
             }
+            history.push(`/myposts`);
         }
         else {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
@@ -70,23 +89,38 @@ const Create = () => {
     }
 
     const removeImage = (e) => {
+        e.preventDefault();
         setPreview("");
     }
 
     var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
-            return (<div className="text-center">
-                <Navbar page = "create"/>
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else {
+        return (<div>
+                <Navbar 
+                    name = {username}
+                    page = "edit"
+                />
                 <Heading />
-                <div> 
-                <h1 className="margin"> Create Your Post Here </h1>
+                <div className="text-center"> 
+                    <h1 className="margin"> Edit Your Post Here </h1> 
                 </div> 
-                <div className="dropdown text-center">
-                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                <div className="dropdown container text-center">
+                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {category}
                     </button>
-                    <div className="dropdown-menu">
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
                         <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
@@ -126,12 +160,10 @@ const Create = () => {
                     <div className="margin">
                     <div className="text-center">
                         <label for="file"> 
-                            <span className="btn expand"> 
-                                Select Image 
-                            </span>
+                            <span className="btn expand"> Select Image </span>
                         </label>
-                        <span className="text-center margin">
-                            <span className="btn expand" onClick={removeImage}> Remove Image </span> 
+                        <span className="center-text margin">
+                            <button className="btn expand" onClick={removeImage}> Remove Image </button> 
                         </span>
                     </div>
                         <input
@@ -155,13 +187,13 @@ const Create = () => {
                         />
                     </div>
                     <div className="text-center margin">
-                        <button className="btn btn-lg expand margin" type="submit"> Create </button> 
+                        <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
                     </div>
                 </form>
             <div className="space"></div>
             <Footer />
         </div>);
-    
+    }
 }
 
-export default Create;
+export default Edit;

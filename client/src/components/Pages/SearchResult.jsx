@@ -2,18 +2,20 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Navbar from "./Navbar";
-import Post from "./Post";
-import Footer from "./Footer";
-import Heading from "./Heading";
+import Navbar from "../Navbar";
+import Post from "../Post";
+import Footer from "../Footer";
+import Heading from "../Heading";
 import Fuse from "fuse.js";
-import InvalidUser from "./InvalidUser";
+import InvalidUser from "../InvalidUser";
+import { Spinner } from "react-bootstrap";
 
 const Result = () => {
 
     var username = localStorage.getItem("username");
     var { searchContent,message,type } = useParams();
     var [foundPosts,setfoundPosts] = useState([]);
+    var [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -21,6 +23,7 @@ const Result = () => {
             const fetch = async() => {
                 try {
                     const response = await axios.get("/posts");
+                    setLoading(false);
                     const fuse = new Fuse(response.data, {
                         keys: ['author', 'title', 'content'],
                         includeScore: true,
@@ -44,6 +47,7 @@ const Result = () => {
             const fetch = async() => {
                 try {
                     const response = await axios.get(`/posts/list/${username}`);
+                    setLoading(false);
                     const fuse = new Fuse(response.data, {
                         keys: ['author', 'title', 'content'],
                         includeScore: true,
@@ -55,7 +59,6 @@ const Result = () => {
                         setfoundPosts(results.filter((post) => {
                             return (post.item.category === type);
                         }));
-                        
                     }
                 }
                 catch(error) {
@@ -141,7 +144,17 @@ const Result = () => {
         }
     }
 
-    return <Check />;
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else return <Check />;
 }
 
 export default Result;

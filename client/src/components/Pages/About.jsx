@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import Heading from "./Heading";
-import InvalidUser from "./InvalidUser";
+import Navbar from "../Navbar";
+import Footer from "../Footer";
+import Heading from "../Heading";
+import InvalidUser from "../InvalidUser";
 import { Container } from "react-bootstrap";
 
 const About = () => {
@@ -34,9 +34,9 @@ const About = () => {
                                 <li> React to other posts and see which users reactes on which posts. </li>
                                 <li> Comment on their own or other posts, as well react to each comments. </li>
                                 <li> View which users commented on any particluar post and which who all users reacted to any 
-                                    comment or any post </li>
+                                     comment or any post </li>
                                 <li> Users can also chat with other users, either on a personal chat or in a group chat by 
-                                    creating a room </li>
+                                     creating a room </li>
                                 <li> Search for any particular user who has commented and reacted to any post. </li>
                                 <li> Users can start by simply registering on the site locally or with google </li>
                             </ul>
@@ -50,7 +50,6 @@ const About = () => {
             </div>);
         }
     }
-
     return <Check />;
 }
 

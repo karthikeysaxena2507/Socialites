@@ -504,4 +504,7 @@ textarea {
     margin-bottom: 20px;
   }
 
+  .spinner {
+    border: 2px solid red;
+  }
   

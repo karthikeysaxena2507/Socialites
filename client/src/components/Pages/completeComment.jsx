@@ -1,16 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Navbar from "../Navbar";
+import Footer from "../Footer";
 import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
-import liked from "./images/like.png";
-import loved from "./images/love.png";
-import laughed from "./images/laugh.png";
-import trash from "./images/trash.png";
-import Heading from "./Heading";
-import InvalidUser from "./InvalidUser";
+import liked from "../images/like.png";
+import loved from "../images/love.png";
+import laughed from "../images/laugh.png";
+import trash from "../images/trash.png";
+import Heading from "../Heading";
+import InvalidUser from "../InvalidUser";
+import { Spinner } from "react-bootstrap";
 
 const CompleteComment = () => {
 
@@ -23,6 +24,7 @@ const CompleteComment = () => {
     var [laugh,setlaugh] = useState(false);
     var [reactions,setreactions] = useState([]);
     var [allreactions,setallreactions] = useState([]);
+    var [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetch = async() => {
@@ -32,6 +34,7 @@ const CompleteComment = () => {
                 setComment(response.data)
                 setallreactions(response.data.reacts.reverse());
                 setreactions(response.data.reacts.reverse());
+                setLoading(false);
             }
             catch(error) {
                 console.log(error);
@@ -182,7 +185,17 @@ const CompleteComment = () => {
         }
     }
 
-    return <Check />;
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else return <Check />;
 
 }
 

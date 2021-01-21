@@ -1,17 +1,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import Navbar from "./Navbar"; 
-import liked from "./images/like.png"
-import loved from "./images/love.png";
-import laughed from "./images/laugh.png";
+import Navbar from "../Navbar"; 
+import liked from "../images/like.png"
+import loved from "../images/love.png";
+import laughed from "../images/laugh.png";
 import axios from "axios";
-import search from "./images/search.png";
-import Footer from "./Footer";
-import Post from "./Post";
-import Heading from "./Heading";
+import search from "../images/search.png";
+import Footer from "../Footer";
+import Post from "../Post";
+import Heading from "../Heading";
 import Fuse from "fuse.js";
-import InvalidUser from "./InvalidUser";
+import InvalidUser from "../InvalidUser";
+import { Spinner } from "react-bootstrap";
 
 const Reactions = () => {
 
@@ -26,6 +27,7 @@ const Reactions = () => {
     var [allreactions,setallreactions] = useState([]);
     var [tempreactions,settempreactions] = useState([]);
     var [message, setMessage] = useState("");
+    var [loading, setLoading] = useState(true);
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
 
     useEffect(() => {
@@ -37,6 +39,7 @@ const Reactions = () => {
                 setreactions(response.data[0].reacts.reverse());
                 settempreactions(response.data[0].reacts.reverse());
                 setPost(response.data[0]);
+                setLoading(false);
             }
             catch(error) {
                 console.log(error);
@@ -249,7 +252,17 @@ const Reactions = () => {
         }
     }
 
-    return <Check />;
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else return <Check />;
 }
 
 export default Reactions;

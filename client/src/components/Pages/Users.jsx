@@ -3,11 +3,12 @@
 import axios from "axios";
 import React, { useEffect,useState } from "react";
 import { useHistory } from "react-router-dom";
-import Footer from "./Footer";
-import Heading from "./Heading";
-import search from "./images/search.png";
-import Navbar from "./Navbar";
+import Footer from "../Footer";
+import Heading from "../Heading";
+import search from "../images/search.png";
+import Navbar from "../Navbar";
 import Fuse from "fuse.js";
+import { Spinner } from "react-bootstrap";
 
 const Users = () => {
 
@@ -20,6 +21,7 @@ const Users = () => {
     var [roomId, setRoomId] = useState("");
     var [roomMessage, setRoomMessage] = useState("");
     var [state, setState] = useState("");
+    var [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetch = async() => {
@@ -27,6 +29,7 @@ const Users = () => {
                 const response = await axios.get(`/users/get/${username}`);
                 setUsers(response.data);
                 setAllUsers(response.data);
+                setLoading(false);
             }
             catch(error) {
                 console.log(error);
@@ -146,6 +149,19 @@ const Users = () => {
             drop();
         }
     }
+
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else {
+
     return <div>
         <Navbar page = "allusers"/>
         <Heading />
@@ -169,7 +185,7 @@ const Users = () => {
         </div>
         <div className="space"></div>
         <Footer />
-    </div>
+    </div>}
 }
 
 export default Users;

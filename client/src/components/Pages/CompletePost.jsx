@@ -3,21 +3,23 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
-import Post from "./Post";
-import Navbar from "./Navbar";
-import like from "./images/like.png";
-import love from "./images/love.png";
-import laugh from "./images/laugh.png";
-import trash from "./images/trash.png";
-import Footer from "./Footer";
-import Heading from "./Heading";
-import InvalidUser from "./InvalidUser";
+import Post from "../Post";
+import Navbar from "../Navbar";
+import like from "../images/like.png";
+import love from "../images/love.png";
+import laugh from "../images/laugh.png";
+import trash from "../images/trash.png";
+import Footer from "../Footer";
+import Heading from "../Heading";
+import InvalidUser from "../InvalidUser";
+import { Spinner } from "react-bootstrap";
 
 const CompletePost = () => {
     
     var history = useHistory();
     var username = localStorage.getItem("username");
     var { id } = useParams();
+    var [loading, setLoading] = useState(true);
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
 
     useEffect(() => {
@@ -25,6 +27,7 @@ const CompletePost = () => {
             try {
                 const response = await axios.get(`/posts/${id}`);
                 setPost(response.data[0]);
+                setLoading(false);
             }
             catch (error) {
                 console.log(error);
@@ -201,7 +204,17 @@ const CompletePost = () => {
         }
     }
 
-    return <Check />;
+    if(loading) {
+        return (<div className="text-center upper-margin"> 
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
+        <span> </span>
+    </div>)
+    }
+    else return <Check />;
 }
 
 export default CompletePost;
