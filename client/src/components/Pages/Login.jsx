@@ -26,7 +26,7 @@ const Login = () => {
         event.preventDefault();
         const drop = async() => {
             try {
-                const response = await axios.post("/users/", userDetails);
+                const response = await axios.post("/users/login", userDetails);
                 console.log(response.data);
                 setMessage(" ");
                 localStorage.setItem("token", response.data.token);
@@ -34,7 +34,7 @@ const Login = () => {
                     history.push(`/profile/${response.data.user.username}`);
                 }
                 else {
-                    history.push(`/verify/${userDetails.username}`);  
+                    history.push(`/verify/${response.data.user.username}`);  
                 }
             }
             catch(error) {

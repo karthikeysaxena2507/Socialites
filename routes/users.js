@@ -30,7 +30,7 @@ router.get("/auth", auth, async(req, res, next) => {
     }
 })
 
-router.post("/add", async(req, res, next) => {
+router.post("/register", async(req, res, next) => {
     try {
         const {username, email, password} = req.body;
         const existingUser = await User.findOne({email});
@@ -61,8 +61,22 @@ router.post("/add", async(req, res, next) => {
                             newUser.password = hash;
                             newUser.save()
                             .then((user) => {
+                                var link = "https://socialites-karthikey.herokuapp.com/verified/" + user.username;
+                                const msg = {
+                                    to: user.email,
+                                    from: "karthikeysaxena@outlook.com", 
+                                    subject: "Welcome to Socialites",
+                                    html: `<a href=${link}> Link to verify your Email </a>`
+                                }
+                                sgMail
+                                    .send(msg)
+                                    .then(() => {
+                                        console.log("Email sent");
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                    });
                                 res.json({
-                                    token,
                                     user: {
                                         id: user.id,
                                         username: user.username,
@@ -84,7 +98,7 @@ router.post("/add", async(req, res, next) => {
     }
 })
 
-router.post("/", async(req, res, next) => {
+router.post("/login", async(req, res, next) => {
     try {
         const {email, password} = req.body;
         const user = await User.findOne({email});
@@ -128,7 +142,7 @@ router.post("/", async(req, res, next) => {
     }
 })
 
-
+// ACCESSING ALL USERS
 router.get("/get/:username", async(req, res, next) => {
     try {  
         const users = await User.find({});
@@ -139,6 +153,7 @@ router.get("/get/:username", async(req, res, next) => {
     }
 });
 
+// ACCESSING A PARTILCULAR USER
 router.get("/find/:username", async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.params.username});
@@ -149,6 +164,7 @@ router.get("/find/:username", async(req, res, next) => {
     }
 });
 
+// UPDATING THE PROFILE PIC OF USER
 router.post("/updateimage", async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.body.user});
@@ -170,6 +186,7 @@ router.post("/updateimage", async(req, res, next) => {
     }
 })
 
+// UPDATING THE USER BIO IN PROFILE PAGE
 router.post("/updatebio", async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.body.user});
@@ -182,6 +199,7 @@ router.post("/updatebio", async(req, res, next) => {
     }
 });
 
+// RESETING THE PASSWORD
 router.post("/reset", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({username: req.body.name});
@@ -200,6 +218,7 @@ router.post("/reset", async(req, res, next) => {
     }
 });
 
+// SENDING RESET PASSWORD MAIL TO USER
 router.post("/forgot", async(req, res, next) => {
     try {
         const foundUser = await User.findOne({ email: req.body.mail });
@@ -230,10 +249,12 @@ router.post("/forgot", async(req, res, next) => {
     }
 });
 
+// SENDING EMAIL VERIFICATION MAIL TO USER
 router.post("/send", async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({username: req.body.name});
-        var link = "https://socialites-karthikey.herokuapp.com/verified/" + foundUser.username;
+        const foundUser = await User.findOne({username: req.body.username});
+        if(foundUser) {
+            var link = "https://socialites-karthikey.herokuapp.com/verified/" + foundUser.username;
             const msg = {
                 to: foundUser.email,
                 from: "karthikeysaxena@outlook.com", 
@@ -249,104 +270,32 @@ router.post("/send", async(req, res, next) => {
                     console.log(error);
                 });
                 res.json(foundUser);
+        }
+        else {
+            res.json("INVALID");
+        }
     }
     catch(error) {
         res.json(next(error));
     }
 });
 
+// VERIFY THE REGISTERED USER
 router.post("/verify", async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({username: req.body.name});
-        foundUser.verified = true;
-        foundUser.save();
+        const foundUser = await User.findOne({username: req.body.username});
+        if(foundUser) {
+            foundUser.verified = true;
+            foundUser.save();
+            res.json(foundUser);
+        }
+        else {
+            res.json("INVALID");
+        }
     }
     catch(error) {
         res.json(next(error));
     }
 });
-
-// LOGIN
-// router.post("/", async(req, res, next) => {
-//     try {
-//         const user = new User ({
-//             username: req.body.username,
-//             password: req.body.password
-//         });
-//         req.login(user, async() => {
-//             try {
-//                 const foundUser = await User.findOne({username: req.body.username});
-//                 passport.authenticate("local")(req, res, function() {
-//                     res.json(foundUser);
-//                 });
-//             }
-//             catch(error) {
-//                 res.json("user not found");
-//             }
-//         });
-//     }
-//     catch(error) {
-//         res.json(next(error));
-//     }
-// });
-
-// REGISTER
-// router.post("/add", async(req, res, next) => {
-//     try {
-//         const foundUser = await User.findOne({username: req.body.username});
-//         const newUser = new User ({
-//             username: req.body.username,
-//             email: req.body.email,
-//             password: req.body.password,
-//             verified: false
-//         });
-//         if(foundUser === null) {
-//             const user = await User.findOne({email: req.body.email});
-//             if(user === null) {
-//                 User.register({
-//                     username: req.body.username, 
-//                     email: req.body.email, 
-//                     verified: newUser.verified, 
-//                     imageUrl: "", 
-//                     about: `Hello, ${req.body.username} here`
-//                 },
-//                     req.body.password, async(err,foundUser) => {
-//                         try {
-//                             passport.authenticate("local")(req, res, () => {
-//                                 var link = "https://socialites-karthikey.herokuapp.com/verified/" + req.body.username;
-//                                 const msg = {
-//                                     to: newUser.email,
-//                                     from: "karthikeysaxena@outlook.com", 
-//                                     subject: "Welcome to Socialites",
-//                                     html: `<a href=${link}> Link to verify your Email </a>`
-//                                 }
-//                                 sgMail
-//                                     .send(msg)
-//                                     .then(() => {
-//                                         console.log("Email sent");
-//                                     })
-//                                     .catch((error) => {
-//                                         console.log(error);
-//                                     });
-//                                 });
-//                             res.json(foundUser);
-//                         }
-//                         catch(error) {
-//                             res.json(error);
-//                         }
-//                 });
-//             }
-//             else {
-//                 res.json("Account with given Email Already Exists");
-//             }
-//         }
-//         else {
-//             res.json("Username Already Exists");
-//         }
-//     }
-//     catch(error) {
-//         res.json(next(error));
-//     }
-// });
 
 module.exports = router;

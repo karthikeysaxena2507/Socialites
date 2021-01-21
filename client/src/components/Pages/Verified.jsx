@@ -1,22 +1,24 @@
 import React from "react";
 import Footer from "../Footer";
-import { useParams,useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Heading from "../Heading";
 
 const Verified = () => {
 
     var { username } = useParams();
-    var history = useHistory();
 
     const submit = () => {
-        var user = {name: username};
         const drop = async() => {
             try {
-                const response = await axios.post("/users/verify/", user);
-                console.log(response.data);
-                alert("email Verifed, you can now Login to socialites");
-                history.push("/login");
+                const response = await axios.post("/users/verify/", username);
+                if(response.data === "INVALID") {
+                    alert("You are not a Registered User, Please go to the site and register yourself");
+                }
+                else {
+                    console.log(response.data);
+                    window.location = "/login";
+                }
             }
             catch(error) {
                 console.log(error);
