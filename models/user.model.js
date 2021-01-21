@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema({
     password: String,
     userId: String,
     verified: Boolean,
+    resetToken: String,
+    verifyToken: String,
+    expiresIn: Date,
     imageUrl: String,
     about: String
 });

@@ -5,7 +5,7 @@ import Heading from "../Heading";
 
 const ResetPassword = () => {
 
-    var { username } = useParams();
+    var { token } = useParams();
     var [newPassword, setNewPassword] = useState("");
     var [confirmPassword, setConfirmPassword] = useState("");
     var [message, setMessage] = useState(" ");
@@ -25,12 +25,11 @@ const ResetPassword = () => {
         if(newPassword === confirmPassword && newPassword.length >= 8) {
             const drop = async() => {
                 try {
-                    const response = await axios.post("/users/reset", {username, newPassword});
+                    const response = await axios.post("/users/reset", {token, newPassword});
                     if(response.data === "INVALID") {
-                        alert("You are not a Registered User, Please go to the site and register yourself");
+                        alert("You are not a Registered User, Please go to the site and register yourself. Or it is possible that the link to reset password has expired");
                     }
                     else {
-                        console.log(response.data);
                         window.location = "/login";    
                     }
                 }

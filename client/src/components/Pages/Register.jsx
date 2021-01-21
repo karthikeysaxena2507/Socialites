@@ -24,11 +24,6 @@ const Register = () => {
         }
     }
 
-    const guestLogin = () => {
-        localStorage.setItem("username", "Guest");
-        history.push(`/allposts`);
-    }
-
     const add = (event) => {
         event.preventDefault();
         if(password.length >= 8) {
@@ -39,7 +34,7 @@ const Register = () => {
                         setMessage(response.data);
                     }
                     else {
-                        history.push(`/verify/${username}`);
+                        history.push(`/verify/${response.data.user.token}`);
                         setMessage("");
                     }
                 }

@@ -9,24 +9,15 @@ const Login = () => {
 
     let history = useHistory();
 
-    var [userDetails, setUserDetails] = useState({email:"", password:""});
+    var [email, setEmail] = useState("");
+    var [password, setPassword] = useState("");
     var [message, setMessage] = useState(" ");
-
-    const change = (event) => {
-        var {name, value} = event.target;
-        setUserDetails((prevUser) => {
-        return {
-          ...prevUser,
-          [name]: value
-        };
-      });
-    }
 
     const add = (event) => {
         event.preventDefault();
         const drop = async() => {
             try {
-                const response = await axios.post("/users/login", userDetails);
+                const response = await axios.post("/users/login", {email, password});
                 console.log(response.data);
                 setMessage(" ");
                 localStorage.setItem("token", response.data.token);
@@ -34,7 +25,7 @@ const Login = () => {
                     history.push(`/profile/${response.data.user.username}`);
                 }
                 else {
-                    history.push(`/verify/${response.data.user.username}`);  
+                    history.push(`/verify/${response.data.user.token}`);  
                 }
             }
             catch(error) {
@@ -45,11 +36,6 @@ const Login = () => {
         drop();
     }
 
-    const guestLogin = () => {
-        localStorage.setItem("username", "Guest");
-        history.push(`/allposts`);
-    }
-
     return (<div className="text-center">
         <Heading />
         <h2> Login to Your Account </h2>
@@ -57,10 +43,9 @@ const Login = () => {
             <div>
                 <input 
                     type="email" 
-                    name="email" 
-                    value={userDetails.email}
+                    value={email}
                     className="margin width" 
-                    onChange={change}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email" 
                     autoComplete="off" 
                     required 
@@ -69,9 +54,8 @@ const Login = () => {
             <div>
                 <input 
                     type="password" 
-                    name="password" 
-                    value={userDetails.password}
-                    onChange={change}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="margin width" 
                     placeholder="Password" 
                     required 

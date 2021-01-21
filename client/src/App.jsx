@@ -44,9 +44,9 @@ function App() {
         <Route exact path="/complete/:id" component={CompletePost} />
         <Route exact path="/categoryposts/:type" component={CategoryPosts} />
         <Route exact path="/mycategoryposts/:type" component={MyCategoryPosts} />
-        <Route exact path="/verify/:username" component={Verify} />
-        <Route exact path="/verified/:username" component={Verified} />
-        <Route exact path="/reset/:username" component={ResetPassword} />
+        <Route exact path="/verify/:token" component={Verify} />
+        <Route exact path="/verified/:token" component={Verified} />
+        <Route exact path="/reset/:token" component={ResetPassword} />
         <Route exact path="/comment/:commentId/:id" component={CompleteComment} />
         <Route exact path="/result/:searchContent/:message/:type" component={SearchResult} />
   </Router>

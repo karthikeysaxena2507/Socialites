@@ -6,14 +6,14 @@ import Heading from "../Heading";
 
 const Verified = () => {
 
-    var { username } = useParams();
+    var { token } = useParams();
 
     const submit = () => {
         const drop = async() => {
             try {
-                const response = await axios.post("/users/verify/", {username});
+                const response = await axios.post("/users/verify/", {token});
                 if(response.data === "INVALID") {
-                    alert("You are not a Registered User, Please go to the site and register yourself");
+                    alert("You are not a Registered User, Please go to the site and register yourself Or the Email Verification link has expired");
                 }
                 else {
                     console.log(response.data);
