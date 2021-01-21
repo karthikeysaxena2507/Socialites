@@ -6,15 +6,10 @@ const ForgotPassword = () => {
 
     var [email, setEmail] = useState("");
 
-    const change = (event) => {
-        setEmail(event.target.value);
-    }
-
     const reset = () => {
-        const user = {mail: email};
         const drop = async() => {
             try {
-                const response = await axios.post("/users/forgot", user);
+                const response = await axios.post("/users/forgot", {email});
                 alert(response.data);
             }
             catch(error) {
@@ -31,7 +26,7 @@ const ForgotPassword = () => {
                     type="email" 
                     value={email}
                     className="margin" 
-                    onChange={change}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter Email" 
                     autoComplete="off" 
                     required 

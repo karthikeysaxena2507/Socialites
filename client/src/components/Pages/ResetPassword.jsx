@@ -1,32 +1,38 @@
 import React, { useState } from "react";
-import { useParams,useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Heading from "../Heading";
 
 const ResetPassword = () => {
 
     var { username } = useParams();
-    var history = useHistory();
-    var [password, setPassword] = useState({name: username, new: "", confirm:""});
+    var [newPassword, setNewPassword] = useState("");
+    var [confirmPassword, setConfirmPassword] = useState("");
     var [message, setMessage] = useState(" ");
+    var [correct, setCorrect] = useState(false);
 
-    const change = (event) => {
-        var {name, value} = event.target;
-        setPassword((prevPassword) => {
-        return {
-          ...prevPassword,
-          [name]: value
-        };
-      });
+    const check = (e) => {
+        setNewPassword(e.target.value);
+        if(e.target.value.length >= 8) {
+            setCorrect(true);
+        }
+        else {
+            setCorrect(false);
+        }
     }
 
     const reset = () => {
-        if(password.new === password.confirm) {
+        if(newPassword === confirmPassword && newPassword.length >= 8) {
             const drop = async() => {
                 try {
-                    const response = await axios.post("/users/reset", password);
-                    console.log(response.data);
-                    history.push("/login");    
+                    const response = await axios.post("/users/reset", {username, newPassword});
+                    if(response.data === "INVALID") {
+                        alert("You are not a Registered User, Please go to the site and register yourself");
+                    }
+                    else {
+                        console.log(response.data);
+                        window.location = "/login";    
+                    }
                 }
                 catch(error) {
                     console.log(error);
@@ -46,22 +52,21 @@ const ResetPassword = () => {
         <div>
             <input 
                 type = "password" 
-                name = "new"
-                value = {password.new}
+                value = {newPassword}
                 className = "margin" 
-                onChange = {change}
+                onChange = {check}
                 placeholder = "New Password" 
                 autoComplete = "off" 
                 required 
             />
         </div>
+        <p className="text-danger mt-2 mb-2" style={correct ? {display: "none"} : null}> Password must be at least 8 characters long </p>
         <div>
             <input 
                 type = "password" 
-                name = "confirm"
-                value = {password.confirm}
+                value = {confirmPassword}
                 className = "margin" 
-                onChange = {change}
+                onChange = {(e) => setConfirmPassword(e.target.value)}
                 placeholder = "Confirm New Password" 
                 autoComplete = "off" 
                 required 

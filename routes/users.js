@@ -202,15 +202,15 @@ router.post("/updatebio", async(req, res, next) => {
 // RESETING THE PASSWORD
 router.post("/reset", async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({username: req.body.name});
+        const foundUser = await User.findOne({username: req.body.username});
         if(foundUser) {
-            foundUser.setPassword(req.body.new, function() {
+            foundUser.setPassword(req.body.newPassword, () => {
                 foundUser.save();
                 res.json("password reset successfull");
             });
         }
         else {
-            res.json("user does not exists");
+            res.json("INVALID");
         }
     }
     catch(error) {
@@ -221,7 +221,7 @@ router.post("/reset", async(req, res, next) => {
 // SENDING RESET PASSWORD MAIL TO USER
 router.post("/forgot", async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({ email: req.body.mail });
+        const foundUser = await User.findOne({ email: req.body.email });
         if (foundUser === null) {
             res.json("account with the entered email does not exists, please enter the email with which you registered");
         }

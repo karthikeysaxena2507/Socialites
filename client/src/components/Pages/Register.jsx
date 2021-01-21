@@ -31,7 +31,7 @@ const Register = () => {
 
     const add = (event) => {
         event.preventDefault();
-        if(password.length >=8) {
+        if(password.length >= 8) {
             const drop = async() => {
                 try {
                     const response = await axios.post("/users/register", {username, email, password});
