@@ -11,7 +11,7 @@ const Verified = () => {
     const submit = () => {
         const drop = async() => {
             try {
-                const response = await axios.post("/users/verify/", username);
+                const response = await axios.post("/users/verify/", {username});
                 if(response.data === "INVALID") {
                     alert("You are not a Registered User, Please go to the site and register yourself");
                 }

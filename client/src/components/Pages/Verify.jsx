@@ -13,7 +13,7 @@ const Verify = () => {
     useEffect(() => {
         const drop = async() => {
             try {
-                const response = await axios.post("/users/send", username);
+                const response = await axios.post("/users/send", {username});
                 if(response.data === "INVALID") {
                     alert("You are not a Registered User, Please go to the site and register yourself");
                 }
@@ -33,7 +33,7 @@ const Verify = () => {
     const send = () => {
         const drop = async() => {
             try {
-                const response = await axios.post("/users/send", username);
+                const response = await axios.post("/users/send", {username});
                 if(response.data === "INVALID") {
                     alert("You are not a Registered User, Please go to the site and register yourself");
                 }
