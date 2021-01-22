@@ -329,6 +329,7 @@ textarea {
 
   .allbtn {
     color: black;
+    border-radius: 3px;
   }
   .allbtn:hover {
     color: black; 

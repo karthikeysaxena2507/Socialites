@@ -46,7 +46,6 @@ const Reactions = () => {
                     setUsername("Guest");
                 }
                 const response = await axios.get(`/posts/${id}`);
-                console.log(response.data[0].reacts.reverse());
                 setallreactions(response.data[0].reacts.reverse());
                 setreactions(response.data[0].reacts.reverse());
                 settempreactions(response.data[0].reacts.reverse());
@@ -256,10 +255,10 @@ const Reactions = () => {
                 <div className="text-center">
                     <h2 className="margin"> Users who Reacted: </h2>
                     <div>
-                        <button className="btn expand margin one allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
-                        <button className="btn expand margin one" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
-                        <button className="btn expand margin one" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
-                        <button className="btn expand margin one" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
+                        <button className="expand mb-3 mt-3 mr-3 allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
+                        <button className="expand mb-3 mt-3 mr-3" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
+                        <button className="expand mb-3 mt-3 mr-3" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
+                        <button className="expand mb-3 mt-3 mr-3" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
                     </div>
                     <div>
                         <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
@@ -267,10 +266,10 @@ const Reactions = () => {
                     </div>
                 </div>    
             </div>
-            <div className="margin text-center">
-                <p className="margin"> {message} </p>
+            <div className="mt-2 text-center">
+                 {message} 
             </div>
-            <div className="margin">
+            <div className="mt-4">
                 {reactions.map(renderUsers)}    
             </div>
             <div className="space"></div>

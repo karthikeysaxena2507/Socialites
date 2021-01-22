@@ -42,7 +42,6 @@ const CompleteComment = () => {
                     setUsername("Guest");
                 }
                 const response = await axios.get(`/posts/getcomment/${commentId}/${id}`);
-                console.log(response.data);
                 setComment(response.data)
                 setallreactions(response.data.reacts.reverse());
                 setreactions(response.data.reacts.reverse());
@@ -66,6 +65,7 @@ const CompleteComment = () => {
                 return (reaction.type === "likes");
             }));
         }
+        console.log(like, love, laugh);
     }
     const changeLove = () => {
         if(!love) {
@@ -95,11 +95,6 @@ const CompleteComment = () => {
         setreactions(allreactions);
     }
 
-    var style1 = (like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
-    var style2 = (love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
-    var style3 = (laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}
-    var style4 = (!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"} 
-
     const remove = () => {
         if(username !== "Guest") {
             const drop = async() => {
@@ -118,9 +113,6 @@ const CompleteComment = () => {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
     }
-
-
-    var styling = (comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"};
 
     const renderUsers = (props, index) => {
 
@@ -186,16 +178,16 @@ const CompleteComment = () => {
                         </div>
                     </div>
                     <div className="comment-content"> {comment.content} </div>            
-                    <div className="comment-options text-center" style={styling}>
-                        <img src={trash} onClick={remove} className="expand one"/>
+                    <div className="comment-options text-center" style={(comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"}}>
+                        <img src={trash} onClick={remove} className="expand mr-3"/>
                     </div>
                     </div>
                     <div className="margin text-center">
                         <h2> Users who reacted: </h2>
-                        <button className="btn expand margin one allbtn" onClick={changeAll} style={style4}> All </button> 
-                        <button className="btn expand margin one" onClick={changeLike} style={style1}> <img src={liked} name="like" className="expand"/> </button> 
-                        <button className="btn expand margin one" onClick={changeLove} style={style2}> <img src={loved} name="love" className="expand"/> </button> 
-                        <button className="btn expand margin one" onClick={changeLaugh} style={style3}> <img src={laughed} name="laugh" className="expand"/> </button> 
+                        <button className="expand mb-4 mt-3 mr-3 allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
+                        <button className="expand mb-4 mt-3 mr-3" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
+                        <button className="expand mb-4 mt-3 mr-3" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
+                        <button className="expand mb-4 mt-3 mr-3" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
                     </div>
                     <div className="margin">
                         {reactions.map(renderUsers)}    
