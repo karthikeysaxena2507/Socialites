@@ -5,7 +5,7 @@ import Footer from "../Footer";
 import Heading from "../Heading";
 import { Link,useHistory } from "react-router-dom";
 import GoogleLogin from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
+// import FacebookLogin from 'react-facebook-login';
 
 
 const Login = () => {
@@ -64,20 +64,20 @@ const Login = () => {
         window.location = "/";
     }
 
-    const responseFacebook = (response) => {
-        const post = async() => {
-            try {
-                const userData = await axios.post("/users/facebooklogin", {accessToken: response.accessToken, userID: response.userID});
-                localStorage.setItem("token", userData.data.token);
-                localStorage.removeItem("Guest");
-                history.push(`/profile/${userData.data.user.username}`);
-            }
-            catch(error) {
-                console.log(error);
-            }
-        }
-        post();
-    }
+    // const responseFacebook = (response) => {
+    //     const post = async() => {
+    //         try {
+    //             const userData = await axios.post("/users/facebooklogin", {accessToken: response.accessToken, userID: response.userID});
+    //             localStorage.setItem("token", userData.data.token);
+    //             localStorage.removeItem("Guest");
+    //             history.push(`/profile/${userData.data.user.username}`);
+    //         }
+    //         catch(error) {
+    //             console.log(error);
+    //         }
+    //     }
+    //     post();
+    // }
 
     return (<div className="text-center">
         <Heading />
@@ -134,11 +134,11 @@ const Login = () => {
                 />
             </div>
             <div className="mt-2">
-                <FacebookLogin
+                {/* <FacebookLogin
                     appId="138101367911588"
                     autoLoad={true}
                     callback={responseFacebook} 
-                />
+                /> */}
             </div>
             <div className="margin">
                 <h3> OR </h3>
