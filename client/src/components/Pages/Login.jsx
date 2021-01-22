@@ -5,6 +5,8 @@ import Footer from "../Footer";
 import Heading from "../Heading";
 import { Link,useHistory } from "react-router-dom";
 import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+
 
 const Login = () => {
 
@@ -45,6 +47,7 @@ const Login = () => {
         const post = async() => {
             try {
                 const userData = await axios.post("/users/googlelogin", {token: response.tokenId});
+                console.log(userData);
                 localStorage.setItem("token", userData.data.token);
                 localStorage.removeItem("Guest");
                 history.push(`/profile/${userData.data.user.username}`);
@@ -59,6 +62,21 @@ const Login = () => {
     const failureGoogle = () => {
         setMessage("Google Login Failed");
         window.location = "/";
+    }
+
+    const responseFacebook = (response) => {
+        const post = async() => {
+            try {
+                const userData = await axios.post("/users/facebooklogin", {accessToken: response.accessToken, userID: response.userID});
+                localStorage.setItem("token", userData.data.token);
+                localStorage.removeItem("Guest");
+                history.push(`/profile/${userData.data.user.username}`);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        post();
     }
 
     return (<div className="text-center">
@@ -105,14 +123,23 @@ const Login = () => {
             <div className="margin">
                 <h3> OR </h3>
             </div>
-            <GoogleLogin
-                clientId="632402415694-9ecqnttq28h5hola3u415aq1ltpiq30c.apps.googleusercontent.com"
-                buttonText="Login With Google"
-                onSuccess={successGoogle}
-                onFailure={failureGoogle}
-                className="btn google"
-                cookiePolicy={'single_host_origin'}
-            />
+            <div>
+                <GoogleLogin
+                    clientId="632402415694-9ecqnttq28h5hola3u415aq1ltpiq30c.apps.googleusercontent.com"
+                    buttonText="Login With Google"
+                    onSuccess={successGoogle}
+                    onFailure={failureGoogle}
+                    className="btn google"
+                    cookiePolicy={'single_host_origin'}
+                />
+            </div>
+            <div className="mt-2">
+                <FacebookLogin
+                    appId="138101367911588"
+                    autoLoad={true}
+                    callback={responseFacebook} 
+                />
+            </div>
             <div className="margin">
                 <h3> OR </h3>
             </div>
