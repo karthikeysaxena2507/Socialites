@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Room = require("../models/room.model");
 const { v4: uuidv4 } = require("uuid");
 
+// ACCESSING A PARTCULAR ROOM
 router.get("/get/:id", async(req, res, next) => {
     try {
         const room = await Room.findOne({roomId: req.params.id});
@@ -12,6 +13,7 @@ router.get("/get/:id", async(req, res, next) => {
     }
 });
 
+// CREATING A NEW CHAT
 router.post("/chat", async(req, res, next) => {
     try {
         const room = await Room.findOne({roomId: req.body.roomId});
@@ -34,6 +36,7 @@ router.post("/chat", async(req, res, next) => {
     }
 });
 
+// JOINING AN EXISTING ROOM
 router.post("/join", async(req, res, next) => {
     try {
         const room = await Room.findOne({roomId: req.body.roomId, roomName: req.body.roomId});
@@ -49,6 +52,7 @@ router.post("/join", async(req, res, next) => {
     }
 });
 
+// CREATING A NEW ROOM
 router.post("/create", async(req, res, next) => {
     try {
         const roomId = uuidv4().replace(/-/g,'').substring(0,6);

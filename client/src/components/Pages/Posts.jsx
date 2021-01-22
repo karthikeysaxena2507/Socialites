@@ -17,24 +17,6 @@ const Posts = () => {
     var [loading, setLoading] = useState(true);
     const guest = localStorage.getItem("Guest");
 
-    // useEffect(() => {
-    //     if(username === null) {
-    //         const getGoogleUser = async() => {
-    //             try {
-    //                 const response = await axios.get("/auth");
-    //                 if(response.data !== "") {
-    //                     localStorage.setItem("username", response.data);
-    //                 }
-    //                 setLoading(false);
-    //             }
-    //             catch(error) {
-    //                 console.log(error);
-    //             }
-    //         }
-    //         getGoogleUser();
-    //     }
-    // },[username]);
-
     useEffect(() => {
         const fetch = async () => {
             try {
@@ -69,10 +51,9 @@ const Posts = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        const response = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
+                        await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                         const res = await axios.get("/posts/");
-                        setPosts(res.data);  
-                        console.log(response.data);
+                        setPosts(res.data.reverse());  
                     }
                     catch(error) {
                         console.log(error);

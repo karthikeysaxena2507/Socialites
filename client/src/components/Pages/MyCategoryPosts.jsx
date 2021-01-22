@@ -57,8 +57,7 @@ const MyCategoryPosts = () => {
         const changepost = (event, post) => {
             const drop = async() => {
                 try {
-                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(res.data);
+                    await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                     const response = await axios.get(`/posts/list/${username}`);
                     setPosts(response.data.reverse().filter((post) => {
                         return (post.category === type);
@@ -74,15 +73,14 @@ const MyCategoryPosts = () => {
         const remove = () => {
             const del = async() => {
                 try {
-                    const response = await axios.delete(`/posts/delete/${props._id}`);
-                    console.log(response.data.reverse());
+                    await axios.delete(`/posts/delete/${props._id}`);
+                    history.push(`/myposts`);
                 }
                 catch(error) {
                     console.log(error);
                 }
             }
             del();
-            history.push(`/myposts`);
         }
 
         const update = () => {

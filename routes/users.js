@@ -7,7 +7,8 @@ const brcypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const crypto = require("crypto");
-
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // JWT AUTHENTICATION MIDDLEWARE FOR A USER
@@ -193,6 +194,53 @@ router.post("/login", async(req, res, next) => {
         res.json(next(error));
     }
 });
+
+// GOOGLE LOGIN
+router.post("/googlelogin", async(req, res, next) => {
+    try {   
+        var tokenId = req.body.token;
+        const response = await client.verifyIdToken({idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID});
+        var {email_verified, given_name, email} = response.payload;
+        if(email_verified) {
+            const user = await User.findOne({email});
+            if(user) {
+                const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 3600});
+                const {id, username, email} = user;
+                res.json({
+                    token,
+                    user: {id, username, email}
+                });
+            }
+            else {
+                const newUser = new User({
+                    username: given_name,
+                    email,
+                    about: `Hello, ${given_name} here`,
+                    imageUrl: "",
+                    verified: true
+                });
+                newUser.save()
+                .then((data) => {
+                    const token = jwt.sign({id: data.id}, process.env.JWT_SECRET, {expiresIn: 3600});
+                    const {id, username, email} = data;
+                    res.json({
+                        token,
+                        user: {id, username, email}
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            }
+        }
+        else {
+            res.json("INVALID");
+        }
+    }
+    catch(error) {
+        res.json(next(error));
+    }
+})
 
 // ACCESSING ALL USERS
 router.get("/get", async(req, res, next) => {

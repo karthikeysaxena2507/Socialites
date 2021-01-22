@@ -4,6 +4,7 @@ import axios from "axios";
 import Footer from "../Footer";
 import Heading from "../Heading";
 import { Link,useHistory } from "react-router-dom";
+import GoogleLogin from 'react-google-login';
 
 const Login = () => {
 
@@ -18,7 +19,6 @@ const Login = () => {
         const drop = async() => {
             try {
                 const response = await axios.post("/users/login", {email, password});
-                console.log(response.data);
                 setMessage(" ");
                 localStorage.setItem("token", response.data.token);
                 localStorage.removeItem("Guest");
@@ -39,6 +39,26 @@ const Login = () => {
 
     const guestLogin = () => {
         localStorage.setItem("Guest", true);
+    }
+
+    const successGoogle = (response) => {
+        const post = async() => {
+            try {
+                const userData = await axios.post("/users/googlelogin", {token: response.tokenId});
+                localStorage.setItem("token", userData.data.token);
+                localStorage.removeItem("Guest");
+                history.push(`/profile/${userData.data.user.username}`);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        post();
+    }
+
+    const failureGoogle = () => {
+        setMessage("Google Login Failed");
+        window.location = "/";
     }
 
     return (<div className="text-center">
@@ -85,10 +105,17 @@ const Login = () => {
             <div className="margin">
                 <h3> OR </h3>
             </div>
-            {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
+            <GoogleLogin
+                clientId="632402415694-9ecqnttq28h5hola3u415aq1ltpiq30c.apps.googleusercontent.com"
+                buttonText="Login With Google"
+                onSuccess={successGoogle}
+                onFailure={failureGoogle}
+                className="btn google"
+                cookiePolicy={'single_host_origin'}
+            />
             <div className="margin">
                 <h3> OR </h3>
-            </div> */}
+            </div>
             <Link to="/allposts">
                 <div className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </div>
             </Link>

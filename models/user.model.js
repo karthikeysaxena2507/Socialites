@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const findOrCreate = require("mongoose-findorcreate");
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -13,8 +12,6 @@ const userSchema = new mongoose.Schema({
     imageUrl: String,
     about: String
 });
-
-userSchema.plugin(findOrCreate);
 
 const User = mongoose.model("User", userSchema);
 

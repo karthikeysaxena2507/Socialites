@@ -3,10 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const passport = require("passport");
 const session = require("express-session");
-const User = require("./models/user.model");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const http = require("http");
 const webpush = require("web-push");
 const app = express();
@@ -34,8 +31,6 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 // CONNECTING TO MONGODB ATLAS
 mongoose.connect(process.env.ATLAS_URI, {
@@ -55,63 +50,7 @@ app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/rooms", roomsRouter);
 
-// SETTING UP PASSPORT MIDDLEWARE
-passport.serializeUser(function(user, done) {
-    done(null, user.id);
-});
-passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-        done(err, user);
-    });
-});
-// SETTING UP GOOGLE AUTH
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL,
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
-  },
-  (accessToken, refreshToken, profile, cb) => {
-    User.findOrCreate({ 
-        userId: profile.id,
-        username: profile._json.given_name,
-        email: profile.email
-    }, function(err, user) {
-        return cb(err, user);
-    });
-  }
-));
-
-// AUTHENTICATIONS ROUTES
-app.get("/auth/google", passport.authenticate("google", { 
-    scope: ["profile"]
- })
-);
-var googleUser = "";
-app.get("/socialites-karthikey/auth/google/social", passport.authenticate("google", {
-    failureRedirect: "/login"
-    }), (req, res) => {
-        googleUser = req.user.username;
-        res.redirect("/allposts");
-});
-app.get("/auth", async(req, res, next) => {
-    try {
-        const user = await User.findOne({username: googleUser});
-        user.about = `Hello, ${googleUser} here`;
-        user.imageUrl = "";
-        user.save();
-        res.json(googleUser);
-    }
-    catch(err) {
-        res.json(next(err));
-    }
-}); 
-app.post("/logout", (req, res) => {
-    req.logOut();
-    res.json("logged out");
-});
-
-// SETTING UP SOCKET.IO FOR REAL TIME CHATS
+// SETTING UP SOCKET.IO FOR REAL TIME CHAT FEATURE
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
 

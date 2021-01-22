@@ -55,14 +55,6 @@ const Edit = () => {
         setCategory(e.target.innerText);
     }
 
-    const changeTitle = (e) => {
-        setTitle(e.target.value);
-    } 
-
-    const changeContent = (e) => {
-        setContent(e.target.value);
-    }
-
     const handleFileInputChange = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -157,7 +149,7 @@ const Edit = () => {
                             placeholder="Title of your Post"
                             rows="1"
                             cols="50"
-                            onChange={changeTitle}
+                            onChange={(e) => setTitle(e.target.value)}
                             required
                         />
                     </div>
@@ -168,7 +160,7 @@ const Edit = () => {
                             placeholder="Content of your Post"
                             rows="9"
                             cols="50"
-                            onChange={changeContent}
+                            onChange={(e) => setContent(e.target.value)}
                             required
                         />
                     </div>

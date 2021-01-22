@@ -25,14 +25,13 @@ const Post = (props) => {
       });
     }
 
-    const addComment = (event) => {
+    const addComment = () => {
         if(props.name !== "Guest") {
             if(comment.content !== "") {
                 const drop = async() => {
                     try {
-                        const response = await axios.post(`/posts/add/${props._id}`, comment);
-                        console.log(response.data);
-                        history.push(`/complete/${props._id}`);
+                        await axios.post(`/posts/add/${props._id}`, comment);
+                        window.location = `/complete/${props._id}`;
                     }
                     catch(error) {
                         console.log(error);

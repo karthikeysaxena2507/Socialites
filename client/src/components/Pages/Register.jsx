@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import Footer from "../Footer";
 import Heading from "../Heading";
+import GoogleLogin from 'react-google-login';
 
 const Register = () => {
 
@@ -45,6 +46,27 @@ const Register = () => {
             drop();
         }
     }
+
+    const successGoogle = (response) => {
+        const post = async() => {
+            try {
+                const userData = await axios.post("/users/googlelogin", {token: response.tokenId});
+                localStorage.setItem("token", userData.data.token);
+                localStorage.removeItem("Guest");
+                history.push(`/profile/${userData.data.user.username}`);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        post();
+    }
+
+    const failureGoogle = () => {
+        setMessage("Google Login Failed");
+        window.location = "/";
+    }
+
 
     const guestLogin = () => {
         localStorage.setItem("Guest", true);
@@ -101,10 +123,17 @@ const Register = () => {
                  <Link to="/login"> Login here </Link>
             </div>
         </form>
-        {/* <div className="margin">
+        <div className="margin">
             <h3> OR </h3>
         </div>
-        <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div> */}
+        <GoogleLogin
+                clientId="632402415694-9ecqnttq28h5hola3u415aq1ltpiq30c.apps.googleusercontent.com"
+                buttonText="Login With Google"
+                onSuccess={successGoogle}
+                onFailure={failureGoogle}
+                className="btn btn-lg expand"
+                cookiePolicy={'single_host_origin'}
+        />
         <div className="margin">
                 <h3> OR </h3>
         </div>

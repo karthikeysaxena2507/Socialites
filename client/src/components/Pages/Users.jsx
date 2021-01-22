@@ -46,8 +46,8 @@ const Users = () => {
             }
             catch(error) {
                 console.log(error);
-                localStorage.clear();
-                window.location = "/login";
+                // localStorage.clear();
+                // window.location = "/login";
             }
         }
         fetch();
@@ -85,20 +85,24 @@ const Users = () => {
         }
 
         if(props.username !== undefined) {
-            return (<div className="container user" key={index}>
+            if(props.username !== "Guest") {
+                return (<div className="container user" key={index}>
                 <li className="profile">
                     <span onClick={SeeProfile}> {props.username} </span>
                     <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
+            }
         } 
         else {
-            return (<div className="container user" key={index}>
+            if(props.item.username !== "Guest") {
+                return (<div className="container user" key={index}>
                 <li className="profile">
                     <span onClick={SeeProfile}> {props.item.username} </span>
                     <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
+            }
         }
     }
 

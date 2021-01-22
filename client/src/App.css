@@ -342,6 +342,10 @@ textarea {
     color: brown;
   }
 
+  .google {
+    width: 180px;
+  }
+
   /* CHAT COMPONENTS DESIGINING */
 
   .messages {

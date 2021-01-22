@@ -18,7 +18,7 @@ const Room = () => {
     var [message, setMessage] = useState("");
     var [messages,setMessages] = useState([]);
     var [loading, setLoading] = useState(true);
-    var [state, setState] = useState("Show");
+    // var [state, setState] = useState("Show");
     // var [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -94,10 +94,10 @@ const Room = () => {
         }
     }
 
-    const changeState = () => {
-        if(state === "Show") setState("Hide");
-        else setState("Show");
-    }
+    // const changeState = () => {
+    //     if(state === "Show") setState("Hide");
+    //     else setState("Show");
+    // }
 
     if(loading) {
         return (<div className="text-center upper-margin"> 
@@ -116,7 +116,7 @@ const Room = () => {
             <Heading />
             <div className="text-center"> 
                 <h5 className="margin"> Room ID: {roomId} </h5>
-                <button className="btn" onClick={changeState}> {state} Users in Room </button>
+                {/* <button className="btn" onClick={changeState}> {state} Users in Room </button> */}
             </div>
             <div className="outerContainer">
                 <div className="innerContainer">

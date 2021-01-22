@@ -47,10 +47,11 @@ const Profile = () => {
                             "x-auth-token": localStorage.getItem("token")
                         }
                     });
+                    const res = await axios.get(`/users/find/${user}`)
                     setUsername(response.data.username);
-                    setImageUrl(response.data.imageUrl);
-                    setAbout(response.data.about);
-                    setText(response.data.about);
+                    setImageUrl(res.data.imageUrl);
+                    setAbout(res.data.about);
+                    setText(res.data.about);
                 }
                 else {
                     const response = await axios.get(`/users/find/${user}`)
@@ -93,8 +94,7 @@ const Profile = () => {
             else {
                 const drop = async() => {
                     try {
-                        const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                        console.log(res.data);
+                        await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                         const postData = await axios.get(`/posts/list/${user}`);
                         setPosts(postData.data.reverse());
                         var cmct = 0, lkct = 0, lvct = 0, lgct = 0;
@@ -121,15 +121,14 @@ const Profile = () => {
         const remove = () => {
             const del = async() => {
                 try {
-                    const response = await axios.delete(`/posts/delete/${props._id}`);
-                    console.log(response.data.reverse());
+                    await axios.delete(`/posts/delete/${props._id}`);
+                    history.push(`/myposts`);
                 }
                 catch(error) {
                     console.log(error);
                 }
             }
             del();
-            history.push(`/myposts`);
         }
 
         const update = () => {
@@ -167,9 +166,8 @@ const Profile = () => {
             const drop = async() => {
                 try {
                     var room = (username < user) ? (username + "-" + user) : (user + "-" + username);
-                    const response = await axios.post("/rooms/chat",{roomId: room})
+                    await axios.post("/rooms/chat",{roomId: room})
                     history.push(`/room/${room}`);
-                    console.log(response);
                 }
                 catch(error) {
                     console.log(error);
@@ -193,7 +191,6 @@ const Profile = () => {
     const changeState = () => {
         if(state === "Show") setState("Hide");
         else setState("Show");
-        console.log(data);
     }
 
     const changeEdit = () => {
@@ -206,7 +203,6 @@ const Profile = () => {
             const drop = async() => {
                 try {
                     const userData = await axios.post(`/users/updatebio`,{user, text});
-                    console.log(userData);
                     setAbout(userData.data);
                     setEdit("Edit");
                 }
@@ -239,7 +235,6 @@ const Profile = () => {
     const uploadImage = async (imageSource) => {
         if(username !== "Guest") {
             try {
-                console.log(imageSource);
                 await fetch("/users/updateimage", {
                     method: "POST",
                     body: JSON.stringify({

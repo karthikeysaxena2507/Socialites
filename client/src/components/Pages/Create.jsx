@@ -51,14 +51,6 @@ const Create = () => {
         setCategory(e.target.innerText);
     }
 
-    const changeTitle = (e) => {
-        setTitle(e.target.value);
-    } 
-
-    const changeContent = (e) => {
-        setContent(e.target.value);
-    }
-
     const handleFileInputChange = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -76,7 +68,6 @@ const Create = () => {
     const uploadImage = async (imageSource) => {
         if(username !== "Guest") {
             try {
-                console.log(imageSource);
                 await fetch("/posts/add", {
                     method: "POST",
                     body: JSON.stringify({
@@ -149,7 +140,7 @@ const Create = () => {
                     placeholder="Title of your Post"
                     rows="1"
                     cols="50"
-                    onChange={changeTitle}
+                    onChange={(e) => setTitle(e.target.value)}
                     required
                 />
             </div>
@@ -160,7 +151,7 @@ const Create = () => {
                     placeholder="Content of your Post"
                     rows="9"
                     cols="50"
-                    onChange={changeContent}
+                    onChange={(e) => setContent(e.target.value)}
                     required
                 />
             </div>

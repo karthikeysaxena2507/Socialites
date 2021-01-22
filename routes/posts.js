@@ -4,6 +4,7 @@ let React = require("../models/react.model");
 let Comment = require("../models/comment.model");
 const { cloudinary } = require("../utils/cloudinary");
 
+// ACCESSING ALL POSTS
 router.get("/", async(req, res, next) => {
     try {
         const posts = await Post.find({});
@@ -14,6 +15,7 @@ router.get("/", async(req, res, next) => {
     }
 });
 
+// ACCESSING A PARTICULAR COMMENT
 router.get("/getcomment/:commentId/:id", async(req, res, next) => {
     try {
         const post = await Post.find({_id: req.params.id});
@@ -25,6 +27,7 @@ router.get("/getcomment/:commentId/:id", async(req, res, next) => {
     }
 });
 
+// ACCESSING A PARTICULAR POST
 router.get("/:id", async(req, res, next) => {
     try {
         const post = await Post.find({_id: req.params.id});
@@ -35,6 +38,7 @@ router.get("/:id", async(req, res, next) => {
     }
 });
 
+// ACCESSING POSTS OF A PARTICULAR USER
 router.get("/list/:username", async(req, res, next) => {
     try {
         const posts = await Post.find({author: req.params.username});
@@ -45,6 +49,7 @@ router.get("/list/:username", async(req, res, next) => {
     }
 });
 
+// ACCESSING A POST BY ID
 router.get("/edit/:id", async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
@@ -61,6 +66,7 @@ router.get("/edit/:id", async(req, res, next) => {
     }
 });
 
+// REACTING TO A POST
 router.post("/update/:react/:username", async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.body._id});
@@ -97,6 +103,7 @@ router.post("/update/:react/:username", async(req, res, next) => {
     }
 });
 
+// EDITING A POST
 router.post("/edit/:id", async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
@@ -121,6 +128,7 @@ router.post("/edit/:id", async(req, res, next) => {
     }
 });
 
+// ADDING NEW POST
 router.post("/add", async(req, res, next) => {
     try {
         var imageUrl = "";
@@ -158,6 +166,7 @@ router.post("/add", async(req, res, next) => {
     }
 });
 
+// ADDING A COMMENT
 router.post("/add/:id", async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
@@ -172,6 +181,7 @@ router.post("/add/:id", async(req, res, next) => {
     }
 });
 
+// REACTING TO A COMMENT
 router.post("/comment/:react/:postId/:username", async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.postId});
@@ -208,6 +218,7 @@ router.post("/comment/:react/:postId/:username", async(req, res, next) => {
     }
 });
 
+// DELETE A COMMENT
 router.post("/remove/:id", async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
@@ -224,6 +235,7 @@ router.post("/remove/:id", async(req, res, next) => {
     }
 });
 
+// DELETING A POST
 router.delete("/delete/:id", async(req, res, next) => {
     try {
         const response = await Post.deleteOne({_id: req.params.id});

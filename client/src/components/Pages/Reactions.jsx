@@ -103,7 +103,6 @@ const Reactions = () => {
             setMessage("Showing All Users Who Laughed");
         }
     }
-
     const changeAll = () => {
         setlike(false);    
         setlove(false);
@@ -111,10 +110,6 @@ const Reactions = () => {
         setreactions(allreactions);
         settempreactions(allreactions);
         setMessage("Showing All Users Who Reacted");
-    }
-
-    const change = (event) => {
-        setsearchContent(event.target.value);
     }
 
     const renderUsers = (props, index) => {
@@ -128,9 +123,8 @@ const Reactions = () => {
                     const drop = async() => {
                         try {
                             var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                            const response = await axios.post("/rooms/chat",{roomId: room})
+                            await axios.post("/rooms/chat",{roomId: room})
                             history.push(`/room/${room}`);
-                            console.log(response.data);
                         }
                         catch(error) {
                             console.log(error);
@@ -155,10 +149,9 @@ const Reactions = () => {
                     const drop = async() => {
                         try {
                             var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                            const response = await axios.post("/rooms/chat",{roomId: room})
+                            await axios.post("/rooms/chat",{roomId: room})
                             localStorage.setItem("roomId", room);
                             history.push(`/room`);
-                            console.log(response.data);
                         }
                         catch(error) {
                             console.log(error);
@@ -261,7 +254,7 @@ const Reactions = () => {
                         <button className="expand mb-3 mt-3 mr-3" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
                     </div>
                     <div>
-                        <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={change} className="width" placeholder="Search" autoComplete="off"/>
+                        <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => setsearchContent(e.target.value)} className="width" placeholder="Search" autoComplete="off"/>
                         <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
                     </div>
                 </div>    

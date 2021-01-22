@@ -54,8 +54,7 @@ const CompletePost = () => {
         if(username !== "Guest") {
             const drop = async() => {
                 try {
-                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(res.data);
+                    await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
                     const response = await axios.get(`/posts/${id}`);
                     setPost(response.data[0]);
                 }
@@ -76,8 +75,7 @@ const CompletePost = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        const res = await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
-                        console.log(res.data);
+                        await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
                         const response = await axios.get(`/posts/${id}`);
                         setPost(response.data[0]);
                     }
@@ -96,8 +94,8 @@ const CompletePost = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        const response = await axios.post(`/posts/remove/${id}`, props);
-                        console.log(response.data);
+                        await axios.post(`/posts/remove/${id}`, props);
+                        window.location = `/complete/${id}`;
                     }
                     catch(error) {
                         console.log(error);
@@ -122,9 +120,8 @@ const CompletePost = () => {
                 const drop = async() => {
                     try {
                         var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                        const response = await axios.post("/rooms/chat",{roomId: room})
+                        await axios.post("/rooms/chat",{roomId: room})
                         history.push(`/room/${room}`);
-                        console.log(response);
                     }
                     catch(error) {
                         console.log(error);

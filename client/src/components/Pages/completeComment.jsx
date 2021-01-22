@@ -65,7 +65,6 @@ const CompleteComment = () => {
                 return (reaction.type === "likes");
             }));
         }
-        console.log(like, love, laugh);
     }
     const changeLove = () => {
         if(!love) {
@@ -87,7 +86,6 @@ const CompleteComment = () => {
             }));
         }
     }
-
     const changeAll = () => {
         setlike(false);    
         setlove(false);
@@ -99,8 +97,7 @@ const CompleteComment = () => {
         if(username !== "Guest") {
             const drop = async() => {
                 try {
-                    const response = await axios.post(`/posts/remove/${id}`, comment);
-                    console.log(response.data);
+                    await axios.post(`/posts/remove/${id}`, comment);
                     history.push(`/comment/${comment._id}/${id}`);        
                 }
                 catch (error) {
@@ -124,9 +121,8 @@ const CompleteComment = () => {
                 const drop = async() => {
                     try {
                         var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                        const response = await axios.post("/rooms/chat",{roomId: room})
+                        await axios.post("/rooms/chat",{roomId: room})
                         history.push(`/room/${room}`);
-                        console.log(response);
                     }
                     catch(error) {
                         console.log(error);
