@@ -9,17 +9,23 @@ const About = () => {
 
     var [username, setUsername] = useState("");
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
     
     useEffect(()=> {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                }
+                else {
+                    setUsername("Guest");
+                }
                 setLoading(false);
             }
             catch(error) {
@@ -29,7 +35,7 @@ const About = () => {
             }
         }
         fetch();
-    },[]);
+    },[guest]);
 
     if(loading) {
         return (<div className="text-center upper-margin"> 
@@ -58,9 +64,9 @@ const About = () => {
                                     <li> Delete their Post. </li>
                                     <li> View other people posts. </li>
                                     <li> Search through all the posts, their own posts based on different categories. </li>
-                                    <li> React to other posts and see which users reactes on which posts. </li>
+                                    <li> React to other posts and see which users reacted on which posts. </li>
                                     <li> Comment on their own or other posts, as well react to each comments. </li>
-                                    <li> View which users commented on any particluar post and which who all users reacted to any 
+                                    <li> View which users commented on any particluar post and who reacted to any 
                                          comment or any post </li>
                                     <li> Users can also chat with other users, either on a personal chat or in a group chat by 
                                          creating a room </li>

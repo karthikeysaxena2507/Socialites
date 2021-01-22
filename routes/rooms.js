@@ -32,7 +32,7 @@ router.post("/chat", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-})
+});
 
 router.post("/join", async(req, res, next) => {
     try {

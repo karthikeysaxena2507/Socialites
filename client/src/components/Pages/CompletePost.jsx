@@ -19,18 +19,24 @@ const CompletePost = () => {
     var [username, setUsername] = useState("");
     var { id } = useParams();
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
     var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
 
     useEffect(() => {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                }
+                else {
+                    setUsername("Guest");
+                }
                 const response = await axios.get(`/posts/${id}`);
                 setPost(response.data[0]);
                 setLoading(false);
@@ -42,7 +48,7 @@ const CompletePost = () => {
             }
         }
         fetch();
-    },[id]);
+    },[guest, id]);
 
     const changepost = (event, post) => {
         if(username !== "Guest") {
@@ -109,19 +115,23 @@ const CompletePost = () => {
         }
 
         const createRoom = () => {
-            const drop = async() => {
-                try {
-                    var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                    const response = await axios.post("/rooms/chat",{roomId: room})
-                    localStorage.setItem("roomId", room);
-                    history.push(`/room`);
-                    console.log(response.data);
-                }
-                catch(error) {
-                    console.log(error);
-                }
+            if(username === "Guest") {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
             }
-            drop();
+            else {
+                const drop = async() => {
+                    try {
+                        var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
+                        const response = await axios.post("/rooms/chat",{roomId: room})
+                        history.push(`/room/${room}`);
+                        console.log(response);
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                }
+                drop();
+            }
         }
 
 

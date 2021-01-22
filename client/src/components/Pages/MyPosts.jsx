@@ -19,19 +19,25 @@ const MyPosts = () => {
     var [username, setUsername] = useState("");
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
-                const response = await axios.get(`/posts/list/${user.data.username}`);
-                setPosts(response.data.reverse());
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                    const response = await axios.get(`/posts/list/${user.data.username}`);
+                    setPosts(response.data.reverse());
+                }
+                else {
+                    setUsername("Guest");
+                }
                 setLoading(false);
             }
             catch(error) {
@@ -41,7 +47,7 @@ const MyPosts = () => {
             }
         }
         fetch();
-    },[username]);
+    },[guest, username]);
 
     const MyPost = (props, index) => {
 

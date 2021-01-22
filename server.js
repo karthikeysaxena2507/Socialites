@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
 const User = require("./models/user.model");
-var LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const http = require("http");
 const webpush = require("web-push");
@@ -57,7 +56,6 @@ app.use("/users", usersRouter);
 app.use("/rooms", roomsRouter);
 
 // SETTING UP PASSPORT MIDDLEWARE
-passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
@@ -116,6 +114,7 @@ app.post("/logout", (req, res) => {
 // SETTING UP SOCKET.IO FOR REAL TIME CHATS
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
+
 const io = require('socket.io')(server, {
     cors: {
       origin: '*',
@@ -141,7 +140,9 @@ io.on("connection", (socket) => {
         try {
             const room = await Room.findOne({roomId: data.room});
             room.messages.push({name: data.name, content: data.message});
+            // const chat = await Chat.find({room: data.room});
             room.save();
+            // io.emit("users", {chat: chat});
             io.to(data.room).emit("message", {name: data.name, content: data.message});
         }
         catch(error) {

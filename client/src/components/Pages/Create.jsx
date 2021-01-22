@@ -19,17 +19,23 @@ const Create = () => {
     var [content, setContent] = useState("");
     var [category, setCategory] = useState("Select Category");
     var [preview, setPreview] = useState(""); 
+    var guest = localStorage.getItem("Guest");
 
     useEffect(()=> {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                }
+                else {
+                    setUsername("Guest");
+                }
                 setLoading(false);
             }
             catch(error) {
@@ -39,7 +45,7 @@ const Create = () => {
             }
         }
         fetch();
-    },[]);
+    },[guest]);
     
     const changeCategory = (e) => {
         setCategory(e.target.innerText);

@@ -12,7 +12,6 @@ import { useHistory } from "react-router-dom";
 const Post = (props) => {
 
     var history = useHistory();
-    var username = localStorage.getItem("username");
     var [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
 
     const change = (event) => {
@@ -27,7 +26,7 @@ const Post = (props) => {
     }
 
     const addComment = (event) => {
-        if(username !== "Guest") {
+        if(props.name !== "Guest") {
             if(comment.content !== "") {
                 const drop = async() => {
                     try {

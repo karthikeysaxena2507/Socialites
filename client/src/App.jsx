@@ -35,7 +35,7 @@ function App() {
         <Route exact path="/about" component={About}/>
         <Route exact path="/allposts" component={Posts} />
         <Route exact path="/profile/:user" component={Profile} />
-        <Route exact path="/room" component={Room} />
+        <Route exact path="/room/:roomId" component={Room} />
         <Route exact path="/allusers" component={Users} />
         <Route exact path="/create" component={Create} />
         <Route exact path="/myposts" component={MyPosts} />

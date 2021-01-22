@@ -46,6 +46,10 @@ const Register = () => {
         }
     }
 
+    const guestLogin = () => {
+        localStorage.setItem("Guest", true);
+    }
+
     return (<div className="text-center">
     <Heading />
     <h2> Register Your Account </h2>
@@ -100,13 +104,13 @@ const Register = () => {
         {/* <div className="margin">
             <h3> OR </h3>
         </div>
-        <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div>
+        <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignUp Using Google </a> </div> */}
         <div className="margin">
                 <h3> OR </h3>
         </div>
         <Link to="/allposts">
             <div className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </div>
-        </Link> */}
+        </Link>
     <div className="space"></div>
     <Footer />
 </div>);

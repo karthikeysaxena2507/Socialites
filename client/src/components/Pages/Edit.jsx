@@ -18,17 +18,23 @@ const Edit = () => {
     var [category, setCategory] = useState("Select Category");
     var [preview, setPreview] = useState(""); 
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                }
+                else {
+                    setUsername("Guest");
+                }
                 const response = await axios.get(`/posts/edit/${id}`);
                 setTitle(response.data.title);
                 setContent(response.data.content);
@@ -43,7 +49,7 @@ const Edit = () => {
             }
         }
         fetch();
-    },[id]);
+    },[guest, id]);
 
     const changeCategory = (e) => {
         setCategory(e.target.innerText);

@@ -22,18 +22,24 @@ const Users = () => {
     var [roomMessage, setRoomMessage] = useState("");
     var [state, setState] = useState("");
     var [loading, setLoading] = useState(false);
+    var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
-                const response = await axios.get(`/users/get/${user.data.username}`);
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                }
+                else {
+                    setUsername("Guest");
+                }
+                const response = await axios.get(`/users/get`);
                 setUsers(response.data);
                 setAllUsers(response.data);
                 setLoading(false);
@@ -45,55 +51,54 @@ const Users = () => {
             }
         }
         fetch();
-    },[]);
+    },[guest]);
 
     const createUser = (props, index) => {
 
-        const createRoom = (e) => {
+        const createRoom = () => {
             var room;
             if(props.username !== undefined) {
                 room = (username < props.username) ? (username + "-" + props.username) : (props.username + "-" + username);
-                localStorage.setItem("roomId", room);
             }
             else {
                 room = (username < props.item.username) ? (username + "-" + props.item.username) : (props.item.username + "-" + username);
-                localStorage.setItem("roomId", room);
             }
-            const drop = async() => {
-                try {
-                    const response = await axios.post("/rooms/chat",{roomId: room})
-                    console.log(response.data);
-                    history.push(`/room`);
-                }
-                catch(error) {
-                    console.log(error);
-                }
+            if(username === "Guest") {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
             }
-            drop();
+            else {
+                const drop = async() => {
+                    try {
+                        await axios.post("/rooms/chat",{roomId: room})
+                        history.push(`/room/${room}`);
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                }
+                drop();
+            }
         }
 
         const SeeProfile = (e) => {
             history.push(`/profile/${e.target.innerText}`);
         }
 
-        if(props.username !== "Guest")
-        {
-            if(props.username !== undefined) {
-                return (<div className="container user" key={index}>
+        if(props.username !== undefined) {
+            return (<div className="container user" key={index}>
                 <li className="profile">
                     <span onClick={SeeProfile}> {props.username} </span>
                     <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
-            } 
-            else {
-                return (<div className="container user" key={index}>
+        } 
+        else {
+            return (<div className="container user" key={index}>
                 <li className="profile">
                     <span onClick={SeeProfile}> {props.item.username} </span>
                     <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
-            }
         }
     }
 
@@ -116,16 +121,14 @@ const Users = () => {
     }
 
     const createRoom = () => {
-        if(username === null || username === "Guest") {
+        if(username === "Guest") {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
         else {
             const drop = async() => {
                 try {
                     const response = await axios.post("/rooms/create", {username});
-                    console.log(response.data);
-                    localStorage.setItem("roomId", response.data.roomId);
-                    history.push("/room");
+                    history.push(`/room/${response.data.roomId}`);
                 }
                 catch(error) {
                     console.log(error);
@@ -136,7 +139,7 @@ const Users = () => {
     }
 
     const joinRoom = () => {
-        if(username === null || username === "Guest") {
+        if(username === "Guest") {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
         else {
@@ -147,8 +150,7 @@ const Users = () => {
                         setRoomMessage("invalid Room Id");
                     }
                     else {
-                        localStorage.setItem("roomId", response.data.roomId);
-                        history.push("/room");
+                        history.push(`/room/${roomId}`);
                     }
                 }
                 catch(error) {

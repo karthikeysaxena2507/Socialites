@@ -1,6 +1,5 @@
 require("dotenv").config();
 const router = require("express").Router();
-const passport = require("passport");
 let User = require("../models/user.model.js");
 const sgMail = require("@sendgrid/mail");
 const { cloudinary } = require("../utils/cloudinary");
@@ -196,7 +195,7 @@ router.post("/login", async(req, res, next) => {
 });
 
 // ACCESSING ALL USERS
-router.get("/get/:username", async(req, res, next) => {
+router.get("/get", async(req, res, next) => {
     try {  
         const users = await User.find({});
         res.json(users);
@@ -205,6 +204,17 @@ router.get("/get/:username", async(req, res, next) => {
         res.json(next(error));
     }
 });
+
+// ACCESSING A PARTICULAR USER BY USERNAME
+router.get("/find/:user", async(req, res, next) => {
+    try {
+        const user = await User.findOne({username: req.params.user});
+        res.json(user);
+    }
+    catch(error) {
+        res.json(error);
+    }
+})
 
 // UPDATING THE PROFILE PIC OF USER
 router.post("/updateimage", async(req, res, next) => {

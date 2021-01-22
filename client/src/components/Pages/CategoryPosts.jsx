@@ -17,17 +17,23 @@ const CategoryPosts = () => {
     var { type } = useParams();
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
         const fetch = async() => {
             try{
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                }
+                else {
+                    setUsername("Guest");
+                }
                 const response = await axios.get("/posts");
                 setPosts(response.data.reverse().filter((post) => {
                     return (post.category === type);
@@ -41,7 +47,7 @@ const CategoryPosts = () => {
             }
         }
         fetch();
-    },[type]);
+    },[guest, type]);
 
     const createPost = (props, index) => {
 

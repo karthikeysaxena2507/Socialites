@@ -15,19 +15,25 @@ const Result = () => {
     var { searchContent,message,type } = useParams();
     var [foundPosts,setfoundPosts] = useState([]);
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
 
         if(message === "all") {
             const fetch = async() => {
                 try {
-                    const user = await axios.get("/users/auth",{
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-auth-token": localStorage.getItem("token")
-                        }
-                    });
-                    setUsername(user.data.username);
+                    if(guest !== "true") {
+                        const user = await axios.get("/users/auth",{
+                            headers: {
+                                "Content-Type": "application/json",
+                                "x-auth-token": localStorage.getItem("token")
+                            }
+                        });
+                        setUsername(user.data.username);
+                    }
+                    else {
+                        setUsername("Guest");
+                    }
                     const response = await axios.get("/posts");
                     setLoading(false);
                     const fuse = new Fuse(response.data, {
@@ -82,7 +88,7 @@ const Result = () => {
             }
             fetch();
         }
-    },[message, searchContent, type, username]);
+    },[guest, message, searchContent, type, username]);
 
     const createPost = (props, index) => {
 

@@ -15,6 +15,7 @@ const Posts = () => {
     var [username, setUsername] = useState("");
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
 
     // useEffect(() => {
     //     if(username === null) {
@@ -37,13 +38,18 @@ const Posts = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                }
+                else {
+                    setUsername("Guest");
+                }
                 const response = await axios.get("/posts/");
                 setPosts(response.data.reverse());
                 setLoading(false);
@@ -55,7 +61,7 @@ const Posts = () => {
             }
         };
         fetch(); 
-    },[]);
+    },[guest]);
 
     const createPost = (props, index) => {
 

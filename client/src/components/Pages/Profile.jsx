@@ -35,20 +35,30 @@ const Profile = () => {
     var [text, setText] = useState("");
     var [show, setShow] = useState(false);
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
     
     useEffect(() => {
         const fetch = async() => {
             try {
-                const response = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(response.data.username);
-                setImageUrl(response.data.imageUrl);
-                setAbout(response.data.about);
-                setText(response.data.about);
+                if(guest !== "true") {
+                    const response = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(response.data.username);
+                    setImageUrl(response.data.imageUrl);
+                    setAbout(response.data.about);
+                    setText(response.data.about);
+                }
+                else {
+                    const response = await axios.get(`/users/find/${user}`)
+                    setUsername("Guest");
+                    setImageUrl(response.data.imageUrl);
+                    setAbout(response.data.about);
+                    setText(response.data.about);
+                }
                 const postData = await axios.get(`/posts/list/${user}`)
                 setPostCount(postData.data.length);
                 setPosts(postData.data.reverse());
@@ -73,35 +83,39 @@ const Profile = () => {
             }
         }
         fetch();
-    },[user]);
+    },[guest, user]);
 
     const MyPost = (props, index) => {
-
         const changepost = (event, post) => {
-            const drop = async() => {
-                try {
-                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(res.data);
-                    const postData = await axios.get(`/posts/list/${user}`);
-                    setPosts(postData.data.reverse());
-                    var cmct = 0, lkct = 0, lvct = 0, lgct = 0;
-                    postData.data.forEach((post) => {
-                        cmct+=post.comment_count;
-                        lkct+=post.like;
-                        lvct+=post.love;
-                        lgct+=post.laugh;
-                    });
-                    setData((data) => {return [...data, lkct, lvct, lgct, cmct, lkct + lvct + lgct]});
-                    setLikes(lkct);
-                    setLoves(lvct);
-                    setLaughs(lgct);
-                    setComments(cmct);
-                }
-                catch(error) {
-                    console.log(error);
-                }
+            if(username === "Guest") {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
             }
-            drop();
+            else {
+                const drop = async() => {
+                    try {
+                        const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
+                        console.log(res.data);
+                        const postData = await axios.get(`/posts/list/${user}`);
+                        setPosts(postData.data.reverse());
+                        var cmct = 0, lkct = 0, lvct = 0, lgct = 0;
+                        postData.data.forEach((post) => {
+                            cmct+=post.comment_count;
+                            lkct+=post.like;
+                            lvct+=post.love;
+                            lgct+=post.laugh;
+                        });
+                        setData((data) => {return [...data, lkct, lvct, lgct, cmct, lkct + lvct + lgct]});
+                        setLikes(lkct);
+                        setLoves(lvct);
+                        setLaughs(lgct);
+                        setComments(cmct);
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                }
+                drop();
+            }
         }
 
         const remove = () => {
@@ -124,7 +138,7 @@ const Profile = () => {
 
         return (<div className="container" key ={index}>
          <Post 
-                name = {user}
+                name = {username}
                 _id = {props._id}
                 author = {props.author}
                 title = {props.title}
@@ -146,19 +160,23 @@ const Profile = () => {
     }
 
     const createRoom = () => {
-        const drop = async() => {
-            try {
-                var room = (username < user) ? (username + "-" + user) : (user + "-" + username);
-                const response = await axios.post("/rooms/chat",{roomId: room})
-                localStorage.setItem("roomId", room);
-                history.push(`/room`);
-                console.log(response.data);
-            }
-            catch(error) {
-                console.log(error);
-            }
+        if(username === "Guest") {
+            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
-        drop();
+        else {
+            const drop = async() => {
+                try {
+                    var room = (username < user) ? (username + "-" + user) : (user + "-" + username);
+                    const response = await axios.post("/rooms/chat",{roomId: room})
+                    history.push(`/room/${room}`);
+                    console.log(response);
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
+        }
     }
 
     var chartData = {
@@ -219,7 +237,7 @@ const Profile = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        if(username !== "Guest" && username !== null) {
+        if(username !== "Guest") {
             try {
                 console.log(imageSource);
                 await fetch("/users/updateimage", {

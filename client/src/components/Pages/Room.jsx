@@ -7,16 +7,19 @@ import ReactEmoji from 'react-emoji';
 import ScrollToBottom from "react-scroll-to-bottom";
 import io from "socket.io-client";
 import { Spinner } from "react-bootstrap";
+import { useParams } from 'react-router-dom';
 const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 
 const Room = () => {
 
     var socket = useRef(null);
+    var { roomId } = useParams();
     var [username, setUsername] = useState("");
-    const roomId = localStorage.getItem("roomId");
     var [message, setMessage] = useState("");
     var [messages,setMessages] = useState([]);
     var [loading, setLoading] = useState(true);
+    var [state, setState] = useState("Show");
+    // var [users, setUsers] = useState([]);
 
     useEffect(() => {
         const fetch = async() => {
@@ -36,6 +39,9 @@ const Room = () => {
                 socket.current.on("message", (data) => {
                     setMessages((prev) => {return [...prev, data]});
                 });
+                socket.current.on("users", (data) => {
+                    console.log(data);
+                })
                 return () => {
                     socket.current.emit("disconnect");
                     socket.current.off();
@@ -88,6 +94,11 @@ const Room = () => {
         }
     }
 
+    const changeState = () => {
+        if(state === "Show") setState("Hide");
+        else setState("Show");
+    }
+
     if(loading) {
         return (<div className="text-center upper-margin"> 
         <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -105,6 +116,7 @@ const Room = () => {
             <Heading />
             <div className="text-center"> 
                 <h5 className="margin"> Room ID: {roomId} </h5>
+                <button className="btn" onClick={changeState}> {state} Users in Room </button>
             </div>
             <div className="outerContainer">
                 <div className="innerContainer">

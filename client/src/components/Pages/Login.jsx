@@ -21,6 +21,7 @@ const Login = () => {
                 console.log(response.data);
                 setMessage(" ");
                 localStorage.setItem("token", response.data.token);
+                localStorage.removeItem("Guest");
                 if(response.data.user.verified) {
                     history.push(`/profile/${response.data.user.username}`);
                 }
@@ -34,6 +35,10 @@ const Login = () => {
             } 
         }
         drop();
+    }
+
+    const guestLogin = () => {
+        localStorage.setItem("Guest", true);
     }
 
     return (<div className="text-center">
@@ -77,16 +82,16 @@ const Login = () => {
             <div className="margin">
                 <Link to="/forgot"> Forgot Password </Link>
             </div>
-            {/* <div className="margin">
+            <div className="margin">
                 <h3> OR </h3>
             </div>
-            <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
+            {/* <div className="margin"> <a className="btn btn-lg expand" href="/auth/google"><img src="https://img.icons8.com/color/32/000000/google-logo.png" /> SignIn Using Google </a> </div>
             <div className="margin">
                 <h3> OR </h3>
             </div> */}
-            {/* <Link to="/allposts">
+            <Link to="/allposts">
                 <div className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </div>
-            </Link> */}
+            </Link>
         <div className="space"></div>
         <Footer />
 </div>);

@@ -20,21 +20,27 @@ const MyCategoryPosts = () => {
     var { type } = useParams();
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
+    var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth",{
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-auth-token": localStorage.getItem("token")
-                    }
-                });
-                setUsername(user.data.username);
-                const response = await axios.get(`/posts/list/${user.data.username}`);
-                setPosts(response.data.reverse().filter((post) => {
-                    return (post.category === type);
-                }));
+                if(guest !== "true") {
+                    const user = await axios.get("/users/auth",{
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-auth-token": localStorage.getItem("token")
+                        }
+                    });
+                    setUsername(user.data.username);
+                    const response = await axios.get(`/posts/list/${user.data.username}`);
+                    setPosts(response.data.reverse().filter((post) => {
+                        return (post.category === type);
+                    }));
+                }
+                else {
+                    setUsername("Guest");
+                }
                 setLoading(false);
             }
             catch(error) {
@@ -44,7 +50,7 @@ const MyCategoryPosts = () => {
             }
         }
         fetch();
-    },[type, username]);
+    },[guest, type, username]);
 
     const MyPost = (props, index) => {
 
