@@ -9,7 +9,6 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import Heading from "../Heading";
 import { Spinner } from "react-bootstrap";
-import session from "express-session";
 
 const Create = () => {
 
