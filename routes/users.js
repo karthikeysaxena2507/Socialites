@@ -127,7 +127,7 @@ router.post("/login", async(req, res, next) => {
                     jwt.sign(
                         {id: user.id},
                         process.env.JWT_SECRET,
-                        {expiresIn: 3600},
+                        {expiresIn: 864000000},
                         (err, token) => {
                             if(err) {
                                 res.json(err);
@@ -205,7 +205,7 @@ router.post("/googlelogin", async(req, res, next) => {
         if(email_verified) {
             const user = await User.findOne({email});
             if(user) {
-                const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 3600});
+                const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 864000000});
                 const {id, username, email} = user;
                 res.json({
                     token,
@@ -222,7 +222,7 @@ router.post("/googlelogin", async(req, res, next) => {
                 });
                 newUser.save()
                 .then((data) => {
-                    const token = jwt.sign({id: data.id}, process.env.JWT_SECRET, {expiresIn: 3600});
+                    const token = jwt.sign({id: data.id}, process.env.JWT_SECRET, {expiresIn: 864000000});
                     const {id, username, email} = data;
                     res.json({
                         token,
@@ -259,7 +259,7 @@ router.post("/facebooklogin", async(req, res, next) => {
                 }
                 else {
                     if(user) {
-                        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 3600});
+                        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 864000000});
                         const {id, username, email} = user;
                         res.json({
                             token,

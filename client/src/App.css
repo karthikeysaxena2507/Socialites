@@ -163,7 +163,7 @@ textarea {
 }
 
 .profilename {
-  position: absolute;
+  position: fixed;
   right: 0;
 }
 

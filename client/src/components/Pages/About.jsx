@@ -60,24 +60,21 @@ const About = () => {
                             <h2> About Socialites </h2>
                         </div>
                         <div className="mt-3">
-                            <p > Welcome to Socialites - A social media web application. Here Users can: </p>
+                            <p > Welcome to Socialites - A social media website. </p>
                                 <ul>
-                                    <li> Create a Post related to any Category </li>
-                                    <li> Edit their Post. </li>
-                                    <li> Delete their Post. </li>
-                                    <li> View other people posts. </li>
-                                    <li> Search through all the posts, their own posts based on different categories. </li>
-                                    <li> React to other posts and see which users reacted on which posts. </li>
-                                    <li> Comment on their own or other posts, as well react to each comments. </li>
-                                    <li> View which users commented on any particluar post and who reacted to any 
-                                         comment or any post </li>
-                                    <li> Users can also chat with other users, either on a personal chat or in a group chat by 
-                                         creating a room </li>
-                                    <li> Search for any particular user who has commented and reacted to any post. </li>
-                                    <li> Users can start by simply registering on the site locally or with google </li>
-                            </ul>
+                                    <li> Users first have to register themselves to the site using their email and verify that email or they can quickly login using Google. </li>
+                                    <li> Users can create a post with/without an image related to any category. </li>
+                                    <li> Users can also edit and delete their posts. </li>
+                                    <li> Users can comment and react on posts. </li>
+                                    <li> Users can see which users commented and reacted on which posts. </li>
+                                    <li> The posts can be filtered based on category or any content searched by the user. </li>
+                                    <li> Users can customize their profile page as they want by adding a profile picture and writing a suitable Bio. </li>
+                                    <li> Users can also chat with other users in real time, either personally or by creating a room and sharing that roomID. </li>
+                                    <li> Search option and many filters have been added to provide good user experience. </li>
+                                    <li> For a quick look, Users can also take a tour of the website by logging in as a guest. They can also check the "remember me" option to login once for 10 days. </li>
+                                </ul>
                         </div>
-                        <div className="mt-3">
+                        <div className="mt-3 text-center">
                             <h4> Made By: Karthikey Saxena </h4>
                         </div>
                     </Container>
