@@ -54,7 +54,6 @@ const Login = () => {
         const post = async() => {
             try {
                 const userData = await axios.post("/users/googlelogin", {token: response.tokenId});
-                console.log(userData);
                 localStorage.setItem("token", userData.data.token);
                 localStorage.removeItem("Guest");
                 history.push(`/profile/${userData.data.user.username}`);

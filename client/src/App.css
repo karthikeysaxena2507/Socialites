@@ -288,11 +288,6 @@ textarea {
   }
 
    /* INPUT IMAGE DESIGNING */
-  /* .row {
-    display: block;
-    text-align: center;
-  } */
-
   .drop-zone {
     padding: 30px 0;
     cursor: pointer;
@@ -361,13 +356,13 @@ textarea {
     padding-left: 15px;
     padding-right: 15px;
     display: inline-block;
-    max-width: 80%;
+    max-width: 300px;
   }
   
   .messageText {
     width: 100%;
     letter-spacing: 0;
-    float: left;
+    text-align: left;
     font-size: 1.1em;
     word-wrap: break-word;
   }
@@ -375,47 +370,22 @@ textarea {
   .messageText img {
     vertical-align: middle;
   }
-  
   .messageContainer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 0 5%;
     margin-top: 3px;
   }
-  
-  .sentText {
-    display: flex;
-    align-items: center;
-    color: black;
-    letter-spacing: 0.3px;
-    padding-left: 10px;
+
+  .justifyEnd {
+    justify-content: flex-end;
   }
-  
-  .pl-10 {
-    padding-left: 10px;
-  }
-  
-  .pr-10 {
-    padding-right: 10px;
-  }
-  
+
   .justifyStart {
     justify-content: flex-start;
   }
   
-  .justifyEnd {
-    justify-content: flex-end;
-  }
-  
-  .colorWhite {
-    color: white !important;
-  }
-  
-  .colorDark {
-    color: #353535 !important;
-  }
-  
-  .backgroundBlue {
+  .backgroundOrange {
     background-color: rgb(211, 115, 36) !important;
   }
   
@@ -437,7 +407,7 @@ textarea {
     border: 3px solid rgb(211, 115, 36) !important;
     border-radius: 10px;
     height: 90%;
-    width: 85%;
+    width: 420px;
   }
   
   @media (min-width: 320px) and (max-width: 480px) {

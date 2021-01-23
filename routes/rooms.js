@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Room = require("../models/room.model");
 const { v4: uuidv4 } = require("uuid");
+const { time } = require("../utils/date");
 
 // ACCESSING A PARTCULAR ROOM
 router.get("/get/:id", async(req, res, next) => {
@@ -22,7 +23,7 @@ router.post("/chat", async(req, res, next) => {
                 roomId: req.body.roomId,
                 messages: []
             });
-            const message = {name: "Admin", content: `Hello Users`};
+            const message = {name: "Admin", content: `Hello Users`, time: time()};
             room.messages.push(message);
             room.save();
             res.json(room);
@@ -61,7 +62,7 @@ router.post("/create", async(req, res, next) => {
             roomName: roomId,
             messages: []
         });
-        const message = {name: "Admin", content: `Hello Users`};
+        const message = {name: "Admin", content: `Hello Users`, time: time()};
         room.messages.push(message);
         room.save();
         res.json(room);

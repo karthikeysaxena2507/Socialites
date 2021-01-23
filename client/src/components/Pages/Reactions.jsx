@@ -136,9 +136,12 @@ const Reactions = () => {
                     drop();
                 }
             }
+            const SeeProfile = (e) => {
+                window.location = (`/profile/${e.target.innerText}`);
+            }
             return (<div className="container user" key={index}>
             <li className="profile"> 
-                {props.name}
+                <span onClick={SeeProfile}> {props.name} </span>
                 <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
             </li>
         </div>);
@@ -163,9 +166,12 @@ const Reactions = () => {
                     drop();
                 }
             }
+            const SeeProfile = (e) => {
+                window.location = (`/profile/${e.target.innerText}`);
+            }
             return (<div className="container user" key={index}>
             <li className="profile"> 
-                {props.item.name} 
+                <span onClick={SeeProfile}> {props.item.name} </span>
                 <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
             </li>
         </div>);

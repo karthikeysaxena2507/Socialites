@@ -9,6 +9,7 @@ const webpush = require("web-push");
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 5000;
+const { time } = require("./utils/date");
 
 // WEB PUSH NOTIFICATIONS
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
@@ -53,6 +54,7 @@ app.use("/rooms", roomsRouter);
 // SETTING UP SOCKET.IO FOR REAL TIME CHAT FEATURE
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
+const { find } = require("./models/room.model");
 
 const io = require('socket.io')(server, {
     cors: {
@@ -67,8 +69,10 @@ io.on("connection", (socket) => {
                 const chat = await new Chat({id: socket.id, name: data.name, room: data.room});
                 chat.save();
             }
+            const chat = await Chat.find({room: data.room});
             socket.join(data.room);
-            io.to(data.room).emit("message", {name: "Admin", content: `Hello ${data.name}, Welcome`});
+            io.to(data.room).emit("users", {chat: chat});
+            io.to(data.room).emit("message", {name: "Admin", content: `Hello ${data.name}, Welcome`, time: time()});
         }
         catch(error) {
             console.log(error);
@@ -78,11 +82,11 @@ io.on("connection", (socket) => {
     socket.on("sendmessage", async(data) => {
         try {
             const room = await Room.findOne({roomId: data.room});
-            room.messages.push({name: data.name, content: data.message});
-            // const chat = await Chat.find({room: data.room});
+            room.messages.push({name: data.name, content: data.message, time: data.time});
             room.save();
-            // io.emit("users", {chat: chat});
-            io.to(data.room).emit("message", {name: data.name, content: data.message});
+            const chat = await Chat.find({room: data.room});
+            io.to(data.room).emit("users", {chat: chat});
+            io.to(data.room).emit("message", {name: data.name, content: data.message, time: data.time});
         }
         catch(error) {
             console.log(error);
@@ -91,7 +95,6 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", async() => {
         try {
-            console.log("disconnected");
             const response = await Chat.deleteOne({id: socket.id});
         }
         catch(error) {

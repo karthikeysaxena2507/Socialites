@@ -142,6 +142,10 @@ const CompleteComment = () => {
         </div>);
     }
 
+    const SeeProfile = (e) => {
+        window.location = (`/profile/${e.target.innerText}`);
+    }
+
     if(loading) {
         return (<div className="text-center upper-margin"> 
             <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
@@ -160,7 +164,7 @@ const CompleteComment = () => {
                     <div className="container margin">
                     <div className="comment-name">
                         <div> 
-                            <span className="name author"> {comment.name} </span>
+                            <span className="name author" onClick={SeeProfile}> {comment.name} </span>
                         </div>
                         <div>
                             <span className="move-right"> 
