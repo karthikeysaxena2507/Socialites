@@ -125,7 +125,7 @@ const Login = () => {
             </div>
             <div>
                 <GoogleLogin
-                    clientId="632402415694-9ecqnttq28h5hola3u415aq1ltpiq30c.apps.googleusercontent.com"
+                    clientId={process.env.REACT_APP_CLIENT_ID}
                     buttonText="Login With Google"
                     onSuccess={successGoogle}
                     onFailure={failureGoogle}
@@ -135,7 +135,7 @@ const Login = () => {
             </div>
             <div className="mt-2">
                 {/* <FacebookLogin
-                    appId="138101367911588"
+                    appId="###############"
                     autoLoad={true}
                     callback={responseFacebook} 
                 /> */}
