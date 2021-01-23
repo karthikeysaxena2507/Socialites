@@ -41,10 +41,12 @@ const Profile = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
+                    var token = localStorage.getItem("token");
+                    if(token === null) token = sessionStorage.getItem("token");
                     const response = await axios.get("/users/auth",{
                         headers: {
                             "Content-Type": "application/json",
-                            "x-auth-token": localStorage.getItem("token")
+                            "x-auth-token": token
                         }
                     });
                     const res = await axios.get(`/users/find/${user}`)
@@ -80,6 +82,7 @@ const Profile = () => {
             catch(error) {
                 console.log(error);
                 localStorage.clear();
+                sessionStorage.clear();
                 window.location = "/login";
             }
         }

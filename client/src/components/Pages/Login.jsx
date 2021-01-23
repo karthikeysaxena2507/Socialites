@@ -15,6 +15,7 @@ const Login = () => {
     var [email, setEmail] = useState("");
     var [password, setPassword] = useState("");
     var [message, setMessage] = useState(" ");
+    var [rememberMe, setRememberMe] = useState(false);
 
     const add = (event) => {
         event.preventDefault();
@@ -22,8 +23,14 @@ const Login = () => {
             try {
                 const response = await axios.post("/users/login", {email, password});
                 setMessage(" ");
-                localStorage.setItem("token", response.data.token);
-                localStorage.removeItem("Guest");
+                if(rememberMe) {
+                    localStorage.setItem("token", response.data.token);
+                    localStorage.removeItem("Guest");
+                }
+                else {
+                    sessionStorage.setItem("token", response.data.token);
+                    sessionStorage.removeItem("Guest");
+                }
                 if(response.data.user.verified) {
                     history.push(`/profile/${response.data.user.username}`);
                 }
@@ -108,6 +115,7 @@ const Login = () => {
                 <p className="margin"> {message} </p>
             </div>
             <div className="margin">
+                <input type="checkbox" onChange={() => setRememberMe(!rememberMe)} className="mr-2"/> Remember Me
             </div>
             <div className="margin">
                 <input type="submit" className="btn btn-lg expand margin" value="Login"/> 

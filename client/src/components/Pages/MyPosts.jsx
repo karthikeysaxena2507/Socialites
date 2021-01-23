@@ -25,10 +25,12 @@ const MyPosts = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
+                    var token = localStorage.getItem("token");
+                    if(token === null) token = sessionStorage.getItem("token");
                     const user = await axios.get("/users/auth",{
                         headers: {
                             "Content-Type": "application/json",
-                            "x-auth-token": localStorage.getItem("token")
+                            "x-auth-token": token
                         }
                     });
                     setUsername(user.data.username);
@@ -43,6 +45,7 @@ const MyPosts = () => {
             catch(error) {
                 console.log(error);
                 localStorage.clear();
+                sessionStorage.clear();
                 window.location = "/login";
             }
         }

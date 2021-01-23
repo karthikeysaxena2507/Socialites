@@ -19,7 +19,8 @@ const Navbar = (props) => {
       }
       drop();
       localStorage.clear();
-      history.push("/");
+      sessionStorage.clear();
+      window.location = "/";
     }
 
     return <div className="text-center">
