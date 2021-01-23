@@ -29,3 +29,12 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 11. The Website is deployed on Heroku platform.
 
 Some snapshots of the website:
+
+Home Page
+![Home](https://user-images.githubusercontent.com/66271249/105611159-ad32b500-5dd9-11eb-9689-29163e097d40.PNG)
+
+Login Page
+![Login](https://user-images.githubusercontent.com/66271249/105611161-adcb4b80-5dd9-11eb-8aff-7751aeb14e63.PNG)
+
+Register Page
+![Register](https://user-images.githubusercontent.com/66271249/105611162-aefc7880-5dd9-11eb-9c98-805d4199fa11.PNG)
