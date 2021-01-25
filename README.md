@@ -17,13 +17,13 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 
 ## Technical Features:
 1. The front end is built using Reactjs, HTML, CSS and Bootstrap.
-2. The backend is built using nodejs and expressjs with MongoDB database.
-3. Used JsonWebToken (JWT) and bcryptjs for user authentication.
-4. Used socket.io library for adding real time chat feature.
+2. The backend is built using Nodejs and Expressjs with MongoDB database.
+3. Used JsonWebToken (JWT) and Bcryptjs for user authentication.
+4. Used Socket.io library for adding real time chat feature.
 5. Used Google OAuth2 API for authentication with google.
 6. Used Cloudinary API for uploading and storing images uploaded by user.
 7. Used Sendgrid API for sending emails from server for email verification or to reset the password.
-8. Used count API for maintaining the count of number of visits to the home page of the website.
+8. Used Count API for maintaining the count of number of visits to the home page of the website.
 9. Used Chartjs with React for creating Pie chart based on reactions and comments on posts of the user.
 10. Used Fusejs for implementing fuzzy search, based on the Jaro-Winkler algorithm for searching in the site.
 11. Used Howlerjs for adding various sound effects.
