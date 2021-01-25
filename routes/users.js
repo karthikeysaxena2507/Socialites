@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const crypto = require("crypto");
 const { OAuth2Client } = require("google-auth-library");
-const fetch = require("node-fetch");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -237,62 +236,6 @@ router.post("/googlelogin", async(req, res, next) => {
         else {
             res.json("INVALID");
         }
-    }
-    catch(error) {
-        res.json(next(error));
-    }
-});
-
-router.post("/facebooklogin", async(req, res, next) => {
-    try {
-        const { userID, accessToken } = req.body;
-        let urlGraphFacebook = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
-        fetch(urlGraphFacebook, {
-            method: 'GET'
-        })
-        .then((response) => response.json())
-        .then((response) => {
-            const {email, name} = response;
-            User.findOne({email}, (err, user) => {
-                if(err) {
-                    res.status(400).json({error: "wrong"});
-                }
-                else {
-                    if(user) {
-                        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 864000000});
-                        const {id, username, email} = user;
-                        res.json({
-                            token,
-                            user: {id, username, email}
-                        });
-                    }
-                    else {
-                        const newUser = new User({
-                            username: name,
-                            email,
-                            about: `Hello, ${given_name} here`,
-                            imageUrl: "",
-                            verified: true
-                        });
-                        newUser.save()
-                        .then((data) => {
-                            const token = jwt.sign({id: data.id}, process.env.JWT_SECRET, {expiresIn: 3600});
-                            const {id, username, email} = data;
-                            res.json({
-                                token,
-                                user: {id, username, email}
-                            });
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                    }
-                }
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-        });
     }
     catch(error) {
         res.json(next(error));

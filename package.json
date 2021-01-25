@@ -33,7 +33,6 @@
     "google-auth-library": "^6.1.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.16",
-    "node-fetch": "^2.6.1",
     "socket.io": "^3.0.5",
     "uuid": "^8.3.2",
     "web-push": "^3.4.4"
