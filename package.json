@@ -15,7 +15,7 @@
     "npm": "6.14.9"
   },
   "keywords": [],
-  "author": "",
+  "author": "Karthikey Saxena",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.4.0",
