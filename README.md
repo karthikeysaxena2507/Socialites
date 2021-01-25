@@ -26,7 +26,8 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 8. Used count API for maintaining the count of number of visits to the home page of the website.
 9. Used Chartjs with React for creating Pie chart based on reactions and comments on posts of the user.
 10. Used Fusejs for implementing fuzzy search, based on the Jaro-Winkler algorithm for searching in the site.
-11. The Website is deployed on Heroku platform.
+11. Used Howlerjs for adding various sound effects.
+12. The Website is deployed on Heroku platform.
 
 Some snapshots of the website:
 
