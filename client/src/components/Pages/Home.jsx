@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
 import Heading from "../Heading";
-import { Spinner } from "react-bootstrap";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+import Loader from "../Loader";
 const countapi = require('countapi-js');
-
+var sound = new Howl({src: [music]});
 
 const Home = () => {
 
@@ -18,18 +20,12 @@ const Home = () => {
     },[]);
 
     const guestLogin = () => {
+        sound.play();
         localStorage.setItem("Guest", true);
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return(<div>
@@ -37,10 +33,10 @@ const Home = () => {
             <Heading />
                 <h1> Welcome To the Socialites </h1>
                 <Link to="/login">
-                    <div className="mt-1"> <button className="btn btn-lg expand"> Login </button> </div>
+                    <div className="mt-1"> <button className="btn btn-lg expand" onClick={() => sound.play()}> Login </button> </div>
                 </Link>
                 <Link to="/register">
-                    <div className="mt-1"> <button className="btn btn-lg expand"> Register </button> </div>
+                    <div className="mt-1"> <button className="btn btn-lg expand" onClick={() => sound.play()}> Register </button> </div>
                 </Link>
                 <h3> OR </h3>
                 <Link to="/allposts">

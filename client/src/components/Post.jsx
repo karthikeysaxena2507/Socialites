@@ -2,12 +2,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
-import like from "./images/like.png";
-import love from "./images/love.png";
-import laugh from "./images/laugh.png";
-import all from "./images/all.png";
+import like from "../images/like.png";
+import love from "../images/love.png";
+import laugh from "../images/laugh.png";
+import all from "../images/all.png";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { Howl } from "howler";
+import music from "../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Post = (props) => {
 
@@ -26,6 +29,7 @@ const Post = (props) => {
     }
 
     const addComment = () => {
+        sound.play();
         if(props.name !== "Guest") {
             if(comment.content !== "") {
                 const drop = async() => {
@@ -49,18 +53,22 @@ const Post = (props) => {
     }
 
     const changePost = (event) => {
+        sound.play();
         props.change(event, props);
     }        
 
     const SeeAll = () => {
+        sound.play();
         history.push(`/post/${props._id}`);
     }
 
     const SeeComplete = () => {
+        sound.play();
         history.push(`/complete/${props._id}`);
     }
 
     const SeeProfile = (e) => {
+        sound.play();
         history.push(`/profile/${e.target.innerText}`);
     }
 

@@ -1,12 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
 import Heading from "../Heading";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const ForgotPassword = () => {
 
     var [email, setEmail] = useState("");
 
     const reset = () => {
+        sound.play();
         const drop = async() => {
             try {
                 const response = await axios.post("/users/forgot", {email});

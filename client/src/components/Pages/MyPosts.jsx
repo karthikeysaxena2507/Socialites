@@ -5,13 +5,16 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Navbar from "../Navbar";
 import Post from "../Post";
-import trash from "../images/trash.png";
-import edit from "../images/edit.png";
+import trash from "../../images/trash.png";
+import edit from "../../images/edit.png";
 import Footer from "../Footer";
 import CategoryMenu from "../CategoryMenu";
 import Heading from "../Heading";
 import SearchBar from "../SearchBar";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const MyPosts = () => {
 
@@ -69,6 +72,7 @@ const MyPosts = () => {
         }
 
         const remove = () => {
+            sound.play();
             const del = async() => {
                 try {
                     await axios.delete(`/posts/delete/${props._id}`);
@@ -82,6 +86,7 @@ const MyPosts = () => {
         }
 
         const update = () => {
+            sound.play();
             history.push(`/edit/${props._id}`);
         }
 
@@ -109,14 +114,7 @@ const MyPosts = () => {
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (<div>

@@ -6,15 +6,18 @@ import Footer from "../Footer";
 import Heading from "../Heading";
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import like from "../images/like.png";
-import love from "../images/love.png";
-import laugh from "../images/laugh.png";
-import trash from "../images/trash.png";
-import editIcon from "../images/edit.png";
+import like from "../../images/like.png";
+import love from "../../images/love.png";
+import laugh from "../../images/laugh.png";
+import trash from "../../images/trash.png";
+import editIcon from "../../images/edit.png";
 import Post from "../Post";
-import blank from "../images/blank.png";
+import blank from "../../images/blank.png";
 import { Pie } from "react-chartjs-2";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Profile = () => {
 
@@ -122,6 +125,7 @@ const Profile = () => {
         }
 
         const remove = () => {
+            sound.play();
             const del = async() => {
                 try {
                     await axios.delete(`/posts/delete/${props._id}`);
@@ -135,6 +139,7 @@ const Profile = () => {
         }
 
         const update = () => {
+            sound.play();
             history.push(`/edit/${props._id}`);
         }
 
@@ -162,6 +167,7 @@ const Profile = () => {
     }
 
     const createRoom = () => {
+        sound.play();
         if(username === "Guest") {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
@@ -192,16 +198,19 @@ const Profile = () => {
     }
 
     const changeState = () => {
+        sound.play();
         if(state === "Show") setState("Hide");
         else setState("Show");
     }
 
     const changeEdit = () => {
+        sound.play();
         if(edit === "Edit") setEdit("Back");
         else setEdit("Edit");
     }
 
     const updateBio = () => {
+        sound.play();
         if(username !== "Guest" && username !== null) {
             const drop = async() => {
                 try {
@@ -232,6 +241,7 @@ const Profile = () => {
 
     const handleSubmitFile = (e) => {
         e.preventDefault();
+        sound.play();
         uploadImage(imageUrl);
     }
 
@@ -258,6 +268,7 @@ const Profile = () => {
     }
 
     const removeImage = async() => {
+        sound.play();
         setImageUrl("");
         if(username !== "Guest" && username !== null) {
             try {
@@ -281,14 +292,7 @@ const Profile = () => {
     } 
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
 
     else {

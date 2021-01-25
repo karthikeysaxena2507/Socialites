@@ -5,6 +5,9 @@ import axios from "axios";
 import Footer from "../Footer";
 import Heading from "../Heading";
 import GoogleLogin from 'react-google-login';
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Register = () => {
 
@@ -27,6 +30,7 @@ const Register = () => {
 
     const add = (event) => {
         event.preventDefault();
+        sound.play();
         if(password.length >= 8) {
             const drop = async() => {
                 try {
@@ -69,6 +73,7 @@ const Register = () => {
 
 
     const guestLogin = () => {
+        sound.play();
         localStorage.setItem("Guest", true);
     }
 
@@ -120,7 +125,7 @@ const Register = () => {
             </div>
             <div className="margin">
                  Already have an account ? 
-                 <Link to="/login"> Login here </Link>
+                 <Link to="/login" onClick={() => sound.play()}> Login here </Link>
             </div>
         </form>
         <div className="margin">
@@ -134,11 +139,8 @@ const Register = () => {
                 className="btn btn-lg expand"
                 cookiePolicy={'single_host_origin'}
         />
-        <div className="margin">
-                <h3> OR </h3>
-        </div>
         <Link to="/allposts">
-            <div className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </div>
+            <span className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </span>
         </Link>
     <div className="space"></div>
     <Footer />

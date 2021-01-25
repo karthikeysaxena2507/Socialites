@@ -8,7 +8,10 @@ import { useHistory } from "react-router-dom";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import Heading from "../Heading";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Create = () => {
 
@@ -51,6 +54,7 @@ const Create = () => {
     },[guest]);
     
     const changeCategory = (e) => {
+        sound.play();
         setCategory(e.target.innerText);
     }
 
@@ -65,6 +69,7 @@ const Create = () => {
 
     const handleSubmitFile = (e) => {
         e.preventDefault();
+        sound.play();
         uploadImage(preview);
     }
 
@@ -94,6 +99,7 @@ const Create = () => {
     }
 
     const removeImage = (e) => {
+        sound.play();
         setPreview("");
     }
 
@@ -101,14 +107,7 @@ const Create = () => {
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (<div className="text-center">

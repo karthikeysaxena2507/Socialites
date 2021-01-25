@@ -7,7 +7,7 @@ import Post from "../Post";
 import Footer from "../Footer";
 import Heading from "../Heading";
 import Fuse from "fuse.js";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
 
 const Result = () => {
 
@@ -156,14 +156,7 @@ const Result = () => {
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (<div>

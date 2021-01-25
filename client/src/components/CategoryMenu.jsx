@@ -1,12 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { Howl } from "howler";
+import music from "../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const CategoryMenu = (props) => {
 
     let history = useHistory();
 
     const changeCategory = (event) => {
+        sound.play();
         if(event.target.innerText === "All" && props.message === "my") {
             history.push(`/myposts`);
         }

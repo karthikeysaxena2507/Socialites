@@ -5,12 +5,15 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
-import liked from "../images/like.png";
-import loved from "../images/love.png";
-import laughed from "../images/laugh.png";
-import trash from "../images/trash.png";
+import liked from "../../images/like.png";
+import loved from "../../images/love.png";
+import laughed from "../../images/laugh.png";
+import trash from "../../images/trash.png";
 import Heading from "../Heading";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const CompleteComment = () => {
 
@@ -60,6 +63,7 @@ const CompleteComment = () => {
     },[commentId, guest, id]);
 
     const changeLike = () => {
+        sound.play();
         if(!like) {
             setlike(true);    
             setlove(false);
@@ -70,6 +74,7 @@ const CompleteComment = () => {
         }
     }
     const changeLove = () => {
+        sound.play();
         if(!love) {
             setlike(false);    
             setlove(true);
@@ -80,6 +85,7 @@ const CompleteComment = () => {
         }
     }
     const changeLaugh = () => {
+        sound.play();
         if(!laugh) {
             setlike(false);    
             setlove(false);
@@ -90,6 +96,7 @@ const CompleteComment = () => {
         }
     }
     const changeAll = () => {
+        sound.play();
         setlike(false);    
         setlove(false);
         setlaugh(false);
@@ -97,6 +104,7 @@ const CompleteComment = () => {
     }
 
     const remove = () => {
+        sound.play();
         if(username !== "Guest") {
             const drop = async() => {
                 try {
@@ -117,6 +125,7 @@ const CompleteComment = () => {
     const renderUsers = (props, index) => {
 
         const createRoom = () => {
+            sound.play();
             if(username === "Guest") {
                 alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
             }
@@ -134,27 +143,25 @@ const CompleteComment = () => {
                 drop();
             }
         }
+        const SeeProfile = (e) => {
+            sound.play();
+            history.push(`/profile/${e.target.innerText}`);
+        }
 
         return (<div className="container user" key={index}>
-            <li className="profile"> {props.name} 
+            <li className="profile"> <span onClick={SeeProfile}> {props.name} </span>
             <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
             </li>
         </div>);
     }
 
     const SeeProfile = (e) => {
+        sound.play();
         window.location = (`/profile/${e.target.innerText}`);
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-            <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-            <span> </span>
-        </div>)
+        return <Loader />
     }
     else {
         return (<div>

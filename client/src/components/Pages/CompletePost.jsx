@@ -5,13 +5,16 @@ import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import Post from "../Post";
 import Navbar from "../Navbar";
-import like from "../images/like.png";
-import love from "../images/love.png";
-import laugh from "../images/laugh.png";
-import trash from "../images/trash.png";
+import like from "../../images/like.png";
+import love from "../../images/love.png";
+import laugh from "../../images/laugh.png";
+import trash from "../../images/trash.png";
 import Footer from "../Footer";
 import Heading from "../Heading";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const CompletePost = () => {
     
@@ -75,6 +78,7 @@ const CompletePost = () => {
     const createComment = (props, index) => {
 
         const reactToComment = (event) => {
+            sound.play();
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
@@ -94,6 +98,7 @@ const CompletePost = () => {
         }
 
         const remove = () => {
+            sound.play();
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
@@ -112,10 +117,12 @@ const CompletePost = () => {
         }
 
         const SeeAll = () => {
+            sound.play();
             history.push(`/comment/${props._id}/${id}`);
         }
 
         const createRoom = () => {
+            sound.play();
             if(username === "Guest") {
                 alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
             }
@@ -136,6 +143,7 @@ const CompletePost = () => {
 
 
         const SeeProfile = (e) => {
+            sound.play();
             history.push(`/profile/${e.target.innerText}`);
         }
 
@@ -187,14 +195,7 @@ const CompletePost = () => {
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (<div className="container">

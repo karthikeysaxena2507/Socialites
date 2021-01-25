@@ -5,8 +5,13 @@ import Footer from "../Footer";
 import Heading from "../Heading";
 import ScrollToBottom from "react-scroll-to-bottom";
 import io from "socket.io-client";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
 import { useParams } from 'react-router-dom';
+import { Howl } from "howler";
+import button from "../../sounds/button.mp3";
+import newMessage from "../../sounds/message.mp3";
+var buttonSound = new Howl({src: [button]});
+var messageSound = new Howl({src: [newMessage]})
 const { time } = require("../../Date");
 const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 // const ENDPOINT = "http://localhost:5000/"
@@ -40,7 +45,7 @@ const Room = () => {
                 socket.current = io(ENDPOINT);
                 socket.current.emit("join", {name: user.data.username, room: roomId}, () => {});
                 socket.current.on("message", (data) => {
-                    console.log(data);
+                    messageSound.play();
                     setMessages((prev) => {return [...prev, data]});
                 });
                 socket.current.on("users", (data) => {
@@ -108,6 +113,7 @@ const Room = () => {
     }
 
     const changeState = () => {
+        buttonSound.play();
         if(state === "Show") setState("Hide");
         else setState("Show");
     }
@@ -115,6 +121,7 @@ const Room = () => {
     const renderUsers = (props, index) => {
 
         const SeeProfile = (e) => {
+            buttonSound.play();
             window.location = (`/profile/${e.target.innerText}`);
         }
 
@@ -126,14 +133,7 @@ const Room = () => {
     } 
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (

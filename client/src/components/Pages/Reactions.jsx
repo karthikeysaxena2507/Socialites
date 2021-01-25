@@ -2,16 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Navbar from "../Navbar"; 
-import liked from "../images/like.png"
-import loved from "../images/love.png";
-import laughed from "../images/laugh.png";
+import liked from "../../images/like.png"
+import loved from "../../images/love.png";
+import laughed from "../../images/laugh.png";
 import axios from "axios";
-import search from "../images/search.png";
+import search from "../../images/search.png";
 import Footer from "../Footer";
 import Post from "../Post";
 import Heading from "../Heading";
 import Fuse from "fuse.js";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Reactions = () => {
 
@@ -65,6 +68,7 @@ const Reactions = () => {
     },[guest, id]);
 
     const changeLike = () => {
+        sound.play();
         if(!like) {
             setlike(true);    
             setlove(false);
@@ -79,6 +83,7 @@ const Reactions = () => {
         }
     }
     const changeLove = () => {
+        sound.play();
         if(!love) {
             setlike(false);    
             setlove(true);
@@ -93,6 +98,7 @@ const Reactions = () => {
         }
     }
     const changeLaugh = () => {
+        sound.play();
         if(!laugh) {
             setlike(false);    
             setlove(false);
@@ -107,6 +113,7 @@ const Reactions = () => {
         }
     }
     const changeAll = () => {
+        sound.play();
         setlike(false);    
         setlove(false);
         setlaugh(false);
@@ -119,6 +126,7 @@ const Reactions = () => {
 
         if(props.name !== undefined) {
             const createRoom = () => {
+                sound.play();
                 if(username === "Guest") {
                     alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
                 }
@@ -137,6 +145,7 @@ const Reactions = () => {
                 }
             }
             const SeeProfile = (e) => {
+                sound.play();
                 window.location = (`/profile/${e.target.innerText}`);
             }
             return (<div className="container user" key={index}>
@@ -148,6 +157,7 @@ const Reactions = () => {
         }
         else {
             const createRoom = () => {
+                sound.play();
                 if(username === "Guest") {
                     alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
                 }
@@ -167,6 +177,7 @@ const Reactions = () => {
                 }
             }
             const SeeProfile = (e) => {
+                sound.play();
                 window.location = (`/profile/${e.target.innerText}`);
             }
             return (<div className="container user" key={index}>
@@ -179,6 +190,7 @@ const Reactions = () => {
     }
 
     const searchIt = (event) => {
+        sound.play();
         event.preventDefault();
         if(searchContent === "") {
             setMessage("Showing All Users in this Category");
@@ -224,14 +236,7 @@ const Reactions = () => {
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return(<div>

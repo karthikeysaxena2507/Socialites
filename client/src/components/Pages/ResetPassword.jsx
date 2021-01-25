@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Heading from "../Heading";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const ResetPassword = () => {
 
@@ -22,6 +25,7 @@ const ResetPassword = () => {
     }
 
     const reset = () => {
+        sound.play();
         if(newPassword === confirmPassword && newPassword.length >= 8) {
             const drop = async() => {
                 try {

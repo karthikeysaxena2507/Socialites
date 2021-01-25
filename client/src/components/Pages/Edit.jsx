@@ -6,7 +6,10 @@ import Navbar from "../Navbar";
 import { useParams, useHistory } from "react-router-dom";
 import Footer from "../Footer";
 import Heading from "../Heading";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Edit = () => {
 
@@ -55,6 +58,7 @@ const Edit = () => {
     },[guest, id]);
 
     const changeCategory = (e) => {
+        sound.play();
         setCategory(e.target.innerText);
     }
 
@@ -69,6 +73,7 @@ const Edit = () => {
 
     const handleSubmitFile = (e) => {
         e.preventDefault();
+        sound.play();
         uploadImage(preview);
     }
 
@@ -100,6 +105,7 @@ const Edit = () => {
 
     const removeImage = (e) => {
         e.preventDefault();
+        sound.play();
         setPreview("");
     }
 
@@ -107,14 +113,7 @@ const Edit = () => {
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (<div>

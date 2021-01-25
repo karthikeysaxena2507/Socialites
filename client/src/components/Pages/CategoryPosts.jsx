@@ -9,7 +9,8 @@ import Post from "../Post";
 import CategoryMenu from "../CategoryMenu";
 import Heading from "../Heading";
 import SearchBar from "../SearchBar";
-import { Container,Spinner } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import Loader from "../Loader";
 
 const CategoryPosts = () => {
 
@@ -94,14 +95,7 @@ const CategoryPosts = () => {
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-2"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (

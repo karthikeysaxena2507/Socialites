@@ -3,12 +3,16 @@ import Footer from "../Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Heading from "../Heading";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Verified = () => {
 
     var { token } = useParams();
 
     const submit = () => {
+        sound.play();
         const drop = async() => {
             try {
                 const response = await axios.post("/users/verify/", {token});

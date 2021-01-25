@@ -6,6 +6,9 @@ import Heading from "../Heading";
 import { Link,useHistory } from "react-router-dom";
 import GoogleLogin from 'react-google-login';
 // import FacebookLogin from 'react-facebook-login';
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 
 const Login = () => {
@@ -19,6 +22,7 @@ const Login = () => {
 
     const add = (event) => {
         event.preventDefault();
+        sound.play();
         const drop = async() => {
             try {
                 const response = await axios.post("/users/login", {email, password});
@@ -47,6 +51,7 @@ const Login = () => {
     }
 
     const guestLogin = () => {
+        sound.play();
         localStorage.setItem("Guest", true);
     }
 
@@ -69,21 +74,6 @@ const Login = () => {
         setMessage("Google Login Failed");
         window.location = "/";
     }
-
-    // const responseFacebook = (response) => {
-    //     const post = async() => {
-    //         try {
-    //             const userData = await axios.post("/users/facebooklogin", {accessToken: response.accessToken, userID: response.userID});
-    //             localStorage.setItem("token", userData.data.token);
-    //             localStorage.removeItem("Guest");
-    //             history.push(`/profile/${userData.data.user.username}`);
-    //         }
-    //         catch(error) {
-    //             console.log(error);
-    //         }
-    //     }
-    //     post();
-    // }
 
     return (<div className="text-center">
         <Heading />
@@ -114,7 +104,7 @@ const Login = () => {
                 <p className="margin"> {message} </p>
             </div>
             <div className="margin">
-                <input type="checkbox" onChange={() => setRememberMe(!rememberMe)} className="mr-2"/> Remember Me
+                <input type="checkbox" onChange={() => {setRememberMe(!rememberMe); sound.play();}} className="mr-2"/> Remember Me
             </div>
             <div className="margin">
                 <input type="submit" className="btn btn-lg expand margin" value="Login"/> 
@@ -122,10 +112,10 @@ const Login = () => {
         </form>
             <div className="margin">
                 New User ? 
-                <Link to="/register"> Create a New account </Link>
+                <Link to="/register" onClick={() => sound.play()}> Create a New account </Link>
             </div>
             <div className="margin">
-                <Link to="/forgot"> Forgot Password </Link>
+                <Link to="/forgot" onClick={() => sound.play()}> Forgot Password </Link>
             </div>
             <div className="margin">
                 <h3> OR </h3>
@@ -139,20 +129,10 @@ const Login = () => {
                     className="btn google"
                     cookiePolicy={'single_host_origin'}
                 />
+                <Link to="/allposts">
+                <span className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </span>
+                </Link>
             </div>
-            <div className="mt-2">
-                {/* <FacebookLogin
-                    appId="###############"
-                    autoLoad={true}
-                    callback={responseFacebook} 
-                /> */}
-            </div>
-            <div className="margin">
-                <h3> OR </h3>
-            </div>
-            <Link to="/allposts">
-                <div className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </div>
-            </Link>
         <div className="space"></div>
         <Footer />
 </div>);

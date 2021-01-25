@@ -5,10 +5,13 @@ import React, { useEffect,useState } from "react";
 import { useHistory } from "react-router-dom";
 import Footer from "../Footer";
 import Heading from "../Heading";
-import search from "../images/search.png";
+import search from "../../images/search.png";
 import Navbar from "../Navbar";
 import Fuse from "fuse.js";
-import { Spinner } from "react-bootstrap";
+import Loader from "../Loader";
+import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
+var sound = new Howl({src: [music]});
 
 const Users = () => {
 
@@ -21,7 +24,7 @@ const Users = () => {
     var [roomId, setRoomId] = useState("");
     var [roomMessage, setRoomMessage] = useState("");
     var [state, setState] = useState("");
-    var [loading, setLoading] = useState(false);
+    var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
@@ -59,6 +62,7 @@ const Users = () => {
     const createUser = (props, index) => {
 
         const createRoom = () => {
+            sound.play();
             var room;
             if(props.username !== undefined) {
                 room = (username < props.username) ? (username + "-" + props.username) : (props.username + "-" + username);
@@ -84,6 +88,7 @@ const Users = () => {
         }
 
         const SeeProfile = (e) => {
+            sound.play();
             history.push(`/profile/${e.target.innerText}`);
         }
 
@@ -111,6 +116,7 @@ const Users = () => {
 
     const searchIt = (event) => {
         event.preventDefault();
+        sound.play();
         if(searchContent === "") {
             setMessage("Showing All Users");
             setUsers(allUsers);
@@ -128,6 +134,7 @@ const Users = () => {
     }
 
     const createRoom = () => {
+        sound.play();
         if(username === "Guest") {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
@@ -146,6 +153,7 @@ const Users = () => {
     }
 
     const joinRoom = () => {
+        sound.play();
         if(username === "Guest") {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
@@ -169,14 +177,7 @@ const Users = () => {
     }
 
     if(loading) {
-        return (<div className="text-center upper-margin"> 
-        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
-        <span> <Spinner animation="grow" variant="dark" className="mr-4"/> </span>
-        <span> </span>
-    </div>)
+        return <Loader />
     }
     else {
         return (<div>
@@ -188,7 +189,7 @@ const Users = () => {
                 <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
                 <div>
                     <button className="btn expand" onClick={createRoom}> Create a room </button>
-                    <button className="btn expand" onClick={() => {setState("Join"); setRoomId("")}}> Join a room </button>
+                    <button className="btn expand" onClick={() => {setState("Join"); setRoomId(""); sound.play()}}> Join a room </button>
                 </div>
                 <div style={(state==="") ? {visibility: "hidden"} : null}>
                     <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Id" autoComplete="off"/>
