@@ -76,7 +76,7 @@ const MyPosts = () => {
             const del = async() => {
                 try {
                     await axios.delete(`/posts/delete/${props._id}`);
-                    history.push(`/myposts`);
+                    history.push(`/allposts`);
                 }
                 catch(error) {
                     console.log(error);
