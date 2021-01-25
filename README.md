@@ -35,7 +35,37 @@ Home Page
 ![Home](https://user-images.githubusercontent.com/66271249/105611159-ad32b500-5dd9-11eb-9689-29163e097d40.PNG)
 
 Login Page
-![Login](https://user-images.githubusercontent.com/66271249/105611161-adcb4b80-5dd9-11eb-8aff-7751aeb14e63.PNG)
+![Login](https://user-images.githubusercontent.com/66271249/105693719-132c5300-5f26-11eb-8444-5f9fa5fc9880.PNG)
 
 Register Page
-![Register](https://user-images.githubusercontent.com/66271249/105611162-aefc7880-5dd9-11eb-9c98-805d4199fa11.PNG)
+![Register](https://user-images.githubusercontent.com/66271249/105693722-145d8000-5f26-11eb-9e7d-f8dfa3db7edd.PNG)
+
+All Posts Page
+![AllPosts](https://user-images.githubusercontent.com/66271249/105693824-3820c600-5f26-11eb-8987-e1623816550e.PNG)
+
+Complete Post Page
+![Complete Post](https://user-images.githubusercontent.com/66271249/105693832-3bb44d00-5f26-11eb-8c44-c4ec63fcc8ee.PNG)
+
+Complete Comment Page
+![completeComment](https://user-images.githubusercontent.com/66271249/105693843-3e16a700-5f26-11eb-8af4-7c9cd3c8da94.PNG)
+
+Create Post Page
+![Create](https://user-images.githubusercontent.com/66271249/105693979-69999180-5f26-11eb-92bf-017d31270c66.PNG)
+
+About Page
+![About](https://user-images.githubusercontent.com/66271249/105693982-6b635500-5f26-11eb-8253-78b3a6f070be.PNG)
+
+Reactions Page
+![Reactions](https://user-images.githubusercontent.com/66271249/105693998-6f8f7280-5f26-11eb-8c92-0a0ea35e68a0.PNG)
+
+All Users Page
+![chats](https://user-images.githubusercontent.com/66271249/105694848-69e65c80-5f27-11eb-8699-3f12473c05a2.PNG)
+
+Chat Room Pages
+![room](https://user-images.githubusercontent.com/66271249/105694835-6521a880-5f27-11eb-9621-aa762b4fefec.PNG)
+![room1](https://user-images.githubusercontent.com/66271249/105694840-66eb6c00-5f27-11eb-88c3-86100a487c9d.PNG)
+
+User Profile Pages
+![Profile1](https://user-images.githubusercontent.com/66271249/105694988-8bdfdf00-5f27-11eb-925d-4219ffabbbb3.PNG)
+![Profile](https://user-images.githubusercontent.com/66271249/105694996-8da9a280-5f27-11eb-862c-59b569ca5cdb.PNG)
+
