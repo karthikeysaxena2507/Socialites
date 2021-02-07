@@ -4,7 +4,6 @@ let User = require("../models/user.model.js");
 const sgMail = require("@sendgrid/mail");
 const { cloudinary } = require("../utils/cloudinary");
 const brcypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
