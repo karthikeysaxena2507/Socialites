@@ -15,6 +15,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 router.get("/auth", auth, async(req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
+        console.log(req.session.id);
         if(user) {
             res.json({
                 id: user._id,

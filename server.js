@@ -4,22 +4,29 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const http = require("http");
-const webpush = require("web-push");
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 5000;
 const { time } = require("./utils/date");
+const redis = require("redis");
+const client = redis.createClient(process.env.REDIS_URL, {
+    no_ready_check: true,
+    auth_pass: process.env.REDIS_PASSWORD
+});
 
-// WEB PUSH NOTIFICATIONS
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
-const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
-webpush.setVapidDetails('mailto:test@test.com', publicVapidKey, privateVapidKey);
-app.post("/subscribe", (req, res) => {
-    const subscription = req.body;
-    res.status(201).json({});
-    const payload = JSON.stringify({ title: "Push test"});
-    webpush.sendNotification(subscription, payload).catch(err => console.log(err));
+client.on("connect", (err) => {
+    if(err) {
+        console.log(err);    
+    }
+    else {
+        console.log("Redis cluster connected Successfully");    
+    }
+});
+
+client.keys("*", (err, keys) => {
+    console.log(keys);
 });
 
 // USING ALL MIDDLEWARES
@@ -27,11 +34,21 @@ app.use(cors());
 app.use(express.json( {limit: "50mb"}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 app.use(session({
-    secret: process.env.SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        sameSite: "strict",
+        maxAge: 3600000
+    }
 }));
+
+app.get("/hello", (req, res) => {
+    console.log(req.sessionID);
+})
 
 // CONNECTING TO MONGODB ATLAS
 mongoose.connect(process.env.ATLAS_URI, {
@@ -40,7 +57,7 @@ mongoose.connect(process.env.ATLAS_URI, {
     useUnifiedTopology: true,
     useFindAndModify:false
 })
-.then(() => {console.log("DB connected successfully");})
+.then(() => {console.log("Mongodb cluster connected Successfully");})
 .catch((err) => {console.log(err);});
 
 // IMPORTING ALL ROUTES
@@ -55,6 +72,7 @@ app.use("/rooms", roomsRouter);
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
 const { find } = require("./models/room.model");
+const { strict } = require("assert");
 
 const io = require('socket.io')(server, {
     cors: {
