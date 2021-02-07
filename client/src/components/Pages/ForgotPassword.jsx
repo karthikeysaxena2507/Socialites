@@ -1,13 +1,32 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Heading from "../Heading";
 import { Howl } from "howler";
+import Loader from "../Loader";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
 const ForgotPassword = () => {
 
     var [email, setEmail] = useState("");
+    var [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const check = async() => {
+            try {
+                const response = await axios.get("/users/auth");
+                if(response.data !== "INVALID") {
+                    setLoading(false);
+                    window.location = `/profile/${response.data.username}`;
+                }
+                setLoading(false);
+            }
+            catch(err) {
+                console.log(err);
+            }
+        }
+        check();
+    },[]);
 
     const reset = () => {
         sound.play();
@@ -23,7 +42,11 @@ const ForgotPassword = () => {
         drop();
     }
 
-    return (<div className="container text-center">
+    if(loading) {
+        return <Loader />
+    }
+    else {
+        return (<div className="container text-center">
         <Heading />
         <h5 className="margin"> Enter your registered email to reset password </h5>
         <input 
@@ -37,6 +60,7 @@ const ForgotPassword = () => {
                 />
         <div className="margin"><button className="btn btn-lg expand margin" onClick={reset}> Send </button> </div>
     </div>);
+    }
 }
 
 export default ForgotPassword;

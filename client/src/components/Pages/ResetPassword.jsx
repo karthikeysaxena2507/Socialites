@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Heading from "../Heading";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import Loader from "../Loader";
 var sound = new Howl({src: [music]});
 
 const ResetPassword = () => {
@@ -13,6 +14,24 @@ const ResetPassword = () => {
     var [confirmPassword, setConfirmPassword] = useState("");
     var [message, setMessage] = useState(" ");
     var [correct, setCorrect] = useState(false);
+    var [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const check = async() => {
+            try {
+                const response = await axios.get("/users/auth");
+                if(response.data !== "INVALID") {
+                    setLoading(false);
+                    window.location = `/profile/${response.data.username}`;
+                }
+                setLoading(false);
+            }
+            catch(err) {
+                console.log(err);
+            }
+        }
+        check();
+    },[]);
 
     const check = (e) => {
         setNewPassword(e.target.value);
@@ -49,7 +68,11 @@ const ResetPassword = () => {
         }
     }
 
-    return (<div className="container text-center">
+    if(loading) {
+        return <Loader />
+    }
+    else {
+        return (<div className="container text-center">
     <Heading />
         <h5 className="margin"> Set New Password </h5>
         <div>
@@ -80,6 +103,7 @@ const ResetPassword = () => {
         </div>
         <div className="margin"><button className="btn btn-lg expand margin" onClick={reset}> Set Password </button> </div>
     </div>);
+    }
 }
 
 export default ResetPassword;

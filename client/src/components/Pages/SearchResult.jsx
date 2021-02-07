@@ -23,15 +23,13 @@ const Result = () => {
             const fetch = async() => {
                 try {
                     if(guest !== "true") {
-                        var token = localStorage.getItem("token");
-                        if(token === null) token = sessionStorage.getItem("token");
-                        const user = await axios.get("/users/auth",{
-                            headers: {
-                                "Content-Type": "application/json",
-                                "x-auth-token": token
-                            }
-                        });
-                        setUsername(user.data.username);
+                        const user = await axios.get("/users/auth");
+                        if(user.data === "INVALID") {
+                            window.location = "/login";
+                        }
+                        else {
+                            setUsername(user.data.username);
+                        }
                     }
                     else {
                         setUsername("Guest");
@@ -53,9 +51,6 @@ const Result = () => {
                 }
                 catch(error) {
                     console.log(error);
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location = "/login";
                 }
             }
             fetch();
@@ -63,16 +58,14 @@ const Result = () => {
         else if(message === "personal") {
             const fetch = async() => {
                 try {
-                    var token = localStorage.getItem("token");
-                    if(token === null) token = sessionStorage.getItem("token");
-                    const user = await axios.get("/users/auth",{
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-auth-token": token
-                        }
-                    });
-                    setUsername(user.data.username);
-                    const response = await axios.get(`/posts/list/${username}`);
+                    const user = await axios.get("/users/auth");
+                    if(user.data === "INVALID") {
+                        window.location = "/login";
+                    }
+                    else {
+                        setUsername(user.data.username);
+                    }
+                    const response = await axios.get(`/posts/list/${user.data.username}`);
                     setLoading(false);
                     const fuse = new Fuse(response.data, {
                         keys: ['author', 'title', 'content'],
@@ -89,9 +82,6 @@ const Result = () => {
                 }
                 catch(error) {
                     console.log(error);
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location = "/login";
                 }
             }
             fetch();

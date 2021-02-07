@@ -20,16 +20,14 @@ const Posts = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                var token = localStorage.getItem("token");
-                if(token === null) token = sessionStorage.getItem("token");
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth",{
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-auth-token": token
-                        }
-                    });
-                    setUsername(user.data.username);
+                    const user = await axios.get("/users/auth");
+                    if(user.data === "INVALID") {
+                        window.location = "/login";
+                    }
+                    else {
+                        setUsername(user.data.username);
+                    }
                 }
                 else {
                     setUsername("Guest");
@@ -40,9 +38,6 @@ const Posts = () => {
             }
             catch (error) {
                 console.log(error);
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location = "/login";
             }
         };
         fetch(); 

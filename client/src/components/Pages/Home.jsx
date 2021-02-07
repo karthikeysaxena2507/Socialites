@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import Heading from "../Heading";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import axios from "axios";
 import Loader from "../Loader";
 const countapi = require('countapi-js');
 var sound = new Howl({src: [music]});
@@ -17,6 +18,20 @@ const Home = () => {
             setVisits(result.value);
             setLoading(false);
         });  
+        const check = async() => {
+            try {
+                const response = await axios.get("/users/auth");
+                if(response.data !== "INVALID") {
+                    setLoading(false);
+                    window.location = `/profile/${response.data.username}`;
+                }
+                setLoading(false);
+            }
+            catch(err) {
+                console.log(err);
+            }
+        }
+        check();
     },[]);
 
     const guestLogin = () => {

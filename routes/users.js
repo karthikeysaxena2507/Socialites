@@ -5,31 +5,99 @@ const sgMail = require("@sendgrid/mail");
 const { cloudinary } = require("../utils/cloudinary");
 const brcypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const auth = require("../middleware/auth");
 const crypto = require("crypto");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const { v4: uuidv4 } = require('uuid');
+const redis = require("redis");
+const redisClient = redis.createClient(process.env.REDIS_URL, {
+    no_ready_check: true,
+    auth_pass: process.env.REDIS_PASSWORD
+});
 
-// JWT AUTHENTICATION MIDDLEWARE FOR A USER
-router.get("/auth", auth, async(req, res, next) => {
+// CHECKING IF REDIS IS CONNECTED OR NOT
+redisClient.on("connect", (err) => {
+    if(err) {
+        console.log(err);    
+    }
+    else {
+        console.log("Redis cluster connected Successfully");    
+    }
+});
+
+// PRINTING ALL KEY-VALUE PAIRS PRESENT IN REDIS
+const printRedisValues = () => {
+    redisClient.keys("*", (err, keys) => {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            keys.map((key) => {
+                redisClient.get(key, (err, value) => {
+                    if(err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log(key, value);
+                    }
+                });
+            })
+        }
+    });
+    
+};
+
+// DELETE ALL REDIS VALUES
+const deleteRedisValues = () => {
+    redisClient.flushall((err, res) => {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            console.log(res);
+        }
+    })
+}
+
+// SESSION AUTHENTICATION MIDDLEWARE FOR A USER
+router.get("/auth", async(req, res, next) => {
     try {
-        const user = await User.findById(req.user.id);
-        console.log(req.session.id);
-        if(user) {
-            res.json({
-                id: user._id,
-                username: user.username,
-                about: user.about,
-                imageUrl: user.imageUrl
+        if(req.cookies.SESSIONID !== undefined) {
+            redisClient.get(req.cookies.SESSIONID, async(err, userId) => {
+                if(err) {
+                    res.json(err);
+                }
+                else {
+                    if(userId !== null) {
+                        const user = await User.findById(userId);
+                        if(user) {
+                            res.json({
+                                id: user._id,
+                                username: user.username,
+                                about: user.about,
+                                imageUrl: user.imageUrl
+                            });
+                        }
+                        else {
+                            res.clearCookie("SESSIONID");
+                            res.json("INVALID");
+                        }     
+                    }
+                    else {
+                        res.clearCookie("SESSIONID");
+                        res.json("INVALID");
+                    }
+                }
             });
         }
         else {
-            res.json("Invalid User");
+            res.clearCookie("SESSIONID");
+            res.json("INVALID");
         }
     }
     catch(error) {
-        res.json(error);
+        res.json(next(error));
     }
 });
 
@@ -115,7 +183,8 @@ router.post("/register", async(req, res, next) => {
 // LOGIN
 router.post("/login", async(req, res, next) => {
     try {
-        const {email, password} = req.body;
+        printRedisValues();
+        const {email, password, rememberMe} = req.body;
         const user = await User.findOne({email});
         if(user) {
             brcypt.compare(password, user.password)
@@ -124,68 +193,63 @@ router.post("/login", async(req, res, next) => {
                     res.json("Password is not Correct");
                 }
                 else {
-                    jwt.sign(
-                        {id: user.id},
-                        process.env.JWT_SECRET,
-                        {expiresIn: 864000000},
-                        (err, token) => {
-                            if(err) {
-                                res.json(err);
-                            }
-                            else {
-                                if(user.verified) {
-                                    res.json({
-                                        token,
-                                        user: {
-                                            id: user.id,
-                                            username: user.username,
-                                            email: user.email,
-                                            verified: user.verified
-                                        }
-                                    });
-                                }
-                                else {
-                                    crypto.randomBytes(32, (err, buffer) => {
-                                        if(err) {
-                                            console.log(err);
-                                        }
-                                        const verifyToken = buffer.toString("hex");
-                                        user.verifyToken = verifyToken;
-                                        user.expiresIn = Date.now() + 1800000;
-                                        user.save();
-                                        var link = "https://socialites-karthikey.herokuapp.com/verified/" + verifyToken;
-                                        const msg = {
-                                            to: user.email,
-                                            from: "karthikeysaxena@outlook.com", 
-                                            subject: "Welcome to Socialites",
-                                            html: `<a href=${link}> Link to verify your Email </a>
-                                                    <p> The Link will expire in 30 mins </p>`
-                                        }
-                                        sgMail
-                                        .send(msg)
-                                        .then(() => {
-                                            console.log("Email sent");
-                                        })
-                                        .catch((error) => {
-                                            console.log(error);
-                                        });
-                                        res.json({
-                                            token,
-                                            user: {
-                                                id: user.id,
-                                                username: user.username,
-                                                email: user.email,
-                                                verified: user.verified,
-                                                token: verifyToken
-                                            }
-                                        });
-                                    })
-                                }
-                            }
+                    if(user.verified) {
+                        const sessionId = uuidv4().replace(/-/g,'');
+                        if(rememberMe) {
+                            res.cookie("SESSIONID", sessionId, {
+                                httpOnly: true,
+                                sameSite: true,
+                                maxAge: 10*24*60*60 // (10 DAYS)
+                            });
                         }
-                    )
+                        else {
+                            res.cookie("SESSIONID", sessionId, {
+                                httpOnly: true,
+                                sameSite: true
+                            });
+                        }
+                        const {id, username, email, verified} = user;
+                        redisClient.set(sessionId, id);
+                        res.json({user: {id, username, email, verified}});
+                    }
+                    else {
+                        crypto.randomBytes(32, (err, buffer) => {
+                            if(err) {
+                                console.log(err);
+                            }
+                            const verifyToken = buffer.toString("hex");
+                            user.verifyToken = verifyToken;
+                            user.expiresIn = Date.now() + 1800000;
+                            user.save();
+                            var link = "https://socialites-karthikey.herokuapp.com/verified/" + verifyToken;
+                            const msg = {
+                                to: user.email,
+                                from: "karthikeysaxena@outlook.com", 
+                                subject: "Welcome to Socialites",
+                                html: `<a href=${link}> Link to verify your Email </a>
+                                        <p> The Link will expire in 30 mins </p>`
+                            }
+                            sgMail
+                            .send(msg)
+                            .then(() => {
+                                console.log("Email sent");
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                            res.json({
+                                user: {
+                                    id: user.id,
+                                    username: user.username,
+                                    email: user.email,
+                                    verified: user.verified,
+                                    token: verifyToken
+                                }
+                            });
+                        });
+                    }
                 }
-            })
+            });
         }
         else {
             res.json("User does not exist");
@@ -205,12 +269,15 @@ router.post("/googlelogin", async(req, res, next) => {
         if(email_verified) {
             const user = await User.findOne({email});
             if(user) {
-                const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 864000000});
-                const {id, username, email} = user;
-                res.json({
-                    token,
-                    user: {id, username, email}
+                const sessionId = uuidv4().replace(/-/g,'');
+                res.cookie("SESSIONID", sessionId, {
+                    httpOnly: true,
+                    sameSite: true,
+                    maxAge: 7*24*60*60
                 });
+                const {id, username, email} = user;
+                redisClient.set(sessionId, id);
+                res.json({user: {id, username, email}});
             }
             else {
                 const newUser = new User({
@@ -222,12 +289,15 @@ router.post("/googlelogin", async(req, res, next) => {
                 });
                 newUser.save()
                 .then((data) => {
-                    const token = jwt.sign({id: data.id}, process.env.JWT_SECRET, {expiresIn: 864000000});
-                    const {id, username, email} = data;
-                    res.json({
-                        token,
-                        user: {id, username, email}
+                    const sessionId = uuidv4().replace(/-/g,'');
+                    res.cookie("SESSIONID", sessionId, {
+                        httpOnly: true,
+                        sameSite: true,
+                        maxAge: 7*24*60*60
                     });
+                    const {id, username, email} = data;
+                    redisClient.set(sessionId, id);
+                    res.json({user: {id, username, email}});
                 })
                 .catch((error) => {
                     console.log(error);
@@ -438,6 +508,24 @@ router.post("/verify", async(req, res, next) => {
     }
     catch(error) {
         res.json(next(error));
+    }
+});
+
+// LOGGING OUT THE USER
+router.post("/logout", async(req, res, next) => {
+    try {
+        redisClient.del(req.cookies.SESSIONID, (err, response) => {
+            if(err) {
+                res.json(err);
+            }
+            else {
+                res.clearCookie("SESSIONID");
+                res.json(response);
+            }
+        });
+    }
+    catch(err) {
+        console.log(err);
     }
 });
 

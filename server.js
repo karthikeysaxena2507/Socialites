@@ -3,47 +3,19 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 5000;
 const { time } = require("./utils/date");
-const redis = require("redis");
-const client = redis.createClient(process.env.REDIS_URL, {
-    no_ready_check: true,
-    auth_pass: process.env.REDIS_PASSWORD
-});
 
-client.on("connect", (err) => {
-    if(err) {
-        console.log(err);    
-    }
-    else {
-        console.log("Redis cluster connected Successfully");    
-    }
-});
-
-client.keys("*", (err, keys) => {
-    console.log(keys);
-});
 // USING ALL MIDDLEWARES
 app.use(cors());
 app.use(express.json( {limit: "50mb"}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 3600000
-    }
-}));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // CONNECTING TO MONGODB ATLAS
 mongoose.connect(process.env.ATLAS_URI, {

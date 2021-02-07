@@ -44,19 +44,17 @@ const Profile = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    var token = localStorage.getItem("token");
-                    if(token === null) token = sessionStorage.getItem("token");
-                    const response = await axios.get("/users/auth",{
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-auth-token": token
-                        }
-                    });
-                    const res = await axios.get(`/users/find/${user}`)
-                    setUsername(response.data.username);
-                    setImageUrl(res.data.imageUrl);
-                    setAbout(res.data.about);
-                    setText(res.data.about);
+                    const response = await axios.get("/users/auth");
+                    if(response.data === "INVALID") {
+                        window.location = "/login";
+                    }
+                    else {
+                        const res = await axios.get(`/users/find/${user}`)
+                        setUsername(response.data.username);
+                        setImageUrl(res.data.imageUrl);
+                        setAbout(res.data.about);
+                        setText(res.data.about);
+                    }
                 }
                 else {
                     const response = await axios.get(`/users/find/${user}`)
@@ -84,9 +82,6 @@ const Profile = () => {
             }
             catch(error) {
                 console.log(error);
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location = "/login";
             }
         }
         fetch();

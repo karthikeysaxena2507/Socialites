@@ -29,19 +29,17 @@ const MyCategoryPosts = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    var token = localStorage.getItem("token");
-                    if(token === null) token = sessionStorage.getItem("token");
-                    const user = await axios.get("/users/auth",{
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-auth-token": token
-                        }
-                    });
-                    setUsername(user.data.username);
-                    const response = await axios.get(`/posts/list/${user.data.username}`);
-                    setPosts(response.data.reverse().filter((post) => {
-                        return (post.category === type);
-                    }));
+                    const user = await axios.get("/users/auth");
+                    if(user.data === "INVALID") {
+                        window.location = "/login";
+                    }
+                    else {
+                        setUsername(user.data.username);
+                        const response = await axios.get(`/posts/list/${user.data.username}`);
+                        setPosts(response.data.reverse().filter((post) => {
+                            return (post.category === type);
+                        }));
+                    }
                 }
                 else {
                     setUsername("Guest");
@@ -50,9 +48,6 @@ const MyCategoryPosts = () => {
             }
             catch(error) {
                 console.log(error);
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location = "/login";
             }
         }
         fetch();
