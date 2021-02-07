@@ -38,8 +38,6 @@ app.use("/rooms", roomsRouter);
 // SETTING UP SOCKET.IO FOR REAL TIME CHAT FEATURE
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
-const { find } = require("./models/room.model");
-const { strict } = require("assert");
 
 const io = require('socket.io')(server, {
     cors: {
