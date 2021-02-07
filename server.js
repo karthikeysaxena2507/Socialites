@@ -25,10 +25,13 @@ client.on("connect", (err) => {
     }
 });
 
+<<<<<<< HEAD
 client.keys("*", (err, keys) => {
     console.log(keys);
 });
 
+=======
+>>>>>>> ae2b7b4869a6216b02c007a7404c126d14c90148
 // USING ALL MIDDLEWARES
 app.use(cors());
 app.use(express.json( {limit: "50mb"}));
