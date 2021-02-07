@@ -5,22 +5,10 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const http = require("http");
-const webpush = require("web-push");
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 5000;
 const { time } = require("./utils/date");
-
-// WEB PUSH NOTIFICATIONS
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
-const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
-webpush.setVapidDetails('mailto:test@test.com', publicVapidKey, privateVapidKey);
-app.post("/subscribe", (req, res) => {
-    const subscription = req.body;
-    res.status(201).json({});
-    const payload = JSON.stringify({ title: "Push test"});
-    webpush.sendNotification(subscription, payload).catch(err => console.log(err));
-});
 
 // USING ALL MIDDLEWARES
 app.use(cors());
