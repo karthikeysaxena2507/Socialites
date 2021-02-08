@@ -25,8 +25,13 @@ router.post("/chat", async(req, res, next) => {
             });
             const message = {name: "Admin", content: `Hello Users`, time: time()};
             room.messages.push(message);
-            room.save();
-            res.json(room);
+            room.save()
+            .then((data) => {
+                res.json(data);
+            })
+            .catch((err) => {
+                res.json(err);
+            });
         }
         else {
             res.json(room);
@@ -57,15 +62,20 @@ router.post("/join", async(req, res, next) => {
 router.post("/create", async(req, res, next) => {
     try {
         const roomId = uuidv4().replace(/-/g,'').substring(0,6);
-        const room = await new Room({
+        const room = new Room({
             roomId: roomId,
             roomName: roomId,
             messages: []
         });
         const message = {name: "Admin", content: `Hello Users`, time: time()};
         room.messages.push(message);
-        room.save();
-        res.json(room);
+        room.save()
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
     }
     catch(error) {
         res.json(next(error));

@@ -95,8 +95,13 @@ router.post("/update/:react/:username", async(req, res, next) => {
         else {
             post.reacts.splice(index, 1);
         }
-        post.save();
-        res.json(post);
+        post.save()
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
     }
     catch(error) {
         res.json(next(error));
@@ -120,8 +125,13 @@ router.post("/edit/:id", async(req, res, next) => {
         post.content = req.body.content;
         post.category = req.body.category;
         post.imageUrl = imageUrl;
-        post.save();
-        res.json(post);
+        post.save()
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
     }
     catch(error) {
         res.json(next(error));
@@ -152,14 +162,13 @@ router.post("/add", async(req, res, next) => {
             love: 0,
             laugh: 0
         });
-        post.save((err) => {
-            if(err) {
-                res.json(err);
-            }
-            else {
-                res.json(post);
-            }
+        post.save()
+        .then((data) => {
+            res.json(data);
         })
+        .catch((err) => {
+            res.json(err);
+        });
     }   
     catch(error) {
         res.json(next(error));
@@ -173,8 +182,13 @@ router.post("/add/:id", async(req, res, next) => {
         const comment = new Comment(req.body);
         post.comments.push(comment);
         post.comment_count = post.comments.length;
-        post.save();
-        res.json(post.comments);
+        post.save()
+        .then((data) => {
+            res.json(data.comments);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
     }
     catch(error) {
         res.json(next(error));
@@ -210,8 +224,13 @@ router.post("/comment/:react/:postId/:username", async(req, res, next) => {
         else {
             post.comments[index].reacts.splice(cur,1);
         }
-        post.save(); 
-        res.json(post.comments[index]);
+        post.save()
+        .then((data) => {
+            res.json(data.comments[index]);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
     }
     catch(error) {
         res.json(next(error));
@@ -227,8 +246,13 @@ router.post("/remove/:id", async(req, res, next) => {
             post.comments.splice(index, 1);
             post.comment_count--;
         }
-        post.save();
-        res.json(post.comments);
+        post.save()
+        .then((data) => {
+            res.json(data.comments);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
     }
     catch(error) {
         res.json(next(error));

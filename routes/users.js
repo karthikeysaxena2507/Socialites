@@ -49,7 +49,7 @@ router.get("/auth", async(req, res, next) => {
     }
 });
 
-// REGISTER
+// REGISTER THE USER
 router.post("/register", async(req, res, next) => {
     try {
         const {username, email, password} = req.body;
@@ -114,7 +114,7 @@ router.post("/register", async(req, res, next) => {
     }
 });
 
-// LOGIN
+// LOGIN THE USER
 router.post("/login", async(req, res, next) => {
     try {
         const {email, password, rememberMe} = req.body;
@@ -156,16 +156,21 @@ router.post("/login", async(req, res, next) => {
                             const verifyToken = buffer.toString("hex");
                             user.verifyToken = verifyToken;
                             user.expiresIn = Date.now() + 1800000;
-                            user.save();
-                            sendEmailVerificationMail(verifyToken, user.email);
-                            res.json({
-                                user: {
-                                    id: user.id,
-                                    username: user.username,
-                                    email: user.email,
-                                    verified: user.verified,
-                                    token: verifyToken
-                                }
+                            user.save()
+                            .then(() => {
+                                sendEmailVerificationMail(verifyToken, user.email);
+                                res.json({
+                                    user: {
+                                        id: user.id,
+                                        username: user.username,
+                                        email: user.email,
+                                        verified: user.verified,
+                                        token: verifyToken
+                                    }
+                                });
+                            })
+                            .catch((err) => {
+                                res.json(err);
                             });
                         });
                     }
@@ -278,8 +283,13 @@ router.post("/updateimage", async(req, res, next) => {
             imageUrl = uploadedResponse.url;
         }
         user.imageUrl = imageUrl;
-        user.save();
-        res.json("Successfully Updated Image");
+        user.save()
+        .then(() => {
+            res.json("Successfully Updated Image");  
+        })
+        .catch((err) => {
+            res.json(err);
+        })
     }
     catch(error) {
         res.json(next(error));
@@ -291,8 +301,13 @@ router.post("/updatebio", async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.body.user});
         user.about = req.body.text;
-        user.save();
-        res.json(user.about);
+        user.save()
+        .then((data) => {
+            res.json(data.about);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
     }
     catch(error) {
         res.json(next(error));
@@ -317,7 +332,7 @@ router.post("/reset", async(req, res, next) => {
                             foundUser.resetToken = undefined;
                             foundUser.expiresIn = undefined;
                             foundUser.save()
-                            .then((user) => {
+                            .then(() => {
                                 res.json("Successfully Resetted Password");
                             })
                             .catch((error) => {
@@ -394,7 +409,7 @@ router.post("/verify", async(req, res, next) => {
             foundUser.verifyToken = undefined;
             foundUser.expiresIn = undefined;
             foundUser.save()
-            .then((user) => {
+            .then(() => {
                 res.json("Successfully Verified User's Email");
             })
             .catch((error) => {
