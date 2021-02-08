@@ -2,93 +2,42 @@ require("dotenv").config();
 const router = require("express").Router();
 let User = require("../models/user.model.js");
 const sgMail = require("@sendgrid/mail");
-const { cloudinary } = require("../utils/cloudinary");
 const brcypt = require("bcryptjs");
 const crypto = require("crypto");
+const redisClient = require("../redis/client");
+const { cloudinary } = require("../utils/cloudinary");
 const { OAuth2Client } = require("google-auth-library");
+const { v4: uuidv4 } = require("uuid");
+const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
+const { deleteBySessionId, getUserId } = require("../redis/functions"); 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const { v4: uuidv4 } = require('uuid');
-const redis = require("redis");
-const redisClient = redis.createClient(process.env.REDIS_URL, {
-    no_ready_check: true,
-    auth_pass: process.env.REDIS_PASSWORD
-});
-
-// CHECKING IF REDIS IS CONNECTED OR NOT
-redisClient.on("connect", (err) => {
-    if(err) {
-        console.log(err);    
-    }
-    else {
-        console.log("Redis cluster connected Successfully");    
-    }
-});
-
-// PRINTING ALL KEY-VALUE PAIRS PRESENT IN REDIS
-const printRedisValues = () => {
-    redisClient.keys("*", (err, keys) => {
-        if(err) {
-            console.log(err);
-        }
-        else {
-            keys.map((key) => {
-                redisClient.get(key, (err, value) => {
-                    if(err) {
-                        console.log(err);
-                    }
-                    else {
-                        console.log(key, value);
-                    }
-                });
-            })
-        }
-    });
-    
-};
-
-// DELETE ALL REDIS VALUES
-const deleteRedisValues = () => {
-    redisClient.flushall((err, res) => {
-        if(err) {
-            console.log(err);
-        }
-        else {
-            console.log(res);
-        }
-    })
-}
 
 // SESSION AUTHENTICATION MIDDLEWARE FOR A USER
 router.get("/auth", async(req, res, next) => {
     try {
+        // printRedisValues();
         if(req.cookies.SESSIONID !== undefined) {
-            redisClient.get(req.cookies.SESSIONID, async(err, userId) => {
-                if(err) {
-                    res.json(err);
+            const userId = await getUserId(req.cookies.SESSIONID);
+            if(userId !== null && userId !== undefined) {
+                const user = await User.findById(userId);
+                if(user) {
+                    res.json({
+                        id: user._id,
+                        username: user.username,
+                        about: user.about,
+                        imageUrl: user.imageUrl
+                    });
                 }
                 else {
-                    if(userId !== null) {
-                        const user = await User.findById(userId);
-                        if(user) {
-                            res.json({
-                                id: user._id,
-                                username: user.username,
-                                about: user.about,
-                                imageUrl: user.imageUrl
-                            });
-                        }
-                        else {
-                            res.clearCookie("SESSIONID");
-                            res.json("INVALID");
-                        }     
-                    }
-                    else {
-                        res.clearCookie("SESSIONID");
-                        res.json("INVALID");
-                    }
-                }
-            });
+                    res.clearCookie("SESSIONID");
+                    res.json("INVALID");
+                }     
+            }
+            else {
+                res.clearCookie("SESSIONID");
+                res.json("INVALID");
+            }
         }
         else {
             res.clearCookie("SESSIONID");
@@ -139,22 +88,8 @@ router.post("/register", async(req, res, next) => {
                                 newUser.password = hash;
                                 newUser.save()
                                 .then((user) => {
-                                    var link = "https://socialites-karthikey.herokuapp.com/verified/" + token;
-                                    const msg = {
-                                        to: user.email,
-                                        from: "karthikeysaxena@outlook.com", 
-                                        subject: "Welcome to Socialites",
-                                        html: `<a href=${link}> Link to verify your Email </a>
-                                                <p> The Link will expire in 30 mins </p>`
-                                    }
-                                    sgMail
-                                        .send(msg)
-                                        .then(() => {
-                                            console.log("Email sent");
-                                        })
-                                        .catch((error) => {
-                                            console.log(error);
-                                        });
+                                    console.log(user);
+                                    sendEmailVerificationMail(user.verifyToken, user.email);
                                     res.json({
                                         user: {
                                             id: user.id,
@@ -182,7 +117,6 @@ router.post("/register", async(req, res, next) => {
 // LOGIN
 router.post("/login", async(req, res, next) => {
     try {
-        printRedisValues();
         const {email, password, rememberMe} = req.body;
         const user = await User.findOne({email});
         if(user) {
@@ -194,21 +128,22 @@ router.post("/login", async(req, res, next) => {
                 else {
                     if(user.verified) {
                         const sessionId = uuidv4().replace(/-/g,'');
+                        const {id, username, email, verified} = user;
                         if(rememberMe) {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
                                 sameSite: true,
-                                maxAge: 10*24*60*60 // (10 DAYS)
+                                maxAge: 7*24*60*60 // (7 DAYS)
                             });
+                            redisClient.setex(sessionId, 7*24*60*60, id); // 7 DAYS
                         }
                         else {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
                                 sameSite: true
                             });
+                            redisClient.setex(sessionId, 10*60*60, id); // 10 HOURS
                         }
-                        const {id, username, email, verified} = user;
-                        redisClient.set(sessionId, id);
                         res.json({user: {id, username, email, verified}});
                     }
                     else {
@@ -220,22 +155,7 @@ router.post("/login", async(req, res, next) => {
                             user.verifyToken = verifyToken;
                             user.expiresIn = Date.now() + 1800000;
                             user.save();
-                            var link = "https://socialites-karthikey.herokuapp.com/verified/" + verifyToken;
-                            const msg = {
-                                to: user.email,
-                                from: "karthikeysaxena@outlook.com", 
-                                subject: "Welcome to Socialites",
-                                html: `<a href=${link}> Link to verify your Email </a>
-                                        <p> The Link will expire in 30 mins </p>`
-                            }
-                            sgMail
-                            .send(msg)
-                            .then(() => {
-                                console.log("Email sent");
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
+                            sendEmailVerificationMail(verifyToken, user.email);
                             res.json({
                                 user: {
                                     id: user.id,
@@ -275,8 +195,14 @@ router.post("/googlelogin", async(req, res, next) => {
                     maxAge: 7*24*60*60
                 });
                 const {id, username, email} = user;
-                redisClient.set(sessionId, id);
-                res.json({user: {id, username, email}});
+                redisClient.setex(sessionId, 7*24*60*60, id, (err) => {
+                    if(err) {
+                        res.json(err);
+                    }
+                    else {
+                        res.json({user: {id, username, email}});     
+                    }
+                });
             }
             else {
                 const newUser = new User({
@@ -295,7 +221,7 @@ router.post("/googlelogin", async(req, res, next) => {
                         maxAge: 7*24*60*60
                     });
                     const {id, username, email} = data;
-                    redisClient.set(sessionId, id);
+                    redisClient.setex(sessionId, 7*24*60*60, id);
                     res.json({user: {id, username, email}});
                 })
                 .catch((error) => {
@@ -424,22 +350,7 @@ router.post("/forgot", async(req, res, next) => {
                 foundUser.expiresIn = Date.now() + 1800000;
                 foundUser.save()
                 .then((user) => {
-                    var link = "https://socialites-karthikey.herokuapp.com/reset/" + token;
-                    const msg = {
-                        to: user.email,
-                        from: "karthikeysaxena@outlook.com",
-                        subject: "Welcome to Socialites",
-                        html: `<a href=${link}> Link to Reset your Password </a> 
-                                <p> The link is valid for 30 mins only </p>`
-                    };
-                    sgMail
-                        .send(msg)
-                        .then(() => {
-                            console.log("Email sent");
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
+                    sendResetPasswordMail(token, user.email);
                     res.json("Password reset mail is sent to the user, check your email");
                 })
                 .catch((error) => {
@@ -456,25 +367,10 @@ router.post("/forgot", async(req, res, next) => {
 // SENDING EMAIL VERIFICATION MAIL TO USER
 router.post("/send", async(req, res, next) => {
     try {
-
         const foundUser = await User.findOne({verifyToken: req.body.token});
         if(foundUser && foundUser.expiresIn >= Date.now()) {
-            var link = "https://socialites-karthikey.herokuapp.com/verified/" + foundUser.verifyToken;
-            const msg = {
-                to: foundUser.email,
-                from: "karthikeysaxena@outlook.com", 
-                subject: "Welcome to Socialites",
-                html: `<a href=${link}> Link to verify your Email </a>`
-            }
-            sgMail
-                .send(msg)
-                .then(() => {
-                    console.log("Email sent");
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            res.json("Email Sent");
+            sendEmailVerificationMail(foundUser.verifyToken, foundUser.email);
+            res.json("Email Sent Successfully");
         }
         else {
             res.json("INVALID");
@@ -513,15 +409,9 @@ router.post("/verify", async(req, res, next) => {
 // LOGGING OUT THE USER
 router.post("/logout", async(req, res, next) => {
     try {
-        redisClient.del(req.cookies.SESSIONID, (err, response) => {
-            if(err) {
-                res.json(err);
-            }
-            else {
-                res.clearCookie("SESSIONID");
-                res.json(response);
-            }
-        });
+        const response = deleteBySessionId(req.cookies.SESSIONID);
+        res.clearCookie("SESSIONID");
+        res.json(response);
     }
     catch(err) {
         console.log(err);

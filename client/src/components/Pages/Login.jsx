@@ -10,7 +10,6 @@ import Loader from "../Loader";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
-
 const Login = () => {
 
     let history = useHistory();
