@@ -133,6 +133,7 @@ router.post("/login", async(req, res, next) => {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
                                 sameSite: true,
+                                secure: true,
                                 maxAge: 7*24*60*60 // (7 DAYS)
                             });
                             redisClient.setex(sessionId, 7*24*60*60, id); // 7 DAYS
@@ -140,7 +141,8 @@ router.post("/login", async(req, res, next) => {
                         else {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
-                                sameSite: true
+                                sameSite: true,
+                                secure: true
                             });
                             redisClient.setex(sessionId, 10*60*60, id); // 10 HOURS
                         }
@@ -192,6 +194,7 @@ router.post("/googlelogin", async(req, res, next) => {
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
                     sameSite: true,
+                    secure: true,
                     maxAge: 7*24*60*60
                 });
                 const {id, username, email} = user;
@@ -218,6 +221,7 @@ router.post("/googlelogin", async(req, res, next) => {
                     res.cookie("SESSIONID", sessionId, {
                         httpOnly: true,
                         sameSite: true,
+                        secure: true,
                         maxAge: 7*24*60*60
                     });
                     const {id, username, email} = data;
