@@ -1,28 +1,35 @@
+import axios from "axios";
 
-
-const getAllPosts = () => {
-
+const getAllPosts = async() => {
+    const posts = await axios.get("/posts");
+    return posts.data;
 }
 
-const getPost = () => {
-
+const getFilteredPosts = async(type) => {
+    const posts = await axios.get("/posts");
+    return posts.data.reverse().filter((post) => {
+        return (post.category === type);
+    });
 }
 
-const getComment = () => {
-
+const getPostsByUser = async(username) => {
+    const posts = await axios.get(`/posts/list/${username}`);
+    return posts.data;
 }
 
-const reactToPost = () => {
-
+const getPostById = async(id) => {
+    const posts = await axios.get(`/posts/${id}`);
+    return posts.data[0];
 }
 
-const reactToComment = () => {
-
+const getPostForEdit = async(id) => {
+    const post = await axios.get(`/posts/edit/${id}`);
+    return post.data;
 }
 
-module.exports = {  getAllPosts,
-                    getPost, 
-                    getComment, 
-                    reactToPost, 
-                    reactToComment 
-                 }
+const getCommentData = async(commentId, id) => {
+    const comment = await axios.get(`/posts/getcomment/${commentId}/${id}`);
+    return comment.data;
+}
+
+export {  getAllPosts, getPostsByUser, getFilteredPosts, getPostById, getPostForEdit, getCommentData }

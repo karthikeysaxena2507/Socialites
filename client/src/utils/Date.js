@@ -17,6 +17,6 @@ const time = () => {
     return (hours + ":" + minutes + " - " + date + "/" + month + "/" + year);
 }
 
-module.exports = { time };
+export { time };
 
 

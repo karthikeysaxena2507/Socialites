@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
-import axios from "axios";
-import { Container} from "react-bootstrap";
 import Loader from "../helper/Loader";
+import { Container} from "react-bootstrap";
+import { checkUser } from "../../api/userApis.js";
 
 const About = () => {
 
@@ -16,13 +16,8 @@ const About = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");

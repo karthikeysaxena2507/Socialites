@@ -4,6 +4,7 @@ import Heading from "../helper/Heading";
 import { Howl } from "howler";
 import Loader from "../helper/Loader";
 import music from "../../sounds/button.mp3";
+import { checkUser } from "../../api/userApis"
 var sound = new Howl({src: [music]});
 
 const ForgotPassword = () => {
@@ -14,12 +15,11 @@ const ForgotPassword = () => {
     useEffect(() => {
         const check = async() => {
             try {
-                const response = await axios.get("/users/auth");
-                if(response.data !== "INVALID") {
-                    setLoading(false);
-                    window.location = `/profile/${response.data.username}`;
-                }
+                const user = await checkUser();
                 setLoading(false);
+                if(user !== "INVALID") {
+                    window.location = `/profile/${user.username}`;
+                }
             }
             catch(err) {
                 console.log(err);

@@ -8,6 +8,8 @@ import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
+import { checkUser } from "../../api/userApis";
+import { getAllPosts, getPostsByUser } from "../../api/postApis";
 
 const Result = () => {
 
@@ -18,25 +20,19 @@ const Result = () => {
     var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
-
         if(message === "all") {
             const fetch = async() => {
                 try {
                     if(guest !== "true") {
-                        const user = await axios.get("/users/auth");
-                        if(user.data === "INVALID") {
-                            window.location = "/login";
-                        }
-                        else {
-                            setUsername(user.data.username);
-                        }
+                        const user = await checkUser();
+                        (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                     }
                     else {
                         setUsername("Guest");
                     }
-                    const response = await axios.get("/posts");
+                    const postsData = await getAllPosts();
                     setLoading(false);
-                    const fuse = new Fuse(response.data, {
+                    const fuse = new Fuse(postsData, {
                         keys: ['author', 'title', 'content'],
                         includeScore: true,
                         includeMatches: true
@@ -58,16 +54,11 @@ const Result = () => {
         else if(message === "personal") {
             const fetch = async() => {
                 try {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
-                    const response = await axios.get(`/posts/list/${user.data.username}`);
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    const postsData = await getPostsByUser(user.username);
                     setLoading(false);
-                    const fuse = new Fuse(response.data, {
+                    const fuse = new Fuse(postsData, {
                         keys: ['author', 'title', 'content'],
                         includeScore: true,
                         includeMatches: true

@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
@@ -11,6 +10,7 @@ import Heading from "../helper/Heading";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { checkUser } from "../../api/userApis"
 var sound = new Howl({src: [music]});
 
 const Create = () => {
@@ -28,13 +28,8 @@ const Create = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");

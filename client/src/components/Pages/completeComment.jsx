@@ -13,6 +13,8 @@ import Heading from "../helper/Heading";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { checkUser } from "../../api/userApis";
+import { getCommentData } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const CompleteComment = () => {
@@ -33,21 +35,16 @@ const CompleteComment = () => {
         const fetch = async() => {
             try{
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");
                 }
-                const response = await axios.get(`/posts/getcomment/${commentId}/${id}`);
-                setComment(response.data)
-                setallreactions(response.data.reacts.reverse());
-                setreactions(response.data.reacts.reverse());
+                const commentData = await getCommentData(commentId, id);
+                setComment(commentData);
+                setallreactions(commentData.reacts.reverse());
+                setreactions(commentData.reacts.reverse());
                 setLoading(false);
             }
             catch(error) {

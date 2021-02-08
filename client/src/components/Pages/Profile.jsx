@@ -17,6 +17,8 @@ import { Pie } from "react-chartjs-2";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { checkUser, getUserData } from "../../api/userApis"
+import { getPostsByUser } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const Profile = () => {
@@ -44,30 +46,21 @@ const Profile = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const response = await axios.get("/users/auth");
-                    if(response.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        const res = await axios.get(`/users/find/${user}`)
-                        setUsername(response.data.username);
-                        setImageUrl(res.data.imageUrl);
-                        setAbout(res.data.about);
-                        setText(res.data.about);
-                    }
+                    const response = await checkUser();
+                    (response === "INVALID") ? window.location = "/login" : setUsername(response.username);
                 }
                 else {
-                    const response = await axios.get(`/users/find/${user}`)
                     setUsername("Guest");
-                    setImageUrl(response.data.imageUrl);
-                    setAbout(response.data.about);
-                    setText(response.data.about);
                 }
-                const postData = await axios.get(`/posts/list/${user}`)
-                setPostCount(postData.data.length);
-                setPosts(postData.data.reverse());
+                const userData = await getUserData(user);
+                setImageUrl(userData.imageUrl);
+                setAbout(userData.about);
+                setText(userData.about);
+                const postData = await getPostsByUser(user);
+                setPostCount(postData.length);
+                setPosts(postData.reverse());
                 var cmct = 0, lkct = 0, lvct = 0, lgct = 0;
-                postData.data.forEach((post) => {
+                postData.forEach((post) => {
                     cmct+=post.comment_count;
                     lkct+=post.like;
                     lvct+=post.love;

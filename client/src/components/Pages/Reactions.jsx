@@ -14,6 +14,8 @@ import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { checkUser } from "../../api/userApis"
+import { getPostById } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const Reactions = () => {
@@ -37,22 +39,17 @@ const Reactions = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");
                 }
-                const response = await axios.get(`/posts/${id}`);
-                setallreactions(response.data[0].reacts.reverse());
-                setreactions(response.data[0].reacts.reverse());
-                settempreactions(response.data[0].reacts.reverse());
-                setPost(response.data[0]);
+                const postData = await getPostById(id);
+                setallreactions(postData.reacts.reverse());
+                setreactions(postData.reacts.reverse());
+                settempreactions(postData.reacts.reverse());
+                setPost(postData);
                 setLoading(false);
             }
             catch(error) {

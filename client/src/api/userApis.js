@@ -1,43 +1,18 @@
+import axios from "axios";
 
-
-const getAllUsers = () => {
-
-}
-
-const getUser = () => {
-
-}
-
-const loginUser = () => {
-
-}
-
-const registerUser = () => {
-
-}
-
-const updateProfilePic = () => {
-
-}
-
-const updateUserBio = () => {
-
-}
-
-const resetPassword = () => {
-
-}
-
-const verifyEmail = () => {
-
+var checkUser = async() => {
+   const user = await axios.get("/users/auth");
+   return user.data;
 }
  
-module.exports = {  getAllUsers, 
-                    getUser,
-                    loginUser,
-                    registerUser,
-                    updateProfilePic,
-                    updateUserBio,
-                    resetPassword,
-                    verifyEmail
-                 }
+const getAllUsers = async() => {
+   const users = await axios.get(`/users/get`);
+   return users.data;
+}
+
+const getUserData = async(username) => {
+   const userData = await axios.get(`/users/find/${username}`);
+   return userData.data;
+}
+
+export {  checkUser, getAllUsers, getUserData };

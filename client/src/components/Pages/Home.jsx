@@ -4,8 +4,8 @@ import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
-import axios from "axios";
 import Loader from "../helper/Loader";
+import { checkUser } from "../../api/userApis"
 const countapi = require('countapi-js');
 var sound = new Howl({src: [music]});
 
@@ -20,10 +20,10 @@ const Home = () => {
         });  
         const check = async() => {
             try {
-                const response = await axios.get("/users/auth");
-                if(response.data !== "INVALID") {
+                const user = await checkUser();
+                if(user !== "INVALID") {
                     setLoading(false);
-                    window.location = `/profile/${response.data.username}`;
+                    window.location = `/profile/${user.username}`;
                 }
                 setLoading(false);
             }

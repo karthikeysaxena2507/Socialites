@@ -14,6 +14,9 @@ import Heading from "../helper/Heading";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { checkUser } from "../../api/userApis";
+import { getPostById } from "../../api/postApis";
+
 var sound = new Howl({src: [music]});
 
 const CompletePost = () => {
@@ -29,19 +32,14 @@ const CompletePost = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");
                 }
-                const response = await axios.get(`/posts/${id}`);
-                setPost(response.data[0]);
+                const postData = await getPostById(id);
+                setPost(postData);
                 setLoading(false);
             }
             catch (error) {

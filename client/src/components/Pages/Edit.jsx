@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Navbar from "../helper/Navbar";
 import { useParams, useHistory } from "react-router-dom";
 import Footer from "../helper/Footer";
@@ -9,6 +8,8 @@ import Heading from "../helper/Heading";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { checkUser } from "../../api/userApis";
+import { getPostForEdit } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const Edit = () => {
@@ -27,22 +28,17 @@ const Edit = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");
                 }
-                const response = await axios.get(`/posts/edit/${id}`);
-                setTitle(response.data.title);
-                setContent(response.data.content);
-                setCategory(response.data.category);
-                setPreview(response.data.imageUrl);
+                const post = await getPostForEdit(id);
+                setTitle(post.title);
+                setContent(post.content);
+                setCategory(post.category);
+                setPreview(post.imageUrl);
                 setLoading(false);
             }
             catch(error) {

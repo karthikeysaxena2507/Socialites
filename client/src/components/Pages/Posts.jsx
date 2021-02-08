@@ -9,6 +9,8 @@ import CategoryMenu from "../helper/CategoryMenu";
 import Heading from "../helper/Heading";
 import SearchBar from "../helper/SearchBar";
 import Loader from "../helper/Loader";
+import { checkUser } from "../../api/userApis"
+import { getAllPosts } from "../../api/postApis";
 
 const Posts = () => {
 
@@ -21,19 +23,14 @@ const Posts = () => {
         const fetch = async () => {
             try {
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");
                 }
-                const response = await axios.get("/posts/");
-                setPosts(response.data.reverse());
+                const postsData = await getAllPosts();
+                setPosts(postsData.reverse());
                 setLoading(false);
             }
             catch (error) {

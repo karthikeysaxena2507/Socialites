@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
@@ -10,9 +9,11 @@ import { useParams } from 'react-router-dom';
 import { Howl } from "howler";
 import button from "../../sounds/button.mp3";
 import newMessage from "../../sounds/message.mp3";
+import { checkUser } from "../../api/userApis"
+import { getRoomById } from "../../api/roomApis";
+import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
-var messageSound = new Howl({src: [newMessage]})
-const { time } = require("../../Date");
+var messageSound = new Howl({src: [newMessage]});
 const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 // const ENDPOINT = "http://localhost:5000/"
 
@@ -30,18 +31,13 @@ const Room = () => {
     useEffect(() => {
         const fetch = async() => {
             try {
-                const user = await axios.get("/users/auth");
-                if(user.data === "INVALID") {
-                    window.location = "/login";
-                }
-                else {
-                    setUsername(user.data.username);
-                }
-                const response = await axios.get(`/rooms/get/${roomId}`);
+                const user = await checkUser();
+                (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                const room = await getRoomById(roomId);
                 setLoading(false);
-                setMessages(response.data.messages);
+                setMessages(room.messages);
                 socket.current = io(ENDPOINT);
-                socket.current.emit("join", {name: user.data.username, room: roomId}, () => {});
+                socket.current.emit("join", {name: user.username, room: roomId}, () => {});
                 socket.current.on("message", (data) => {
                     messageSound.play();
                     setMessages((prev) => {return [...prev, data]});

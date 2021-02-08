@@ -11,6 +11,7 @@ import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { checkUser, getAllUsers } from "../../api/userApis"
 var sound = new Howl({src: [music]});
 
 const Users = () => {
@@ -31,20 +32,15 @@ const Users = () => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await axios.get("/users/auth");
-                    if(user.data === "INVALID") {
-                        window.location = "/login";
-                    }
-                    else {
-                        setUsername(user.data.username);
-                    }
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 }
                 else {
                     setUsername("Guest");
                 }
-                const response = await axios.get(`/users/get`);
-                setUsers(response.data);
-                setAllUsers(response.data);
+                const response = await getAllUsers();
+                setUsers(response);
+                setAllUsers(response);
                 setLoading(false);
             }
             catch(error) {
