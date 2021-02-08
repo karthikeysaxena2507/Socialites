@@ -3,12 +3,12 @@
 import axios from "axios";
 import React, { useEffect,useState } from "react";
 import { useHistory } from "react-router-dom";
-import Footer from "../Footer";
-import Heading from "../Heading";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
 import search from "../../images/search.png";
-import Navbar from "../Navbar";
+import Navbar from "../helper/Navbar";
 import Fuse from "fuse.js";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

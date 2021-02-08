@@ -1,16 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
+import Navbar from "../helper/Navbar";
+import Footer from "../helper/Footer";
 import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
 import liked from "../../images/like.png";
 import loved from "../../images/love.png";
 import laughed from "../../images/laugh.png";
 import trash from "../../images/trash.png";
-import Heading from "../Heading";
-import Loader from "../Loader";
+import Heading from "../helper/Heading";
+import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "../Navbar";
+import Navbar from "../helper/Navbar";
 import { useParams, useHistory } from "react-router-dom";
-import Footer from "../Footer";
-import Heading from "../Heading";
-import Loader from "../Loader";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
+import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

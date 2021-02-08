@@ -1,11 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
-import Navbar from "../Navbar";
-import Footer from "../Footer";
-import Heading from "../Heading";
+import Navbar from "../helper/Navbar";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
 import ScrollToBottom from "react-scroll-to-bottom";
 import io from "socket.io-client";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 import { useParams } from 'react-router-dom';
 import { Howl } from "howler";
 import button from "../../sounds/button.mp3";

@@ -1,17 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import Navbar from "../Navbar"; 
+import Navbar from "../helper/Navbar"; 
 import liked from "../../images/like.png"
 import loved from "../../images/love.png";
 import laughed from "../../images/laugh.png";
 import axios from "axios";
 import search from "../../images/search.png";
-import Footer from "../Footer";
-import Post from "../Post";
-import Heading from "../Heading";
+import Footer from "../helper/Footer";
+import Post from "../helper/Post";
+import Heading from "../helper/Heading";
 import Fuse from "fuse.js";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
-import Footer from "../Footer";
-import Heading from "../Heading";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
 import GoogleLogin from 'react-google-login';
 import { Howl } from "howler";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 

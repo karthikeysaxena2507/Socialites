@@ -1,17 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
+import Navbar from "../helper/Navbar";
+import Footer from "../helper/Footer";
 import { useParams,useHistory } from "react-router-dom";
 import axios from "axios";
-import Post from "../Post";
+import Post from "../helper/Post";
 import trash from "../../images/trash.png";
 import edit from "../../images/edit.png";
-import CategoryMenu from "../CategoryMenu";
-import Heading from "../Heading";
-import SearchBar from "../SearchBar";
-import Loader from "../Loader";
+import CategoryMenu from "../helper/CategoryMenu";
+import Heading from "../helper/Heading";
+import SearchBar from "../helper/SearchBar";
+import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

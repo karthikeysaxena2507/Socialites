@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
-import Heading from "../Heading";
+import Navbar from "../helper/Navbar";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
 import axios from "axios";
 import { Container} from "react-bootstrap";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 
 const About = () => {
 

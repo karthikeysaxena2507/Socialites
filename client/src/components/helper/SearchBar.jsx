@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
-import search from "../images/search.png";
+import search from "../../images/search.png";
 import { useHistory } from "react-router-dom";
 import { Howl } from "howler";
-import music from "../sounds/button.mp3";
+import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
 const SearchBar = (props) => {

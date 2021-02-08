@@ -2,14 +2,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
-import like from "../images/like.png";
-import love from "../images/love.png";
-import laugh from "../images/laugh.png";
-import all from "../images/all.png";
+import like from "../../images/like.png";
+import love from "../../images/love.png";
+import laugh from "../../images/laugh.png";
+import all from "../../images/all.png";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Howl } from "howler";
-import music from "../sounds/button.mp3";
+import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
 const Post = (props) => {

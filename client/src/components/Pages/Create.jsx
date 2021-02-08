@@ -5,10 +5,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
-import Heading from "../Heading";
-import Loader from "../Loader";
+import Navbar from "../helper/Navbar";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
+import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

@@ -1,7 +1,6 @@
 require("dotenv").config();
 const router = require("express").Router();
 let User = require("../models/user.model.js");
-const sgMail = require("@sendgrid/mail");
 const brcypt = require("bcryptjs");
 const crypto = require("crypto");
 const redisClient = require("../redis/client");
@@ -11,7 +10,6 @@ const { v4: uuidv4 } = require("uuid");
 const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
 const { deleteBySessionId, getUserId } = require("../redis/functions"); 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // SESSION AUTHENTICATION MIDDLEWARE FOR A USER
 router.get("/auth", async(req, res, next) => {

@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from 'react'
-import Navbar from "../Navbar";
-import Footer from "../Footer";
-import Heading from "../Heading";
+import Navbar from "../helper/Navbar";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import like from "../../images/like.png";
@@ -11,10 +11,10 @@ import love from "../../images/love.png";
 import laugh from "../../images/laugh.png";
 import trash from "../../images/trash.png";
 import editIcon from "../../images/edit.png";
-import Post from "../Post";
+import Post from "../helper/Post";
 import blank from "../../images/blank.png";
 import { Pie } from "react-chartjs-2";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

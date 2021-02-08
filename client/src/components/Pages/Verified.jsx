@@ -1,8 +1,8 @@
 import React from "react";
-import Footer from "../Footer";
+import Footer from "../helper/Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Heading from "../Heading";
+import Heading from "../helper/Heading";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});

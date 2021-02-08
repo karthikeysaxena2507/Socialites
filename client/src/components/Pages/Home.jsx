@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Footer from "../Footer";
-import Heading from "../Heading";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import axios from "axios";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 const countapi = require('countapi-js');
 var sound = new Howl({src: [music]});
 

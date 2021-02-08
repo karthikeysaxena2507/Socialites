@@ -1,16 +1,16 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
+import Navbar from "../helper/Navbar";
+import Footer from "../helper/Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Post from "../Post";
-import CategoryMenu from "../CategoryMenu";
-import Heading from "../Heading";
-import SearchBar from "../SearchBar";
+import Post from "../helper/Post";
+import CategoryMenu from "../helper/CategoryMenu";
+import Heading from "../helper/Heading";
+import SearchBar from "../helper/SearchBar";
 import { Container } from "react-bootstrap";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 
 const CategoryPosts = () => {
 

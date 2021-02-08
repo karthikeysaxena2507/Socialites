@@ -2,12 +2,12 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Navbar from "../Navbar";
-import Post from "../Post";
-import Footer from "../Footer";
-import Heading from "../Heading";
+import Navbar from "../helper/Navbar";
+import Post from "../helper/Post";
+import Footer from "../helper/Footer";
+import Heading from "../helper/Heading";
 import Fuse from "fuse.js";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 
 const Result = () => {
 

@@ -2,7 +2,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Howl } from "howler";
-import music from "../sounds/button.mp3";
+import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
 const CategoryMenu = (props) => {

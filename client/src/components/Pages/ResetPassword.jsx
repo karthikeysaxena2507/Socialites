@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Heading from "../Heading";
+import Heading from "../helper/Heading";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 var sound = new Howl({src: [music]});
 
 const ResetPassword = () => {

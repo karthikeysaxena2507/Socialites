@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import Heading from "../Heading";
+import Heading from "../helper/Heading";
 import { Howl } from "howler";
-import Loader from "../Loader";
+import Loader from "../helper/Loader";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 

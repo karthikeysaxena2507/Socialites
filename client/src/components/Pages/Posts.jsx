@@ -2,13 +2,13 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-import Navbar from "../Navbar";
-import Post from "../Post";
-import Footer from "../Footer";
-import CategoryMenu from "../CategoryMenu";
-import Heading from "../Heading";
-import SearchBar from "../SearchBar";
-import Loader from "../Loader";
+import Navbar from "../helper/Navbar";
+import Post from "../helper/Post";
+import Footer from "../helper/Footer";
+import CategoryMenu from "../helper/CategoryMenu";
+import Heading from "../helper/Heading";
+import SearchBar from "../helper/SearchBar";
+import Loader from "../helper/Loader";
 
 const Posts = () => {
 
