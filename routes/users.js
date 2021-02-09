@@ -8,7 +8,7 @@ const { cloudinary } = require("../utils/cloudinary");
 const { OAuth2Client } = require("google-auth-library");
 const { v4: uuidv4 } = require("uuid");
 const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
-const { printRedisValues, deleteBySessionId, getUserId,deleteAllRedisValues } = require("../redis/functions"); 
+const { printRedisValues, deleteBySessionId, getUserId, deleteAllRedisValues } = require("../redis/functions"); 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // SESSION AUTHENTICATION MIDDLEWARE FOR A USER
@@ -132,7 +132,7 @@ router.post("/login", async(req, res, next) => {
                                 httpOnly: true,
                                 sameSite: true,
                                 secure: true,
-                                maxAge: 7*24*60*60 // (7 DAYS)
+                                maxAge: 7*24*60*60*1000 // (7 DAYS)
                             });
                             redisClient.setex(sessionId, 7*24*60*60, id); // 7 DAYS
                         }
@@ -198,7 +198,7 @@ router.post("/googlelogin", async(req, res, next) => {
                     httpOnly: true,
                     sameSite: true,
                     secure: true,
-                    maxAge: 7*24*60*60
+                    maxAge: 7*24*60*60*1000
                 });
                 const {id, username, email} = user;
                 redisClient.setex(sessionId, 7*24*60*60, id, (err) => {
@@ -225,7 +225,7 @@ router.post("/googlelogin", async(req, res, next) => {
                         httpOnly: true,
                         sameSite: true,
                         secure: true,
-                        maxAge: 7*24*60*60
+                        maxAge: 7*24*60*60*1000
                     });
                     const {id, username, email} = data;
                     redisClient.setex(sessionId, 7*24*60*60, id);
