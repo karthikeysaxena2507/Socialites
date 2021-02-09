@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
+import { Pie } from "react-chartjs-2";
+import { Howl } from "howler";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
-import { useParams, useHistory } from 'react-router-dom';
-import axios from 'axios';
 import like from "../../images/like.png";
 import love from "../../images/love.png";
 import laugh from "../../images/laugh.png";
@@ -13,12 +14,11 @@ import trash from "../../images/trash.png";
 import editIcon from "../../images/edit.png";
 import Post from "../helper/Post";
 import blank from "../../images/blank.png";
-import { Pie } from "react-chartjs-2";
 import Loader from "../helper/Loader";
-import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
-import { checkUser, getUserData } from "../../api/userApis"
-import { getPostsByUser } from "../../api/postApis";
+import { checkUser, getUserData, updateUserBio, updateUserImage } from "../../api/userApis"
+import { getPostsByUser, addReactionToPost, deletePost } from "../../api/postApis";
+import { createChat } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Profile = () => {
@@ -34,7 +34,6 @@ const Profile = () => {
     var [laughs, setLaughs] = useState(0);
     var [comments, setComments] = useState(0);
     var [state, setState] = useState("Hide");
-    var history = useHistory();
     var [about, setAbout] = useState("");
     var [edit, setEdit] = useState("Edit");
     var [text, setText] = useState("");
@@ -88,11 +87,11 @@ const Profile = () => {
             else {
                 const drop = async() => {
                     try {
-                        await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                        const postData = await axios.get(`/posts/list/${user}`);
-                        setPosts(postData.data.reverse());
+                        await addReactionToPost(event.target.name, post.name, post);
+                        const postData = await getPostsByUser(post.name);
+                        setPosts(postData);
                         var cmct = 0, lkct = 0, lvct = 0, lgct = 0;
-                        postData.data.forEach((post) => {
+                        postData.forEach((post) => {
                             cmct+=post.comment_count;
                             lkct+=post.like;
                             lvct+=post.love;
@@ -116,8 +115,8 @@ const Profile = () => {
             sound.play();
             const del = async() => {
                 try {
-                    await axios.delete(`/posts/delete/${props._id}`);
-                    history.push(`/myposts`);
+                    await deletePost(props._id);
+                    window.location = `/myposts`;
                 }
                 catch(error) {
                     console.log(error);
@@ -128,10 +127,10 @@ const Profile = () => {
 
         const update = () => {
             sound.play();
-            history.push(`/edit/${props._id}`);
+            window.location = `/edit/${props._id}`;
         }
 
-        return (<div className="container" key ={index}>
+    return (<div className="container" key ={index}>
          <Post 
                 name = {username}
                 _id = {props._id}
@@ -163,8 +162,8 @@ const Profile = () => {
             const drop = async() => {
                 try {
                     var room = (username < user) ? (username + "-" + user) : (user + "-" + username);
-                    await axios.post("/rooms/chat",{roomId: room})
-                    history.push(`/room/${room}`);
+                    await createChat(room);
+                    window.location = `/room/${room}`;
                 }
                 catch(error) {
                     console.log(error);
@@ -202,8 +201,8 @@ const Profile = () => {
         if(username !== "Guest" && username !== null) {
             const drop = async() => {
                 try {
-                    const userData = await axios.post(`/users/updatebio`,{user, text});
-                    setAbout(userData.data);
+                    const userData = await updateUserBio(user, text);
+                    setAbout(userData);
                     setEdit("Edit");
                 }
                 catch(error) {
@@ -236,14 +235,11 @@ const Profile = () => {
     const uploadImage = async (imageSource) => {
         if(username !== "Guest") {
             try {
-                await fetch("/users/updateimage", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        data: imageSource,
-                        user: user
-                    }),
-                    headers: {"Content-type": "application/json"}                
+                const body = JSON.stringify({
+                    data: imageSource,
+                    user: user
                 });
+                await updateUserImage(body);
                 window.location = `/profile/${user}`;
             }
             catch(error) {
@@ -260,14 +256,11 @@ const Profile = () => {
         setImageUrl("");
         if(username !== "Guest" && username !== null) {
             try {
-                await fetch("/users/updateimage", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        data: "",
-                        user: user
-                    }),
-                    headers: {"Content-type": "application/json"}                
+                const body = JSON.stringify({
+                    data: "",
+                    user: user
                 });
+                await updateUserImage(body);
                 window.location = `/profile/${user}`;
             }
             catch(error) {

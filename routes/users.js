@@ -8,13 +8,13 @@ const { cloudinary } = require("../utils/cloudinary");
 const { OAuth2Client } = require("google-auth-library");
 const { v4: uuidv4 } = require("uuid");
 const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
-const { deleteBySessionId, getUserId } = require("../redis/functions"); 
+const { printRedisValues, deleteBySessionId, getUserId,deleteAllRedisValues } = require("../redis/functions"); 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // SESSION AUTHENTICATION MIDDLEWARE FOR A USER
 router.get("/auth", async(req, res, next) => {
     try {
-        // printRedisValues();
+        printRedisValues();
         if(req.cookies.SESSIONID !== undefined) {
             const userId = await getUserId(req.cookies.SESSIONID);
             if(userId !== null && userId !== undefined) {

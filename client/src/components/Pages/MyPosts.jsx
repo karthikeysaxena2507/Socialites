@@ -1,8 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
 import Navbar from "../helper/Navbar";
 import Post from "../helper/Post";
 import trash from "../../images/trash.png";
@@ -15,12 +13,11 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
-import { getPostsByUser } from "../../api/postApis";
+import { getPostsByUser, addReactionToPost, deletePost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const MyPosts = () => {
 
-    var history = useHistory();
     var [username, setUsername] = useState("");
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
@@ -33,7 +30,7 @@ const MyPosts = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                     const postsData = await getPostsByUser(user.username);
-                    setPosts(postsData.reverse());
+                    setPosts(postsData);
                 }
                 else {
                     setUsername("Guest");
@@ -52,9 +49,9 @@ const MyPosts = () => {
         const changepost = (event, post) => {
             const drop = async() => {
                 try {
-                    await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    const response = await axios.get(`/posts/list/${username}`);
-                    setPosts(response.data.reverse());
+                    addReactionToPost(event.target.name, post.name, post);
+                    const postsData = await getPostsByUser(post.name);
+                    setPosts(postsData);
                 }
                 catch(error) {
                     console.log(error);
@@ -67,8 +64,8 @@ const MyPosts = () => {
             sound.play();
             const del = async() => {
                 try {
-                    await axios.delete(`/posts/delete/${props._id}`);
-                    history.push(`/allposts`);
+                    await deletePost(props._id);
+                    window.location = `/allposts`;
                 }
                 catch(error) {
                     console.log(error);
@@ -79,7 +76,7 @@ const MyPosts = () => {
 
         const update = () => {
             sound.play();
-            history.push(`/edit/${props._id}`);
+            window.location = `/edit/${props._id}`;
         }
 
         return (<div className="container" key ={index}>

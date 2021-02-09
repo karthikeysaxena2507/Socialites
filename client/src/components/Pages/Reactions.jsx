@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navbar from "../helper/Navbar"; 
 import liked from "../../images/like.png"
 import loved from "../../images/love.png";
@@ -15,13 +15,13 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
-import { getPostById } from "../../api/postApis";
+import { getPostById, addReactionToPost } from "../../api/postApis";
+import { createChat } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Reactions = () => {
 
     var [username, setUsername] = useState("");
-    var history = useHistory();
     var { id } = useParams();
     var [like,setlike] = useState(false);
     var [love,setlove] = useState(false);
@@ -126,8 +126,8 @@ const Reactions = () => {
                     const drop = async() => {
                         try {
                             var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                            await axios.post("/rooms/chat",{roomId: room})
-                            history.push(`/room/${room}`);
+                            await createChat(room);
+                            window.location = `/room/${room}`;
                         }
                         catch(error) {
                             console.log(error);
@@ -136,10 +136,12 @@ const Reactions = () => {
                     drop();
                 }
             }
+
             const SeeProfile = (e) => {
                 sound.play();
                 window.location = (`/profile/${e.target.innerText}`);
             }
+
             return (<div className="container user" key={index}>
             <li className="profile"> 
                 <span onClick={SeeProfile}> {props.name} </span>
@@ -157,9 +159,8 @@ const Reactions = () => {
                     const drop = async() => {
                         try {
                             var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                            await axios.post("/rooms/chat",{roomId: room})
-                            localStorage.setItem("roomId", room);
-                            history.push(`/room`);
+                            await createChat(room);
+                            window.location = `/room/${room}`;
                         }
                         catch(error) {
                             console.log(error);
@@ -207,14 +208,12 @@ const Reactions = () => {
         else {
             const drop = async() => {
                 try {
-                    const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    console.log(res.data);
-                    const response = await axios.get(`/posts/${id}`);
-                    console.log(response.data[0].reacts.reverse());
-                    setallreactions(response.data[0].reacts.reverse());
-                    setreactions(response.data[0].reacts.reverse());
-                    settempreactions(response.data[0].reacts.reverse());
-                    setPost(response.data[0]);
+                    await addReactionToPost(event.target.name, post.name, post);
+                    const postData = await getPostById(id);
+                    setallreactions(postData.reacts.reverse());
+                    setreactions(postData.reacts.reverse());
+                    settempreactions(postData.reacts.reverse());
+                    setPost(postData);
                     setlike(false);
                     setlove(false);
                     setlaugh(false);

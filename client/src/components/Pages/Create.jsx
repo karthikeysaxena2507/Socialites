@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
@@ -11,11 +10,11 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
+import { addPost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const Create = () => {
 
-    var history = useHistory();
     var [username, setUsername] = useState("");
     var [loading, setLoading] = useState(true);
     var [title, setTitle] = useState("");
@@ -66,18 +65,13 @@ const Create = () => {
     const uploadImage = async (imageSource) => {
         if(username !== "Guest") {
             try {
-                await fetch("/posts/add", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        data: imageSource,
-                        author: username,
-                        title: title,
-                        content: content,
-                        category: category
-                    }),
-                    headers: {"Content-type": "application/json"}                
+                const body = JSON.stringify({
+                    data: imageSource,
+                    author: username,
+                    title, content, category
                 });
-                history.push(`/allposts`);
+                await addPost(body);
+                window.location = "/allposts";
             }
             catch(error) {
                 console.log(error);
@@ -95,7 +89,7 @@ const Create = () => {
 
     var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
     var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
-
+ 
     if(loading) {
         return <Loader />
     }

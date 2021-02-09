@@ -6,10 +6,10 @@ import like from "../../images/like.png";
 import love from "../../images/love.png";
 import laugh from "../../images/laugh.png";
 import all from "../../images/all.png";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { addCommentToPost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const Post = (props) => {
@@ -34,7 +34,7 @@ const Post = (props) => {
             if(comment.content !== "") {
                 const drop = async() => {
                     try {
-                        await axios.post(`/posts/add/${props._id}`, comment);
+                        await addCommentToPost(props._id, comment);
                         window.location = `/complete/${props._id}`;
                     }
                     catch(error) {

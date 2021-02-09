@@ -1,13 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import axios from "axios";
 import React from "react";
-import { Link,useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 const Navbar = (props) => {
 
-    var history = useHistory();
     var username = props.name;
 
     const change = () => {
@@ -29,7 +28,7 @@ const Navbar = (props) => {
 
     const SeeProfile = (e) => {
       sound.play();
-      history.push(`/profile/${username}`)
+      window.location = `/profile/${username}`;
     }
 
     return <div className="text-center">

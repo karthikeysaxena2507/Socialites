@@ -12,7 +12,7 @@ import Heading from "../helper/Heading";
 import SearchBar from "../helper/SearchBar";
 import { Container } from "react-bootstrap";
 import { checkUser } from "../../api/userApis"
-import { getFilteredPosts } from "../../api/postApis";
+import { getFilteredPosts, addReactionToPost } from "../../api/postApis";
 
 const CategoryPosts = () => {
 
@@ -49,11 +49,9 @@ const CategoryPosts = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try{
-                        await axios.post(`/posts/update/${event.target.name}/${post.name}`, post)
-                        const res = await axios.get("/posts");
-                        setPosts(res.data.reverse().filter((post) => {
-                            return (post.category === type);
-                        }));
+                        await addReactionToPost(event.target.name, post.name, post);
+                        const filteredPosts = await getFilteredPosts(type);
+                        setPosts(filteredPosts);
                     }
                     catch(error) {
                         console.log(error);

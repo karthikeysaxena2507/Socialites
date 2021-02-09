@@ -25,8 +25,8 @@ const Room = () => {
     var [message, setMessage] = useState("");
     var [messages,setMessages] = useState([]);
     var [loading, setLoading] = useState(true);
-    var [state, setState] = useState("Show");
     var [users, setUsers] = useState([]);
+    var [state, setState] = useState("Show");
 
     useEffect(() => {
         const fetch = async() => {

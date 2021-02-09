@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
-import axios from "axios";
 import Navbar from "../helper/Navbar";
 import Post from "../helper/Post";
 import Footer from "../helper/Footer";
@@ -10,7 +9,7 @@ import Heading from "../helper/Heading";
 import SearchBar from "../helper/SearchBar";
 import Loader from "../helper/Loader";
 import { checkUser } from "../../api/userApis"
-import { getAllPosts } from "../../api/postApis";
+import { getAllPosts, addReactionToPost,  } from "../../api/postApis";
 
 const Posts = () => {
 
@@ -30,7 +29,7 @@ const Posts = () => {
                     setUsername("Guest");
                 }
                 const postsData = await getAllPosts();
-                setPosts(postsData.reverse());
+                setPosts(postsData);
                 setLoading(false);
             }
             catch (error) {
@@ -46,9 +45,9 @@ const Posts = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                        const res = await axios.get("/posts/");
-                        setPosts(res.data.reverse());  
+                        await addReactionToPost(event.target.name, post.name, post);
+                        const postsData = await getAllPosts();
+                        setPosts(postsData);
                     }
                     catch(error) {
                         console.log(error);

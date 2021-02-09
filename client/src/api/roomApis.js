@@ -5,4 +5,18 @@ const getRoomById = async(id) => {
     return room.data;
 } 
 
-export { getRoomById };
+const createChat = async(room) => {
+    await axios.post("/rooms/chat",{roomId: room});
+}
+
+const createChatRoom = async(username) => {
+    const roomData = await axios.post("/rooms/create", {username});
+    return roomData.data;
+}
+
+const joinChatRoom = async(roomId, username) => {
+    const roomData = await axios.post("/rooms/join", {roomId, username});
+    return roomData.data;
+}
+
+export { getRoomById, createChat, createChatRoom, joinChatRoom };

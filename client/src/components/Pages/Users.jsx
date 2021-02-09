@@ -1,8 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import axios from "axios";
 import React, { useEffect,useState } from "react";
-import { useHistory } from "react-router-dom";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import search from "../../images/search.png";
@@ -12,12 +10,12 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser, getAllUsers } from "../../api/userApis"
+import { createChat, createChatRoom, joinChatRoom } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Users = () => {
 
     var [username, setUsername] = useState("");
-    var history = useHistory();
     var [allUsers, setAllUsers] = useState([]);
     var [users, setUsers] = useState([]);
     var [searchContent,setsearchContent] = useState("");
@@ -67,8 +65,8 @@ const Users = () => {
             else {
                 const drop = async() => {
                     try {
-                        await axios.post("/rooms/chat",{roomId: room})
-                        history.push(`/room/${room}`);
+                        await createChat(room);
+                        window.location = `/room/${room}`;
                     }
                     catch(error) {
                         console.log(error);
@@ -80,7 +78,7 @@ const Users = () => {
 
         const SeeProfile = (e) => {
             sound.play();
-            history.push(`/profile/${e.target.innerText}`);
+            window.location = `/profile/${e.target.innerText}`;
         }
 
         if(props.username !== undefined) {
@@ -132,8 +130,8 @@ const Users = () => {
         else {
             const drop = async() => {
                 try {
-                    const response = await axios.post("/rooms/create", {username});
-                    history.push(`/room/${response.data.roomId}`);
+                    const roomData = await createChatRoom(username);
+                    window.location = `/room/${roomData.roomId}`;
                 }
                 catch(error) {
                     console.log(error);
@@ -151,12 +149,12 @@ const Users = () => {
         else {
             const drop = async() => {
                 try {
-                    const response = await axios.post("/rooms/join", {roomId, username});
-                    if(response.data === "invalid") {
+                    const roomData = await joinChatRoom(roomId, username);
+                    if(roomData === "invalid") {
                         setRoomMessage("invalid Room Id");
                     }
                     else {
-                        history.push(`/room/${roomId}`);
+                        window.location = `/room/${roomId}`;
                     }
                 }
                 catch(error) {

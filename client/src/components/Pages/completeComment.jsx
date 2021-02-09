@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
-import { useParams,useHistory } from "react-router-dom";
-import axios from "axios";
+import { useParams } from "react-router-dom";
 import liked from "../../images/like.png";
 import loved from "../../images/love.png";
 import laughed from "../../images/laugh.png";
@@ -14,12 +13,12 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
-import { getCommentData } from "../../api/postApis";
+import { getCommentData, deleteComment } from "../../api/postApis";
+import { createChat } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const CompleteComment = () => {
 
-    var history = useHistory();
     var [username, setUsername] = useState("");
     var { commentId,id } = useParams();
     var [comment, setComment] = useState({});
@@ -100,8 +99,8 @@ const CompleteComment = () => {
         if(username !== "Guest") {
             const drop = async() => {
                 try {
-                    await axios.post(`/posts/remove/${id}`, comment);
-                    history.push(`/comment/${comment._id}/${id}`);        
+                    await deleteComment(id, comment);
+                    window.location = `/complete/${id}`;        
                 }
                 catch (error) {
                     console.log(error);
@@ -125,8 +124,8 @@ const CompleteComment = () => {
                 const drop = async() => {
                     try {
                         var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                        await axios.post("/rooms/chat",{roomId: room})
-                        history.push(`/room/${room}`);
+                        await createChat(room);
+                        window.location = `/room/${room}`;
                     }
                     catch(error) {
                         console.log(error);
@@ -137,7 +136,7 @@ const CompleteComment = () => {
         }
         const SeeProfile = (e) => {
             sound.play();
-            history.push(`/profile/${e.target.innerText}`);
+            window.location = `/profile/${e.target.innerText}`;
         }
 
         return (<div className="container user" key={index}>

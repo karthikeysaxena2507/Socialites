@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import axios from "axios";
+import { useParams } from "react-router-dom";
 import Post from "../helper/Post";
 import Navbar from "../helper/Navbar";
 import like from "../../images/like.png";
@@ -15,13 +14,13 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
-import { getPostById } from "../../api/postApis";
+import { getPostById, addReactionToPost, addReactionToComment, deleteComment } from "../../api/postApis";
+import { createChat } from "../../api/roomApis.js";
 
 var sound = new Howl({src: [music]});
 
 const CompletePost = () => {
     
-    var history = useHistory();
     var [username, setUsername] = useState("");
     var { id } = useParams();
     var [loading, setLoading] = useState(true);
@@ -53,9 +52,9 @@ const CompletePost = () => {
         if(username !== "Guest") {
             const drop = async() => {
                 try {
-                    await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    const response = await axios.get(`/posts/${id}`);
-                    setPost(response.data[0]);
+                    await addReactionToPost(event.target.name, post.name, post);
+                    const postData = await getPostById(id);
+                    setPost(postData);
                 }
                 catch(error) {
                     console.log(error);
@@ -75,9 +74,9 @@ const CompletePost = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        await axios.post(`/posts/comment/${event.target.name}/${id}/${username}`, props);
-                        const response = await axios.get(`/posts/${id}`);
-                        setPost(response.data[0]);
+                        await addReactionToComment(event.target.name, id, username, props);
+                        const postData = await getPostById(id);
+                        setPost(postData);
                     }
                     catch(error) {
                         console.log(error);
@@ -95,7 +94,7 @@ const CompletePost = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        await axios.post(`/posts/remove/${id}`, props);
+                        deleteComment(id, props);
                         window.location = `/complete/${id}`;
                     }
                     catch(error) {
@@ -111,7 +110,7 @@ const CompletePost = () => {
 
         const SeeAll = () => {
             sound.play();
-            history.push(`/comment/${props._id}/${id}`);
+            window.location = `/comment/${props._id}/${id}`;
         }
 
         const createRoom = () => {
@@ -123,8 +122,8 @@ const CompletePost = () => {
                 const drop = async() => {
                     try {
                         var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                        await axios.post("/rooms/chat",{roomId: room})
-                        history.push(`/room/${room}`);
+                        await createChat(room);
+                        window.location = `/room/${room}`;
                     }
                     catch(error) {
                         console.log(error);
@@ -134,10 +133,9 @@ const CompletePost = () => {
             }
         }
 
-
         const SeeProfile = (e) => {
             sound.play();
-            history.push(`/profile/${e.target.innerText}`);
+            window.location = `/profile/${e.target.innerText}`;
         }
 
         var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}

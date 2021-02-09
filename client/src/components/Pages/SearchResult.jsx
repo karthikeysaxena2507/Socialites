@@ -9,7 +9,7 @@ import Heading from "../helper/Heading";
 import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
 import { checkUser } from "../../api/userApis";
-import { getAllPosts, getPostsByUser } from "../../api/postApis";
+import { getAllPosts, getPostsByUser, addReactionToPost } from "../../api/postApis";
 
 const Result = () => {
 
@@ -85,14 +85,13 @@ const Result = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        const res = await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                        console.log(res.data);
+                        await addReactionToPost(event.target.name, post.name, post);
                         var response;
                         if(message === "all") {
-                            response = await axios.get("/posts");
+                            response = await getAllPosts();
                         }
                         else if(message === "personal") {
-                            response = await axios.get(`/posts/list/${username}`);
+                            response = await getPostsByUser(username);
                         }
                         const fuse = new Fuse(response.data, {
                             keys: ['author', 'title', 'content'],

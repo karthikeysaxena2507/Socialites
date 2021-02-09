@@ -15,4 +15,17 @@ const getUserData = async(username) => {
    return userData.data;
 }
 
-export {  checkUser, getAllUsers, getUserData };
+const updateUserBio = async(user, text) => {
+   const userData = await axios.post(`/users/updatebio`,{user, text});
+   return userData.data;
+}
+
+const updateUserImage = async(body) => {
+   await fetch("/users/updateimage", {
+      method: "POST",
+      body,
+      headers: {"Content-type": "application/json"}                
+  });
+}
+
+export { checkUser, getAllUsers, getUserData, updateUserBio, updateUserImage };

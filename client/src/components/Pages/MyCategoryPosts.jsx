@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
-import { useParams,useHistory } from "react-router-dom";
-import axios from "axios";
+import { useParams } from "react-router-dom";
 import Post from "../helper/Post";
 import trash from "../../images/trash.png";
 import edit from "../../images/edit.png";
@@ -15,13 +14,12 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
-import { getPostsByUser } from "../../api/postApis";
+import { getPostsByUser, addReactionToPost, deletePost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const MyCategoryPosts = () => {
 
     var [username, setUsername] = useState("");
-    var history = useHistory();
     var { type } = useParams();
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
@@ -34,7 +32,7 @@ const MyCategoryPosts = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                     const postsData = await getPostsByUser(user.username);
-                    setPosts(postsData.reverse().filter((post) => {
+                    setPosts(postsData.filter((post) => {
                         return (post.category === type);
                     }));
                 }
@@ -55,9 +53,9 @@ const MyCategoryPosts = () => {
         const changepost = (event, post) => {
             const drop = async() => {
                 try {
-                    await axios.post(`/posts/update/${event.target.name}/${post.name}`, post);
-                    const response = await axios.get(`/posts/list/${username}`);
-                    setPosts(response.data.reverse().filter((post) => {
+                    await addReactionToPost(event.target.name, post.name, post);
+                    const postsData = await getPostsByUser(post.name);
+                    setPosts(postsData.filter((post) => {
                         return (post.category === type);
                     }));
                 }   
@@ -72,8 +70,8 @@ const MyCategoryPosts = () => {
             sound.play();
             const del = async() => {
                 try {
-                    await axios.delete(`/posts/delete/${props._id}`);
-                    history.push(`/myposts`);
+                    await deletePost(props._id);
+                    window.location = `/myposts`;
                 }
                 catch(error) {
                     console.log(error);
@@ -84,7 +82,7 @@ const MyCategoryPosts = () => {
 
         const update = () => {
             sound.play();
-            history.push(`/edit/${props._id}`);
+            window.location = `/edit/${props._id}`;
         }
 
         return (<div className="container" key ={index}>

@@ -2,20 +2,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import Navbar from "../helper/Navbar";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
-import { getPostForEdit } from "../../api/postApis";
+import { getPostForEdit, editPost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
 const Edit = () => {
 
     var { id } = useParams();
-    var history = useHistory();
     var [username, setUsername] = useState("");
     var [title, setTitle] = useState("");
     var [content, setContent] = useState("");
@@ -71,23 +70,17 @@ const Edit = () => {
     const uploadImage = async (imageSource) => {
         if(username !== "Guest") {
             try {
-                console.log(imageSource);
-                await fetch(`/posts/edit/${id}`, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        data: imageSource,
-                        author: username,
-                        title: title,
-                        content: content,
-                        category: category
-                    }),
-                    headers: {"Content-type": "application/json"}                
+                const body = JSON.stringify({
+                    data: imageSource,
+                    author: username,
+                    title, content, category
                 });
+                await editPost(body, id);
             }
             catch(error) {
                 console.log(error);
             }
-            history.push(`/myposts`);
+            window.location = "/myposts";
         }
         else {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
