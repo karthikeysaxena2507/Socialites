@@ -14,7 +14,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // SESSION AUTHENTICATION MIDDLEWARE FOR A USER
 router.get("/auth", async(req, res, next) => {
     try {
-        printRedisValues();
+        // printRedisValues();
         if(req.cookies.SESSIONID !== undefined) {
             const userId = await getUserId(req.cookies.SESSIONID);
             if(userId !== null && userId !== undefined) {
@@ -142,7 +142,7 @@ router.post("/login", async(req, res, next) => {
                                 sameSite: true,
                                 secure: true
                             });
-                            redisClient.setex(sessionId, 10*60*60, id); // 10 HOURS
+                            redisClient.setex(sessionId, 6*60*60, id); // 10 HOURS
                         }
                         res.json({user: {id, username, email, verified}});
                     }
@@ -263,7 +263,7 @@ router.get("/find/:user", async(req, res, next) => {
         res.json(user);
     }
     catch(error) {
-        res.json(error);
+        res.json(next(error));
     }
 });
 
@@ -431,7 +431,7 @@ router.post("/logout", async(req, res, next) => {
         res.json(response);
     }
     catch(err) {
-        console.log(err);
+        res.json(next(error));
     }
 });
 

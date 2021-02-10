@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState,useEffect } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import Navbar from "../helper/Navbar";
 import Post from "../helper/Post";

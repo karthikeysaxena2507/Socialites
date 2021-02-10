@@ -1,19 +1,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import GoogleLogin from 'react-google-login';
 import { Howl } from "howler";
 import Loader from "../helper/Loader";
 import music from "../../sounds/button.mp3";
-import { checkUser } from "../../api/userApis"
+import { checkUser } from "../../api/userApis";
+import { registerUser, LoginWithGoogle } from "../../api/authApis";
 var sound = new Howl({src: [music]});
 
 const Register = () => {
 
-    var history = useHistory();
     var [username, setUsername] = useState("");
     var [email, setEmail] = useState("");
     var [password, setPassword] = useState("");
@@ -53,13 +52,12 @@ const Register = () => {
         if(password.length >= 8) {
             const drop = async() => {
                 try {
-                    const response = await axios.post("/users/register", {username, email, password});
-                    console.log(response.data);
-                    if(response.data === "Username Already Exists" || response.data === "Email already exists") {
-                        setMessage(response.data);
+                    const response = await registerUser(username, email, password);
+                    if(response === "Username Already Exists" || response === "Email already exists") {
+                        setMessage(response);
                     }
                     else {
-                        window.location = `/verify/${response.data.user.token}`;
+                        window.location = `/verify/${response.user.token}`;
                         setMessage("");
                     }
                 }
@@ -74,10 +72,9 @@ const Register = () => {
     const successGoogle = (response) => {
         const post = async() => {
             try {
-                const userData = await axios.post("/users/googlelogin", {token: response.tokenId});
-                localStorage.setItem("token", userData.data.token);
+                const user = await LoginWithGoogle(response.tokenId);
                 localStorage.removeItem("Guest");
-                history.push(`/profile/${userData.data.user.username}`);
+                window.location = `/profile/${user.username}`;
             }
             catch(error) {
                 console.log(error);
@@ -90,7 +87,6 @@ const Register = () => {
         setMessage("Google Login Failed");
         window.location = "/";
     }
-
 
     const guestLogin = () => {
         sound.play();

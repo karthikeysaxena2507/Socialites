@@ -1,19 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
-import { Link,useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import GoogleLogin from 'react-google-login';
 import { Howl } from "howler";
 import Loader from "../helper/Loader";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
+import { loginUser, LoginWithGoogle } from "../../api/authApis";
 var sound = new Howl({src: [music]});
 
 const Login = () => {
-
-    let history = useHistory();
 
     var [email, setEmail] = useState("");
     var [password, setPassword] = useState("");
@@ -42,13 +40,13 @@ const Login = () => {
         sound.play();
         const drop = async() => {
             try {
-                const response = await axios.post("/users/login", {email, password, rememberMe});
+                const user = await loginUser(email, password, rememberMe);
                 setMessage(" ");
-                if(response.data.user.verified) {
-                    history.push(`/profile/${response.data.user.username}`);
+                if(user.verified) {
+                    window.location = `/profile/${user.username}`;
                 }
                 else {
-                    history.push(`/verify/${response.data.user.token}`);  
+                    window.location = `/verify/${user.token}`;
                 }
             }
             catch(error) {
@@ -67,8 +65,10 @@ const Login = () => {
     const successGoogle = (response) => {
         const post = async() => {
             try {
-                const userData = await axios.post("/users/googlelogin", {token: response.tokenId});
-                history.push(`/profile/${userData.data.user.username}`);
+                const user = await LoginWithGoogle(response.tokenId);
+
+                localStorage.removeItem("Guest");
+                window.location = `/profile/${user.username}`;
             }
             catch(error) {
                 console.log(error);
