@@ -66,7 +66,6 @@ const Login = () => {
         const post = async() => {
             try {
                 const user = await LoginWithGoogle(response.tokenId);
-
                 localStorage.removeItem("Guest");
                 window.location = `/profile/${user.username}`;
             }

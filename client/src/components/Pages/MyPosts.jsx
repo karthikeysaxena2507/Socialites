@@ -49,7 +49,7 @@ const MyPosts = () => {
         const changepost = (event, post) => {
             const drop = async() => {
                 try {
-                    addReactionToPost(event.target.name, post.name, post);
+                    await addReactionToPost(event.target.name, post.name, post);
                     const postsData = await getPostsByUser(post.name);
                     setPosts(postsData);
                 }

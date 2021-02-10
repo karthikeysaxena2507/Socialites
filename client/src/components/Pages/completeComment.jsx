@@ -134,6 +134,7 @@ const CompleteComment = () => {
                 drop();
             }
         }
+        
         const SeeProfile = (e) => {
             sound.play();
             window.location = `/profile/${e.target.innerText}`;

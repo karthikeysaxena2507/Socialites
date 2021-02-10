@@ -80,6 +80,7 @@ const Profile = () => {
     },[guest, user]);
 
     const MyPost = (props, index) => {
+        
         const changepost = (event, post) => {
             if(username === "Guest") {
                 alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");

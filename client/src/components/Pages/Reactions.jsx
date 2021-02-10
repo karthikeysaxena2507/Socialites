@@ -5,7 +5,6 @@ import Navbar from "../helper/Navbar";
 import liked from "../../images/like.png"
 import loved from "../../images/love.png";
 import laughed from "../../images/laugh.png";
-import axios from "axios";
 import search from "../../images/search.png";
 import Footer from "../helper/Footer";
 import Post from "../helper/Post";
@@ -150,6 +149,7 @@ const Reactions = () => {
         </div>);
         }
         else {
+
             const createRoom = () => {
                 sound.play();
                 if(username === "Guest") {
@@ -169,10 +169,12 @@ const Reactions = () => {
                     drop();
                 }
             }
+
             const SeeProfile = (e) => {
                 sound.play();
                 window.location = (`/profile/${e.target.innerText}`);
             }
+            
             return (<div className="container user" key={index}>
             <li className="profile"> 
                 <span onClick={SeeProfile}> {props.item.name} </span>

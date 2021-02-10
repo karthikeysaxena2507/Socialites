@@ -12,7 +12,6 @@ const registerUser = async(username, email, password) => {
 
 const LoginWithGoogle = async(tokenId) => {
     const userData = await axios.post("/users/googlelogin", {token: tokenId});
-    console.log(userData);
     return userData.data.user;
 }
 

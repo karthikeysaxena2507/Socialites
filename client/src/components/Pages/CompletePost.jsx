@@ -94,7 +94,7 @@ const CompletePost = () => {
             if(username !== "Guest") {
                 const drop = async() => {
                     try {
-                        deleteComment(id, props);
+                        await deleteComment(id, props);
                         window.location = `/complete/${id}`;
                     }
                     catch(error) {
