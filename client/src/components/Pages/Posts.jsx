@@ -75,6 +75,7 @@ const Posts = () => {
                 change = {changepost}
                 show_comments={true}
                 imageUrl = {props.imageUrl}
+                reactions = {props.reacts}
         />
     }
 

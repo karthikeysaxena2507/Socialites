@@ -37,7 +37,7 @@ const Result = () => {
                         includeMatches: true
                     });
                     const results = fuse.search(searchContent);
-                    setfoundPosts(results.reverse());
+                    setfoundPosts(results);
                     if(type !== "none") {
                         setfoundPosts(results.filter((post) => {
                             return (post.item.category === type);
@@ -92,13 +92,13 @@ const Result = () => {
                         else if(message === "personal") {
                             response = await getPostsByUser(username);
                         }
-                        const fuse = new Fuse(response.data, {
+                        const fuse = new Fuse(response, {
                             keys: ['author', 'title', 'content'],
                             includeScore: true,
                             includeMatches: true
                         });
                         const results = fuse.search(searchContent);
-                        setfoundPosts(results.reverse());
+                        setfoundPosts(results);
                         if(type !== "none") {
                             setfoundPosts(results.filter((post) => {
                                 return (post.item.category === type);
@@ -131,6 +131,7 @@ const Result = () => {
                 change = {changepost}
                 show_comments = {true}
                 imageUrl = {props.item.imageUrl}
+                reactions = {props.item.reacts}
             />
     }
 

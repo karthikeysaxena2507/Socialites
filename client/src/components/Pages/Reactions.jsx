@@ -32,7 +32,7 @@ const Reactions = () => {
     var [message, setMessage] = useState("");
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
-    var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
+    var [post,setPost] = useState({});
 
     useEffect(() => {
         const fetch = async() => {
@@ -251,6 +251,7 @@ const Reactions = () => {
                         change = {changepost}
                         show_comments = {true}
                         imageUrl = {post.imageUrl}
+                        reactions = {post.reacts}
                 />
                 <div className="text-center">
                     <h2 className="margin"> Users who Reacted: </h2>

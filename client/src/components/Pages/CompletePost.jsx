@@ -25,7 +25,7 @@ const CompletePost = () => {
     var { id } = useParams();
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
-    var [post,setPost] = useState({author:"", title:"", content:"", comments:[], comment_count:0, like:0, love:0, laugh:0, imageUrl:""});
+    var [post,setPost] = useState({});
 
     useEffect(() => {
         const fetch = async() => {
@@ -208,6 +208,7 @@ const CompletePost = () => {
                     change = {changepost}
                     show_comments = {false}
                     imageUrl = {post.imageUrl}
+                    reactions = {post.reacts}
             />
             <h3 className="margin text-center"> Comments </h3>
             {post.comments.map(createComment)}

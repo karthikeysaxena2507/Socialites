@@ -52,10 +52,22 @@ const Post = (props) => {
         }
     }
 
-    const changePost = (event) => {
+    const changePost = (e) => {
         sound.play();
-        props.change(event, props);
+        props.change(e, props);
     }        
+
+    const check = (type) => {
+        const reactions = props.reactions;
+        let flag = false;
+        for(let reaction of reactions) {
+            if(reaction.name === props.name && reaction.type === type) {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
 
     const SeeAll = () => {
         sound.play();
@@ -71,10 +83,6 @@ const Post = (props) => {
         sound.play();
         history.push(`/profile/${e.target.innerText}`);
     }
-
-    var visibility = (props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"};
-
-    var image = (props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"};
     
     return(<div className="container margin post"> 
         <div className="post-title"> 
@@ -86,7 +94,7 @@ const Post = (props) => {
         <div className="post-content">
             {props.content}
             <div className="margin text-center">
-                <img src={props.imageUrl} style={image} className="post-image" alt="image not found"/>
+                <img src={props.imageUrl} style={(props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"}} className="post-image" alt="image not found"/>
             </div>
         </div>
         <div className="post-info"> 
@@ -95,6 +103,7 @@ const Post = (props) => {
                 src={like} 
                 name="like" 
                 onClick={changePost} 
+                style={check("like") ? {backgroundColor: "white", padding: "5px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
                 className="expand one"/>
                 <span onClick={SeeAll} > {props.like} </span>
             </span>
@@ -103,6 +112,7 @@ const Post = (props) => {
                 src={love} 
                 name="love" 
                 onClick={changePost} 
+                style={check("love") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
                 className="expand one"/>
                 <span onClick={SeeAll} > {props.love} </span>
             </span>
@@ -111,6 +121,7 @@ const Post = (props) => {
                 src={laugh} 
                 name="laugh" 
                 onClick={changePost} 
+                style={check("laugh") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
                 className="expand one"/>
                 <span onClick={SeeAll} > {props.laugh} </span>
             </span>
@@ -129,7 +140,7 @@ const Post = (props) => {
                 <input type="text" onChange={change} name="content" value={comment.content} placeholder="Add a Comment" required/>
             </div>
             <div className="comment">
-                <a onClick={SeeComplete} style={visibility} className="expand"> {props.comment_count} comments </a>
+                <a onClick={SeeComplete} style={(props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"}} className="expand"> {props.comment_count} comments </a>
                 <button onClick={addComment} className="move-right btn-dark expand"> Add Comment </button>
             </div>
         </div>

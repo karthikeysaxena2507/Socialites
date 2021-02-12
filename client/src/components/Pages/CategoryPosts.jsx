@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import Post from "../helper/Post";
 import Loader from "../helper/Loader";
 import CategoryMenu from "../helper/CategoryMenu";
@@ -79,6 +78,7 @@ const CategoryPosts = () => {
                 change = {changepost}
                 show_comments={true}
                 imageUrl = {props.imageUrl}
+                reactions = {props.reacts}
         />
     }
 

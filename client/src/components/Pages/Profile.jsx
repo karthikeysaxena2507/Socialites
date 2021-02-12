@@ -146,6 +146,7 @@ const Profile = () => {
                 change = {changepost}
                 show_comments = {true}
                 imageUrl = {props.imageUrl}
+                reactions = {props.reacts}
         />
         <div style={ (user !== username) ? {visibility: "hidden"} : null } className="post-options text-center">
             <img src={trash} onClick={remove} className="expand one"/>
