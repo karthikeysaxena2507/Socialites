@@ -89,7 +89,7 @@ const Profile = () => {
                 const drop = async() => {
                     try {
                         await addReactionToPost(event.target.name, post.name, post);
-                        const postData = await getPostsByUser(post.name);
+                        const postData = await getPostsByUser(user);
                         setPosts(postData);
                         var cmct = 0, lkct = 0, lvct = 0, lgct = 0;
                         postData.forEach((post) => {
