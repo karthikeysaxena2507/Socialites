@@ -138,7 +138,17 @@ const CompletePost = () => {
             window.location = `/profile/${e.target.innerText}`;
         }
 
-        var style1 = (props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}
+        const check = (type) => {
+            const reactions = props.reacts;
+            let flag = false;
+            for(let reaction of reactions) {
+                if(reaction.name === username && reaction.type === type) {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
+        }
 
         return <div className="container margin" key={index}>
         <div className="comment-name">
@@ -153,24 +163,30 @@ const CompletePost = () => {
                             src={like}   
                             name = "likes"
                             onClick={reactToComment}
-                            className="expand one"/> 
-                            {props.likes}
+                            style={check("likes") ? {backgroundColor: "white", padding: "5px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
+                            className="expand one"
+                        /> 
+                        {props.likes}
                     </span>
                     <span className="one">
                         <img 
                             src={love}   
                             onClick={reactToComment}
                             name = "loves"
-                            className="expand one"/> 
-                            {props.loves}
+                            style={check("loves") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
+                            className="expand one"
+                        /> 
+                        {props.loves}
                     </span>
                     <span className="one">
                         <img 
                             src={laugh}   
                             onClick={reactToComment}
                             name = "laughs"
-                            className="expand one"/> 
-                            {props.laughs}
+                            style={check("laughs") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
+                            className="expand one"
+                        /> 
+                        {props.laughs}
                     </span>
                     <span className="all">
                         <a onClick={SeeAll} className="expand"> All </a> 
@@ -179,7 +195,7 @@ const CompletePost = () => {
             </div>
         </div>
         <div className="comment-content"> {props.content} </div>            
-        <div className="comment-options text-center" style={style1}>
+        <div className="comment-options text-center" style={(props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}}>
             <img src={trash} onClick={remove} className="expand one"/>
         </div>
     </div>

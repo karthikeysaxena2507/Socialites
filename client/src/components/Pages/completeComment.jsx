@@ -13,7 +13,7 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
-import { getCommentData, deleteComment } from "../../api/postApis";
+import { getCommentData, deleteComment, addReactionToComment } from "../../api/postApis";
 import { createChat } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
@@ -93,7 +93,6 @@ const CompleteComment = () => {
         setlaugh(false);
         setreactions(allreactions);
     }
-
     const remove = () => {
         sound.play();
         if(username !== "Guest") {
@@ -112,7 +111,6 @@ const CompleteComment = () => {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
     }
-
     const renderUsers = (props, index) => {
 
         const createRoom = () => {
@@ -146,7 +144,6 @@ const CompleteComment = () => {
             </li>
         </div>);
     }
-
     const SeeProfile = (e) => {
         sound.play();
         window.location = (`/profile/${e.target.innerText}`);
@@ -156,6 +153,41 @@ const CompleteComment = () => {
         return <Loader />
     }
     else {
+
+        const check = (type) => {
+            const reactions = comment.reacts;
+            let flag = false;
+            for(let reaction of reactions) {
+                if(reaction.name === username && reaction.type === type) {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
+        } 
+
+        const reactToComment = (event) => {
+            sound.play();
+            if(username !== "Guest") {
+                const drop = async() => {
+                    try {
+                        await addReactionToComment(event.target.name, id, username, comment);
+                        const commentData = await getCommentData(commentId, id);
+                        setComment(commentData);
+                        setallreactions(commentData.reacts.reverse());
+                        setreactions(commentData.reacts.reverse());
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                }
+                drop();
+            }
+            else {
+                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            }
+        }
+
         return (<div>
                 <Navbar name={username} page = "comment"/>
                 <Heading />
@@ -168,13 +200,34 @@ const CompleteComment = () => {
                         <div>
                             <span className="move-right"> 
                                 <span className="one">
-                                    <img src={liked} className="one"/> {comment.likes}
+                                    <img 
+                                        src={liked} 
+                                        name="likes"
+                                        onClick={reactToComment}
+                                        className="expand one" 
+                                        style={check("likes") ? {backgroundColor: "white", padding: "5px 5px", borderRadius: "5px", border: "2px solid brown"} : null}                                        
+                                    /> 
+                                    {comment.likes}
                                 </span>
                                 <span className="one">
-                                    <img src={loved} className="one"/> {comment.loves}
+                                    <img 
+                                        src={loved} 
+                                        name="loves"
+                                        onClick={reactToComment}
+                                        className="expand one" 
+                                        style={check("loves") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
+                                    />
+                                    {comment.loves}
                                 </span>
                                 <span className="one">
-                                    <img src={laughed} className="one"/> {comment.laughs}
+                                    <img 
+                                        src={laughed}
+                                        name="laughs" 
+                                        onClick={reactToComment}
+                                        className="expand one" 
+                                        style={check("laughs") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}                                        
+                                    />
+                                    {comment.laughs}
                                 </span>
                             </span> 
                         </div>
