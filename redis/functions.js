@@ -7,7 +7,9 @@ const redisClient = redis.createClient(process.env.REDIS_URL, {
     auth_pass: process.env.REDIS_PASSWORD
 });
 
-// PRINTING ALL KEY-VALUE PAIRS PRESENT IN REDIS
+/**
+ * Print all key value pairs in redis
+ */
 const printRedisValues = () => {
     redisClient.keys("*", (err, keys) => {
         if(err) {
@@ -29,7 +31,9 @@ const printRedisValues = () => {
     
 };
 
-// DELETE ALL REDIS VALUES
+/**
+ * The function to delete all values from redis
+ */
 const deleteAllRedisValues = () => {
     redisClient.flushall((err, res) => {
         if(err) {
@@ -41,7 +45,10 @@ const deleteAllRedisValues = () => {
     })
 }
 
-// DELETE PARTICULAR KEY-VALUE PAIR IN REDIS
+/**
+ * The function to delete key value pair from redis by sessionId
+ * @param {String} sessionId 
+ */
 const deleteBySessionId = (sessionId) => {
     redisClient.del(sessionId, (err, response) => {
         if(err) {

@@ -1,6 +1,11 @@
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+/**
+ * The function to send the email verification email
+ * @param {String} token 
+ * @param {String} email 
+ */
 const sendEmailVerificationMail = (token, email) => {
     const link = `https://socialites-karthikey.herokuapp.com/verified/${token}`;
     const msg = {
@@ -20,6 +25,11 @@ const sendEmailVerificationMail = (token, email) => {
     });
 }
 
+/**
+ * The function to send the reset password email
+ * @param {String} token 
+ * @param {String} email 
+ */
 const sendResetPasswordMail = (token, email) => {
     var link = "https://socialites-karthikey.herokuapp.com/reset/" + token;
     const msg = {

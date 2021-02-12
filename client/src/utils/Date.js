@@ -1,3 +1,6 @@
+/**
+ * The function to get the current time
+ */
 const time = () => {
     var d = new Date();
     var date = d.getDate().toString();
