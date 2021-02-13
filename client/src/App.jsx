@@ -1,5 +1,5 @@
 import React from "react";
-import  {BrowserRouter as Router, Route } from "react-router-dom";
+import  {BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./components/Pages/Home";
 import About from "./components/Pages/About";
 import Posts from "./components/Pages/Posts";
@@ -21,6 +21,7 @@ import MyCategoryPosts from "./components/Pages/MyCategoryPosts";
 import Users from "./components/Pages/Users";
 import Room from "./components/Pages/Room";
 import Profile from "./components/Pages/Profile";
+import PageNotFound from "./components/Pages/PageNotFound";
 
 import "./App.css";
 
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <Router>
+      <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/forgot" component={ForgotPassword} />
         <Route exact path="/login" component={Login} />
@@ -49,6 +51,8 @@ function App() {
         <Route exact path="/reset/:token" component={ResetPassword} />
         <Route exact path="/comment/:commentId/:id" component={CompleteComment} />
         <Route exact path="/result/:searchContent/:message/:type" component={SearchResult} />
+        <Route path="*" component={PageNotFound} />
+      </Switch>
   </Router>
   );
 }
