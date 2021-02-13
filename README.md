@@ -62,10 +62,10 @@ About Page
 ![About](https://user-images.githubusercontent.com/66271249/105693982-6b635500-5f26-11eb-8253-78b3a6f070be.PNG)
 
 Reactions Page
-![Reactions](https://user-images.githubusercontent.com/66271249/105693998-6f8f7280-5f26-11eb-8c92-0a0ea35e68a0.PNG)
+![complete](https://user-images.githubusercontent.com/66271249/107852061-6d894700-6e34-11eb-8b7d-3e4ce3b00161.PNG)
 
 All Users Page
-![chats](https://user-images.githubusercontent.com/66271249/105694848-69e65c80-5f27-11eb-8699-3f12473c05a2.PNG)
+![chats](https://user-images.githubusercontent.com/66271249/107852044-46cb1080-6e34-11eb-85f8-be178d76455e.PNG)
 
 Chat Room Pages
 ![room](https://user-images.githubusercontent.com/66271249/105694835-6521a880-5f27-11eb-9621-aa762b4fefec.PNG)
