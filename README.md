@@ -12,7 +12,9 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 7. Users can customize their profile page as they want by adding a profile picture and writing a suitable Bio.
 8. Users can also chat with other users in real time, either personally or by creating a room and sharing that roomID.
 9. Search option, sound effects and many filters have been added to provide good user experience.
-10. For a quick look, Users can also take a tour of the website by logging in as a guest. They can also check the "remember me" option to login once for 7 days.
+10. For a quick look, Users can also take a tour of the website by logging in as a guest.
+11. Users can also check the "remember me" option to login once for 7 days.
+12. Users can also see which other users are online in a group or a personal chat.
 
 
 ## Technical Features:
@@ -68,8 +70,13 @@ All Users Page
 Chat Room Pages
 ![room](https://user-images.githubusercontent.com/66271249/105694835-6521a880-5f27-11eb-9621-aa762b4fefec.PNG)
 ![room1](https://user-images.githubusercontent.com/66271249/105694840-66eb6c00-5f27-11eb-88c3-86100a487c9d.PNG)
+![Capture](https://user-images.githubusercontent.com/66271249/107851975-b68ccb80-6e33-11eb-8cac-64694e426aad.PNG)
+![Capture1](https://user-images.githubusercontent.com/66271249/107851977-b7bdf880-6e33-11eb-9061-6c7e9cd9a4cb.PNG)
+![Capture2](https://user-images.githubusercontent.com/66271249/107851978-b8568f00-6e33-11eb-9e15-2669d4bad718.PNG)
+
 
 User Profile Pages
 ![Profile1](https://user-images.githubusercontent.com/66271249/105694988-8bdfdf00-5f27-11eb-925d-4219ffabbbb3.PNG)
 ![Profile](https://user-images.githubusercontent.com/66271249/105694996-8da9a280-5f27-11eb-862c-59b569ca5cdb.PNG)
+
 
