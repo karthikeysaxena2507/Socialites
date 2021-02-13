@@ -73,6 +73,7 @@ const Reactions = () => {
             setMessage("Showing All Users Who Liked");
         }
     }
+
     const changeLove = () => {
         sound.play();
         if(!love) {
@@ -88,6 +89,7 @@ const Reactions = () => {
             setMessage("Showing All Users Who Loved");
         }
     }
+
     const changeLaugh = () => {
         sound.play();
         if(!laugh) {
@@ -103,6 +105,7 @@ const Reactions = () => {
             setMessage("Showing All Users Who Laughed");
         }
     }
+    
     const changeAll = () => {
         sound.play();
         setlike(false);    
@@ -116,6 +119,7 @@ const Reactions = () => {
     const renderUsers = (props, index) => {
 
         if(props.name !== undefined) {
+
             const createRoom = () => {
                 sound.play();
                 if(username === "Guest") {
@@ -125,7 +129,7 @@ const Reactions = () => {
                     const drop = async() => {
                         try {
                             var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                            await createChat(room);
+                            await createChat(room, username, props.name);
                             window.location = `/room/${room}`;
                         }
                         catch(error) {
@@ -158,8 +162,8 @@ const Reactions = () => {
                 else {
                     const drop = async() => {
                         try {
-                            var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                            await createChat(room);
+                            var room = (username < props.item.name) ? (username + "-" + props.item.name) : (props.item.name + "-" + username);
+                            await createChat(room, username, props.item.name);
                             window.location = `/room/${room}`;
                         }
                         catch(error) {

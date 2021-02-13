@@ -53,7 +53,6 @@ const Room = () => {
                     setMessages((prev) => {return [...prev, data]});
                 });
                 socket.current.on("users", (data) => {
-                    console.log(data.chat);
                     setOnlineUsers(data.chat);
                 });
                 return () => {

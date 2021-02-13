@@ -122,7 +122,7 @@ const CompletePost = () => {
                 const drop = async() => {
                     try {
                         var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                        await createChat(room);
+                        await createChat(room, username, props.name);
                         window.location = `/room/${room}`;
                     }
                     catch(error) {

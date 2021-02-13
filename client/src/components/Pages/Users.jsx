@@ -18,11 +18,14 @@ const Users = () => {
     var [username, setUsername] = useState("");
     var [allUsers, setAllUsers] = useState([]);
     var [users, setUsers] = useState([]);
-    var [searchContent,setsearchContent] = useState("");
+    var [searchUsers,setSearchUsers] = useState("");
+    var [searchRooms, setSearchRooms] = useState("");
     var [message, setMessage] = useState("");
     var [roomId, setRoomId] = useState("");
     var [rooms, setRooms] = useState([]);
+    var [allRooms, setAllRooms] = useState([]);
     var [roomMessage, setRoomMessage] = useState("");
+    var [tempMessage, setTempMessage] = useState("");
     var [state, setState] = useState("");
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
@@ -35,6 +38,7 @@ const Users = () => {
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                     const roomsData = await getRoomsByUser(user.username);
                     setRooms(roomsData);
+                    setAllRooms(roomsData);
                 }
                 else {
                     setUsername("Guest");
@@ -106,22 +110,41 @@ const Users = () => {
         }
     }
 
-    const searchIt = (event) => {
-        event.preventDefault();
+    const searchAmongUsers = (e) => {
+        e.preventDefault();
         sound.play();
-        if(searchContent === "") {
+        if(searchUsers === "") {
             setMessage("Showing All Users");
             setUsers(allUsers);
         }
         else {
-            setMessage(`Showing Search results for: ${searchContent}` )
+            setMessage(`Showing Search results for: ${searchUsers}` )
             const fuse = new Fuse(allUsers, {
                 keys: ["username"],
                 includeScore: true,
                 includeMatches: true
             });
-            const result = fuse.search(searchContent);
+            const result = fuse.search(searchUsers);
             setUsers(result);
+        }
+    }
+
+    const searchAmongRooms = (e) => {
+        e.preventDefault();
+        sound.play();
+        if(searchRooms === "") {
+            setTempMessage("Showing All Rooms");
+            setRooms(allRooms);
+        }
+        else {
+            setTempMessage(`Showing Search results for: ${searchRooms}` )
+            const fuse = new Fuse(rooms, {
+                keys: ["roomName"],
+                includeScore: true,
+                includeMatches: true
+            });
+            const result = fuse.search(searchRooms);
+            setRooms(result);
         }
     }
 
@@ -176,30 +199,59 @@ const Users = () => {
 
     const printRooms = (props, index) => {
 
-        const join = async() => {
-            const drop = async() => {
-                try {
-                    const roomData = await joinChatRoom(props.roomId, username);
-                    if(roomData === "invalid") {
-                        setRoomMessage("invalid Room Id");
-                    }
-                    else {
-                        window.location = `/room/${props.roomId}`;
-                    }
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            }
-            drop();
-        }
+        if(props.roomName !== undefined) {
 
-        return (<div className="container user" key={index}>
+            const join = async() => {
+                const drop = async() => {
+                    try {
+                        const roomData = await joinChatRoom(props.roomId, username);
+                        if(roomData === "invalid") {
+                            setRoomMessage("invalid Room Id");
+                        }
+                        else {
+                            window.location = `/room/${props.roomId}`;
+                        }
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                }
+                drop();
+            }
+
+            return (<div className="container user" key={index}>
+                <li className="profile">
+                    <span> {props.roomName} </span>
+                    <button onClick={join} className="move-right btn-dark expand"> Join </button>
+                </li>
+            </div>);
+        }   
+        else {
+            const join = async() => {
+                const drop = async() => {
+                    try {
+                        const roomData = await joinChatRoom(props.item.roomId, username);
+                        if(roomData === "invalid") {
+                            setRoomMessage("invalid Room Id");
+                        }
+                        else {
+                            window.location = `/room/${props.item.roomId}`;
+                        }
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
+                }
+                drop();
+            }
+
+            return (<div className="container user" key={index}>
             <li className="profile">
-                <span> {props.roomName} </span>
+                <span> {props.item.roomName} </span>
                 <button onClick={join} className="move-right btn-dark expand"> Join </button>
             </li>
         </div>);
+        }
     }
 
     if(loading) {
@@ -216,24 +268,53 @@ const Users = () => {
                     <button className="btn expand" onClick={() => {setState("Join"); setRoomId(""); sound.play()}}> Join a room </button>
                 </div>
                 <div style={(state !== "Join") ? {display: "none"} : null}>
-                    <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Id" autoComplete="off"/>
+                    <input 
+                        type="text" 
+                        value={roomId} 
+                        onChange={(e) => (setRoomId(e.target.value))} 
+                        className="width" 
+                        placeholder="Enter Room Id" 
+                        autoComplete="off"
+                    />
                     <button className="btn expand" onClick={joinRoom}> {state} </button>
                 </div>
                 <div style={(state !== "Create") ? {display: "none"} : null}>
-                    <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Name" autoComplete="off"/>
+                    <input 
+                        type="text" 
+                        value={roomId} 
+                        onChange={(e) => (setRoomId(e.target.value))} 
+                        className="width" 
+                        placeholder="Enter Room Name" 
+                        autoComplete="off"
+                    />
                     <button className="btn expand" onClick={createRoom}> {state} </button>
                 </div>
                 <div>
                     <p className="mt-1"> {roomMessage} </p>
+                    <input 
+                        type="text" 
+                        value={searchUsers} 
+                        onKeyPress={(e) => e.key === "Enter" ? searchAmongUsers(e) : null} onChange={(e) => {setSearchUsers(e.target.value)}} 
+                        className="width" 
+                        placeholder="Search Users" 
+                        autoComplete="off"
+                    />
+                    <button className="btn expand" onClick={searchAmongUsers}> <img src={search} /> </button>
                     <p className="mt-1"> {message} </p>
-                    <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width" placeholder="Search Users" autoComplete="off"/>
-                    <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
                     <div className="mt-4">
                         {users.map(createUser)}
                     </div>
                     <h3 className="mt-5"> My Chat Rooms </h3>
-                    <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width mt-4" placeholder="Search Chat Rooms" autoComplete="off"/>
-                    <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                    <input 
+                        type="text" 
+                        value={searchRooms} 
+                        onKeyPress={(e) => e.key === "Enter" ? searchAmongRooms(e) : null} onChange={(e) => {setSearchRooms(e.target.value)}} 
+                        className="width mt-4" 
+                        placeholder="Search Chat Rooms" 
+                        autoComplete="off"
+                    />
+                    <button className="btn expand" onClick={searchAmongRooms}> <img src={search} /> </button>
+                    <p className="mt-1"> {tempMessage} </p>
                 </div>
                 <div className="mt-3"> 
                     {rooms.map(printRooms)} 

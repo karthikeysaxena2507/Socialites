@@ -164,7 +164,7 @@ const Profile = () => {
             const drop = async() => {
                 try {
                     var room = (username < user) ? (username + "-" + user) : (user + "-" + username);
-                    await createChat(room);
+                    await createChat(room, username, user);
                     window.location = `/room/${room}`;
                 }
                 catch(error) {
