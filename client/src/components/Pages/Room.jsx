@@ -15,25 +15,35 @@ import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
 const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
-// const ENDPOINT = "http://localhost:5000/"
+// const ENDPOINT = "http://localhost:5000/";
 
 const Room = () => {
 
     var socket = useRef(null);
     var { roomId } = useParams();
+    var [roomName, setRoomName] = useState("");
+    var [creator, setCreator] = useState("");
+    var [isGroup, setIsGroup] = useState(false);
     var [username, setUsername] = useState("");
     var [message, setMessage] = useState("");
     var [messages,setMessages] = useState([]);
     var [loading, setLoading] = useState(true);
-    var [users, setUsers] = useState([]);
+    var [onlineUsers, setOnlineUsers] = useState([]);
+    var [allUsers, setAllUsers] = useState([]);
     var [state, setState] = useState("Show");
 
-    useEffect(() => {
-        const fetch = async() => {
+    useEffect(() => 
+    {
+        const fetch = async() => 
+        {
             try {
                 const user = await checkUser();
                 (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
                 const room = await getRoomById(roomId);
+                setAllUsers(room.users);
+                setRoomName(room.roomName);
+                setCreator(room.creator);
+                setIsGroup(room.isGroup);
                 setLoading(false);
                 setMessages(room.messages);
                 socket.current = io(ENDPOINT);
@@ -43,8 +53,9 @@ const Room = () => {
                     setMessages((prev) => {return [...prev, data]});
                 });
                 socket.current.on("users", (data) => {
-                    setUsers(data.chat);
-                })
+                    console.log(data.chat);
+                    setOnlineUsers(data.chat);
+                });
                 return () => {
                     socket.current.emit("disconnect");
                     socket.current.off();
@@ -57,20 +68,25 @@ const Room = () => {
         fetch();
     },[roomId]);
     
-    const sendMessage = (e) => {
+    const sendMessage = (e) => 
+    {
         e.preventDefault();
-        if(username === null || username === "Guest") {
+        if(username === null || username === "Guest") 
+        {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
-        else {
-            if(message) {
+        else 
+        {
+            if(message) 
+            {
                 socket.current.emit("sendmessage", {message, name: username, room: roomId, time: time()}, () => {});
                 setMessage("");
             }
         }
     }
 
-    const createMessage = (props, index) => {
+    const createMessage = (props, index) => 
+    {
         if(props.name === username) {
             return (
             <div key={index}>
@@ -103,42 +119,97 @@ const Room = () => {
         }
     }
 
-    const changeState = () => {
+    const changeState = () => 
+    {
         buttonSound.play();
         if(state === "Show") setState("Hide");
         else setState("Show");
     }
 
-    const renderUsers = (props, index) => {
-
-        const SeeProfile = (e) => {
+    const renderUsers = (props, index) => 
+    {
+        const SeeProfile = (e) => 
+        {
             buttonSound.play();
             window.location = (`/profile/${e.target.innerText}`);
         }
 
-        return (<div className="container user" key={index}>
+        const isOnline = () => 
+        {
+            let flag = false;
+            for (let user of onlineUsers) 
+            {
+                if(user.name === props.name) 
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
+        }
+
+        return (
+        <div className="container user" key={index}>
             <li className="profile" onClick={SeeProfile}> 
                 {props.name}
+                <span 
+                    className="move-right" 
+                    style={!isOnline() ? 
+                    {
+                        display: "none"
+                    } : 
+                    {
+                        backgroundColor: "darkgreen", 
+                        color: "white", 
+                        padding: "4px 8px", 
+                        borderRadius: "5px"
+                    }
+                }>
+                    Online
+                </span>
+                <span 
+                    className="move-right" 
+                    style={isOnline() ? 
+                    {
+                        display: "none"
+                    } : 
+                    {
+                        backgroundColor: "red", 
+                        color: "white", 
+                        padding: "4px 8px", 
+                        borderRadius: "5px"
+                    }
+                }>
+                    Offline
+                </span>
             </li>
-        </div>);
+        </div>
+        );
     } 
 
-    if(loading) {
+    if(loading) 
+    {
         return <Loader />
     }
-    else {
+    else 
+    {
         return (
         <div>
             <Navbar name={username} page = "allusers"/>
             <Heading />
             <div className="text-center"> 
-                <h5 className="margin"> Room ID: {roomId} </h5>
-                <button className="btn" onClick={changeState}> {state} Users in Room </button>
+                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room ID: {roomId} </h5>
+                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Name: {roomName} </h5>
+                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Creator: {creator} </h5>
+                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Share the above room id with users whom you want to join <strong> {roomName} </strong> </h5>
+                <h5 className="mt-1" style={isGroup ? {display: "none"} : null}> Chat between {roomId} </h5>
+                <button className="btn" onClick={changeState} style={!isGroup ? {display: "none"} : null}> {state} All Users in {roomName} </button>
+                <button className="btn" onClick={changeState} style={isGroup ? {display: "none"} : null}> {state} Status </button>
             </div>
             <div className="mt-3" style={(state === "Show") ? {display: "none"} : null}>
-                {users.map(renderUsers)}
+                {allUsers.map(renderUsers)}
             </div>
-            <div className="outerContainer">
+            <div className="outerContainer mt-2">
                 <div className="innerContainer">
                 <ScrollToBottom className="messages">
                     {messages.map(createMessage)}
@@ -156,9 +227,13 @@ const Room = () => {
                 </form>
                 </div>
             </div>
+            <div className="text-center">
+                Note: The messages from the admin are system generated
+            </div>
             <div className="space"></div>
             <Footer />
-        </div>);
+        </div>
+        );
     }
 }
 

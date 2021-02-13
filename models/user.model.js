@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     verifyToken: String,
     expiresIn: Date,
     imageUrl: String,
-    about: String
+    about: String,
+    rooms: [{roomId: String, roomName: String, isGroup: Boolean}]
 });
 
 const User = mongoose.model("User", userSchema);

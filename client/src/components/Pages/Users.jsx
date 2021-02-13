@@ -10,7 +10,7 @@ import Loader from "../helper/Loader";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser, getAllUsers } from "../../api/userApis"
-import { createChat, createChatRoom, joinChatRoom } from "../../api/roomApis";
+import { createChat, createChatRoom, joinChatRoom, getRoomsByUser } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Users = () => {
@@ -21,6 +21,7 @@ const Users = () => {
     var [searchContent,setsearchContent] = useState("");
     var [message, setMessage] = useState("");
     var [roomId, setRoomId] = useState("");
+    var [rooms, setRooms] = useState([]);
     var [roomMessage, setRoomMessage] = useState("");
     var [state, setState] = useState("");
     var [loading, setLoading] = useState(true);
@@ -32,13 +33,15 @@ const Users = () => {
                 if(guest !== "true") {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    const roomsData = await getRoomsByUser(user.username);
+                    setRooms(roomsData);
                 }
                 else {
                     setUsername("Guest");
                 }
-                const response = await getAllUsers();
-                setUsers(response);
-                setAllUsers(response);
+                const usersData = await getAllUsers();
+                setUsers(usersData);
+                setAllUsers(usersData);
                 setLoading(false);
             }
             catch(error) {
@@ -65,7 +68,7 @@ const Users = () => {
             else {
                 const drop = async() => {
                     try {
-                        await createChat(room);
+                        await createChat(room, username, props.username);
                         window.location = `/room/${room}`;
                     }
                     catch(error) {
@@ -86,7 +89,7 @@ const Users = () => {
                 return (<div className="container user" key={index}>
                 <li className="profile">
                     <span onClick={SeeProfile}> {props.username} </span>
-                    <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+                    <button onClick={createRoom} style={props.username === username ? {visibility: "hidden"} : null} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
             }
@@ -96,7 +99,7 @@ const Users = () => {
                 return (<div className="container user" key={index}>
                 <li className="profile">
                     <span onClick={SeeProfile}> {props.item.username} </span>
-                    <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+                    <button onClick={createRoom} style={props.item.username === username ? {visibility: "hidden"} : null} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
             }
@@ -124,14 +127,20 @@ const Users = () => {
 
     const createRoom = () => {
         sound.play();
+        console.log(roomId);
         if(username === "Guest") {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
         else {
             const drop = async() => {
                 try {
-                    const roomData = await createChatRoom(username);
-                    window.location = `/room/${roomData.roomId}`;
+                    const roomData = await createChatRoom(username, roomId);
+                    if(roomData === "Room Name Already Exists") {
+                        setRoomMessage(roomData);
+                    }
+                    else {
+                        window.location = `/room/${roomData.roomId}`;
+                    }
                 }
                 catch(error) {
                     console.log(error);
@@ -165,6 +174,34 @@ const Users = () => {
         }
     }
 
+    const printRooms = (props, index) => {
+
+        const join = async() => {
+            const drop = async() => {
+                try {
+                    const roomData = await joinChatRoom(props.roomId, username);
+                    if(roomData === "invalid") {
+                        setRoomMessage("invalid Room Id");
+                    }
+                    else {
+                        window.location = `/room/${props.roomId}`;
+                    }
+                }
+                catch(error) {
+                    console.log(error);
+                }
+            }
+            drop();
+        }
+
+        return (<div className="container user" key={index}>
+            <li className="profile">
+                <span> {props.roomName} </span>
+                <button onClick={join} className="move-right btn-dark expand"> Join </button>
+            </li>
+        </div>);
+    }
+
     if(loading) {
         return <Loader />
     }
@@ -173,22 +210,34 @@ const Users = () => {
             <Navbar name={username} page = "allusers"/>
             <Heading />
             <div className="container margin text-center">
-                <h3 className="margin"> All Users </h3>
-                <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width" placeholder="Search Users" autoComplete="off"/>
-                <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                <h3 className="margin"> Chats </h3>
                 <div>
-                    <button className="btn expand" onClick={createRoom}> Create a room </button>
+                    <button className="btn expand" onClick={() => {setState("Create"); setRoomId(""); sound.play()}}> Create a room </button>
                     <button className="btn expand" onClick={() => {setState("Join"); setRoomId(""); sound.play()}}> Join a room </button>
                 </div>
-                <div style={(state==="") ? {visibility: "hidden"} : null}>
+                <div style={(state !== "Join") ? {display: "none"} : null}>
                     <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Id" autoComplete="off"/>
                     <button className="btn expand" onClick={joinRoom}> {state} </button>
                 </div>
-                <p className="margin"> {roomMessage} </p>
-                <p className="margin"> {message} </p>
-            </div>
-            <div className="margin">
-                {users.map(createUser)}
+                <div style={(state !== "Create") ? {display: "none"} : null}>
+                    <input type="text" value={roomId} onChange={(e) => (setRoomId(e.target.value))} className="width" placeholder="Enter Room Name" autoComplete="off"/>
+                    <button className="btn expand" onClick={createRoom}> {state} </button>
+                </div>
+                <div>
+                    <p className="mt-1"> {roomMessage} </p>
+                    <p className="mt-1"> {message} </p>
+                    <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width" placeholder="Search Users" autoComplete="off"/>
+                    <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                    <div className="mt-4">
+                        {users.map(createUser)}
+                    </div>
+                    <h3 className="mt-5"> My Chat Rooms </h3>
+                    <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => {setsearchContent(e.target.value)}} className="width mt-4" placeholder="Search Chat Rooms" autoComplete="off"/>
+                    <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                </div>
+                <div className="mt-3"> 
+                    {rooms.map(printRooms)} 
+                </div>
             </div>
             <div className="space"></div>
             <Footer />

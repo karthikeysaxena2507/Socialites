@@ -44,18 +44,25 @@ const io = require('socket.io')(server, {
       origin: '*',
     }
 });
+
 io.on("connection", (socket) => {
     socket.on("join", async(data) => {
         try {
             const existingUser = await Chat.findOne({name: data.name, room: data.room});
             if(existingUser === null) {
                 const chat = await new Chat({id: socket.id, name: data.name, room: data.room});
-                chat.save();
+                chat.save()
+                .then(() => {
+                    console.log("saved");
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
             }
             const chat = await Chat.find({room: data.room});
-            socket.join(data.room);
-            io.to(data.room).emit("users", {chat: chat});
-            io.to(data.room).emit("message", {name: "Admin", content: `Hello ${data.name}, Welcome`, time: time()});
+            await socket.join(data.room);
+            await io.to(data.room).emit("users", {chat: chat});
+            await io.to(data.room).emit("message", {name: "Admin", content: `Hello ${data.name}, Welcome`, time: time()});
         }
         catch(error) {
             console.log(error);
@@ -66,10 +73,15 @@ io.on("connection", (socket) => {
         try {
             const room = await Room.findOne({roomId: data.room});
             room.messages.push({name: data.name, content: data.message, time: data.time});
-            room.save();
-            const chat = await Chat.find({room: data.room});
-            io.to(data.room).emit("users", {chat: chat});
-            io.to(data.room).emit("message", {name: data.name, content: data.message, time: data.time});
+            room.save()
+            .then(async() => {
+                const chat = await Chat.find({room: data.room});
+                await io.to(data.room).emit("users", {chat: chat});
+                await io.to(data.room).emit("message", {name: data.name, content: data.message, time: data.time});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
         }
         catch(error) {
             console.log(error);
@@ -78,7 +90,7 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", async() => {
         try {
-            const response = await Chat.deleteOne({id: socket.id});
+            await Chat.deleteOne({id: socket.id});
         }
         catch(error) {
             console.log(error);
