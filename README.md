@@ -13,8 +13,10 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 8. Users can also chat with other users in real time, either personally or by creating a room and sharing that roomID.
 9. Search option, sound effects and many filters have been added to provide good user experience.
 10. For a quick look, Users can also take a tour of the website by logging in as a guest.
-11. Users can also check the "remember me" option to login once for 7 days.
-12. Users can also see which other users are online in a group or a personal chat.
+11. Users can check the "remember me" option to login once for 7 days.
+12. Users can see which other users are online in a group or a personal chat.
+13. Users can see the number of unread messages in their chats and rooms.
+14. Users can see a pie chart based on the different types of reactions and comments on their posts.
 
 
 ## Technical Features:
@@ -47,13 +49,13 @@ Register Page
 ![Register](https://user-images.githubusercontent.com/66271249/105693722-145d8000-5f26-11eb-9e7d-f8dfa3db7edd.PNG)
 
 All Posts Page
-![AllPosts](https://user-images.githubusercontent.com/66271249/105693824-3820c600-5f26-11eb-8987-e1623816550e.PNG)
+![all posts](https://user-images.githubusercontent.com/66271249/107873215-e80aa300-6ed6-11eb-81eb-4187dc34d1ca.PNG)
 
 Complete Post Page
-![Complete Post](https://user-images.githubusercontent.com/66271249/105693832-3bb44d00-5f26-11eb-8c44-c4ec63fcc8ee.PNG)
+![complete post](https://user-images.githubusercontent.com/66271249/107873213-e6d97600-6ed6-11eb-8083-d6729295a67e.PNG)
 
 Complete Comment Page
-![completeComment](https://user-images.githubusercontent.com/66271249/105693843-3e16a700-5f26-11eb-8af4-7c9cd3c8da94.PNG)
+![complete comment](https://user-images.githubusercontent.com/66271249/107873216-e9d46680-6ed6-11eb-9a9c-b32e8392b0b3.PNG)
 
 Create Post Page
 ![Create](https://user-images.githubusercontent.com/66271249/105693979-69999180-5f26-11eb-92bf-017d31270c66.PNG)
@@ -65,7 +67,8 @@ Reactions Page
 ![complete](https://user-images.githubusercontent.com/66271249/107852061-6d894700-6e34-11eb-8b7d-3e4ce3b00161.PNG)
 
 All Users Page
-![chats](https://user-images.githubusercontent.com/66271249/107852044-46cb1080-6e34-11eb-85f8-be178d76455e.PNG)
+![allusers1](https://user-images.githubusercontent.com/66271249/107873408-60be2f00-6ed8-11eb-8c49-43ae17404141.PNG)
+![allusers2](https://user-images.githubusercontent.com/66271249/107873409-61ef5c00-6ed8-11eb-92dd-0d55837e5731.PNG)
 
 Chat Room Pages
 ![room](https://user-images.githubusercontent.com/66271249/105694835-6521a880-5f27-11eb-9621-aa762b4fefec.PNG)
