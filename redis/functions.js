@@ -60,7 +60,10 @@ const deleteBySessionId = (sessionId) => {
     });
 }
 
-// GETTING USER ID FROM SESSION ID FROM REDIS
+/**
+ * GETTING USER ID FROM SESSION ID FROM REDIS
+ * @param {String} sessionId 
+ */
 const getUserId = async(sessionId) => {
     const userId = await redisClient.getAsync(sessionId);
     return userId;

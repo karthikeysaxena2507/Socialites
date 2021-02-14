@@ -1,11 +1,9 @@
-const router = require("express").Router();
 const Room = require("../models/room.model");
 const User = require("../models/user.model");
 const { v4: uuidv4 } = require("uuid");
 const { time } = require("../utils/date");
 
-// ACCESSING A PARTCULAR ROOM
-router.get("/get/:id", async(req, res, next) => {
+const getRoom = async(req, res, next) => {
     try {
         const room = await Room.findOne({roomId: req.params.id});
         res.json(room);
@@ -13,10 +11,9 @@ router.get("/get/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-//ACCESSING ALL CHAT GROUPS CREATED BY A USER
-router.get("/groups/:username", async(req, res, next) => {
+const getRoomsByUser = async(req, res, next) => {
     try {
         const userRooms = await User.findOne({username: req.params.username}).select(['rooms']);
         res.json(userRooms);
@@ -24,10 +21,9 @@ router.get("/groups/:username", async(req, res, next) => {
     catch(err) {
         res.json(next(err));
     }
-});
+}   
 
-//ACCESSING ALL CHATS OF A USER
-router.get("/chats/:username", async(req, res, next) => {
+const getChatsByUser = async(req, res, next) => {
     try {
         const userChats = await User.findOne({username: req.params.username}).select(['chats']);
         res.json(userChats);
@@ -35,10 +31,9 @@ router.get("/chats/:username", async(req, res, next) => {
     catch(err) {
         res.json(next(err));
     }
-})
+}
 
-// CREATING A NEW CHAT
-router.post("/chat", async(req, res, next) => {
+const createChat = async(req, res, next) => {
     try {
         const room = await Room.findOne({roomId: req.body.roomId, isGroup: false});
         if(room === null) {
@@ -96,10 +91,9 @@ router.post("/chat", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// JOINING AN EXISTING ROOM
-router.post("/join", async(req, res, next) => {
+const joinRoom = async(req, res, next) => {
     try {
         const room = await Room.findOne({roomId: req.body.roomId, isGroup: true});
         const user = await User.findOne({username: req.body.username});
@@ -145,10 +139,9 @@ router.post("/join", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// CREATING A NEW ROOM
-router.post("/create", async(req, res, next) => {
+const createRoom = async(req, res, next) => {
     try {
         const roomId = uuidv4().replace(/-/g,'').substring(0,6);
         const existingRoom = await Room.findOne({roomName: req.body.roomName});
@@ -193,6 +186,13 @@ router.post("/create", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-module.exports = router;
+module.exports = {
+                    getRoom,
+                    getChatsByUser,
+                    getRoomsByUser,
+                    createChat,
+                    createRoom,
+                    joinRoom
+                 }

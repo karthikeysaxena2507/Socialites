@@ -28,9 +28,9 @@ mongoose.connect(process.env.ATLAS_URI, {
 .catch((err) => {console.log(err);});
 
 // IMPORTING ALL ROUTES
-const postsRouter = require("./routes/posts.js");
-const usersRouter = require("./routes/users.js");
-const roomsRouter = require("./routes/rooms.js");
+const postsRouter = require("./routes/post.routes");
+const usersRouter = require("./routes/user.routes");
+const roomsRouter = require("./routes/room.routes");
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/rooms", roomsRouter);
@@ -47,6 +47,7 @@ const io = require('socket.io')(server, {
 });
 
 io.on("connection", (socket) => {
+
     socket.on("join", async(data) => {
         try {
             const room = await Room.findOne({roomId: data.room});
@@ -143,7 +144,7 @@ io.on("connection", (socket) => {
         catch(error) {
             console.log(error);
         }
-    })
+    });
 });
 
 // HANDLING THE PRODUCTION BUILD FOR HEROKU

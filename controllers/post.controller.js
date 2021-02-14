@@ -1,11 +1,9 @@
-const router = require("express").Router();
 let Post = require("../models/post.model");
 let React = require("../models/react.model");
 let Comment = require("../models/comment.model");
 const { cloudinary } = require("../utils/cloudinary");
 
-// ACCESSING ALL POSTS
-router.get("/", async(req, res, next) => {
+const getAllPosts = async(req, res, next) => {
     try {
         const posts = await Post.find({});
         res.json(posts);
@@ -13,10 +11,9 @@ router.get("/", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ACCESSING A PARTICULAR COMMENT
-router.get("/getcomment/:commentId/:id", async(req, res, next) => {
+const getComment = async(req, res, next) => {
     try {
         const post = await Post.find({_id: req.params.id});
         var index = post[0].comments.findIndex((comment) => (comment._id == req.params.commentId));
@@ -25,10 +22,9 @@ router.get("/getcomment/:commentId/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ACCESSING A PARTICULAR POST
-router.get("/:id", async(req, res, next) => {
+const getPost = async(req, res, next) => {
     try {
         const post = await Post.find({_id: req.params.id});
         res.json(post);
@@ -36,10 +32,9 @@ router.get("/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ACCESSING POSTS OF A PARTICULAR USER
-router.get("/list/:username", async(req, res, next) => {
+const getPostsByUser = async(req, res, next) => {
     try {
         const posts = await Post.find({author: req.params.username});
         res.json(posts);
@@ -47,10 +42,9 @@ router.get("/list/:username", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ACCESSING A POST BY ID
-router.get("/edit/:id", async(req, res, next) => {
+const getPostById = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
         const edited_post = {
@@ -64,10 +58,9 @@ router.get("/edit/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// REACTING TO A POST
-router.post("/update/:react/:username", async(req, res, next) => {
+const addReactionToPost = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.body._id});
         const newReact = new React({
@@ -106,10 +99,9 @@ router.post("/update/:react/:username", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// EDITING A POST
-router.post("/edit/:id", async(req, res, next) => {
+const editPost = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
         var imageUrl = "";
@@ -136,10 +128,9 @@ router.post("/edit/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ADDING NEW POST
-router.post("/add", async(req, res, next) => {
+const addPost = async(req, res, next) => {
     try {
         var imageUrl = "";
         if(req.body.data !== "") {
@@ -173,10 +164,9 @@ router.post("/add", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ADDING A COMMENT
-router.post("/add/:id", async(req, res, next) => {
+const addComment = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
         const comment = new Comment(req.body);
@@ -193,10 +183,9 @@ router.post("/add/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// REACTING TO A COMMENT
-router.post("/comment/:react/:postId/:username", async(req, res, next) => {
+const addReactionToComment = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.postId});
         var index = post.comments.findIndex((comment) => (comment._id == req.body._id));
@@ -235,10 +224,9 @@ router.post("/comment/:react/:postId/:username", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// DELETE A COMMENT
-router.post("/remove/:id", async(req, res, next) => {
+const deleteComment = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
         var index = post.comments.findIndex((comment) => comment._id == req.body._id);
@@ -257,10 +245,9 @@ router.post("/remove/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// DELETING A POST
-router.delete("/delete/:id", async(req, res, next) => {
+const deletePost = async(req, res, next) => {
     try {
         const response = await Post.deleteOne({_id: req.params.id});
         res.json(response);
@@ -268,6 +255,19 @@ router.delete("/delete/:id", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-module.exports = router;
+module.exports = { 
+                    getAllPosts,
+                    getComment,
+                    getPost,
+                    getPostById,
+                    getPostsByUser,
+                    addComment,
+                    addPost,
+                    addReactionToComment,
+                    addReactionToPost,
+                    editPost,
+                    deleteComment,
+                    deletePost
+                 };

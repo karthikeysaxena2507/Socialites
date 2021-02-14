@@ -1,5 +1,4 @@
 require("dotenv").config();
-const router = require("express").Router();
 const User = require("../models/user.model");
 const Room = require("../models/room.model");
 const brcypt = require("bcryptjs");
@@ -12,8 +11,7 @@ const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/s
 const { deleteBySessionId, getUserId } = require("../redis/functions"); 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// SESSION AUTHENTICATION MIDDLEWARE FOR A USER
-router.get("/auth", async(req, res, next) => {
+const checkAuth = async(req, res, next) => {
     try {
         if(req.cookies.SESSIONID !== undefined) {
             const userId = await getUserId(req.cookies.SESSIONID);
@@ -64,10 +62,9 @@ router.get("/auth", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// REGISTER THE USER
-router.post("/register", async(req, res, next) => {
+const registerUser = async(req, res, next) => {
     try {
         const {username, email, password} = req.body;
         const existingUser = await User.findOne({email});
@@ -130,10 +127,9 @@ router.post("/register", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// LOGIN THE USER
-router.post("/login", async(req, res, next) => {
+const loginUser = async(req, res, next) => {
     try {
         const {email, password, rememberMe} = req.body;
         const user = await User.findOne({email});
@@ -202,10 +198,9 @@ router.post("/login", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// GOOGLE LOGIN
-router.post("/googlelogin", async(req, res, next) => {
+const loginWithGoogle = async(req, res, next) => {
     try {   
         var tokenId = req.body.token;
         const response = await client.verifyIdToken({idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID});
@@ -264,10 +259,9 @@ router.post("/googlelogin", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ACCESSING ALL USERS
-router.get("/get", async(req, res, next) => {
+const getAllUsers = async(req, res, next) => {
     try {  
         const users = await User.find({});
         res.json(users);
@@ -275,10 +269,9 @@ router.get("/get", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// ACCESSING A PARTICULAR USER BY USERNAME
-router.get("/find/:user", async(req, res, next) => {
+const getUserByUsername = async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.params.user});
         res.json(user);
@@ -286,10 +279,9 @@ router.get("/find/:user", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// UPDATING THE PROFILE PIC OF USER
-router.post("/updateimage", async(req, res, next) => {
+const updateProfileImage = async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.body.user});
         var imageUrl = "";
@@ -313,10 +305,9 @@ router.post("/updateimage", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// UPDATING THE USER BIO IN PROFILE PAGE
-router.post("/updatebio", async(req, res, next) => {
+const updateUserBio = async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.body.user});
         user.about = req.body.text;
@@ -331,10 +322,9 @@ router.post("/updatebio", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// RESETING THE PASSWORD
-router.post("/reset", async(req, res, next) => {
+const resetPassword = async(req, res, next) => {
     try {
         const foundUser = await User.findOne({resetToken: req.body.token});
         console.log(Date.now());
@@ -369,10 +359,9 @@ router.post("/reset", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// SENDING RESET PASSWORD MAIL TO USER
-router.post("/forgot", async(req, res, next) => {
+const forgotPassword = async(req, res, next) => {
     try {
         const foundUser = await User.findOne({ email: req.body.email });
         if (foundUser === null) {
@@ -400,10 +389,9 @@ router.post("/forgot", async(req, res, next) => {
     catch (error) {
         res.json(next(error));
     }
-});
+}
 
-// SENDING EMAIL VERIFICATION MAIL TO USER
-router.post("/send", async(req, res, next) => {
+const sendEmail = async(req, res, next) => {
     try {
         const foundUser = await User.findOne({verifyToken: req.body.token});
         if(foundUser && foundUser.expiresIn >= Date.now()) {
@@ -417,10 +405,9 @@ router.post("/send", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// VERIFY THE REGISTERED USER
-router.post("/verify", async(req, res, next) => {
+const verifyUser = async(req, res, next) => {
     try {
         const foundUser = await User.findOne({verifyToken: req.body.token});
         if(foundUser && foundUser.expiresIn >= Date.now()) {
@@ -442,10 +429,9 @@ router.post("/verify", async(req, res, next) => {
     catch(error) {
         res.json(next(error));
     }
-});
+}
 
-// LOGGING OUT THE USER
-router.post("/logout", async(req, res, next) => {
+const logoutUser = async(req, res, next) => {
     try {
         const response = deleteBySessionId(req.cookies.SESSIONID);
         res.clearCookie("SESSIONID");
@@ -454,6 +440,20 @@ router.post("/logout", async(req, res, next) => {
     catch(err) {
         res.json(next(error));
     }
-});
+}
 
-module.exports = router;
+module.exports = {  
+                    checkAuth, 
+                    registerUser, 
+                    loginUser, 
+                    loginWithGoogle, 
+                    getAllUsers, 
+                    getUserByUsername,  
+                    updateProfileImage,
+                    updateUserBio,
+                    resetPassword,
+                    forgotPassword,
+                    sendEmail,
+                    verifyUser,
+                    logoutUser
+                 }
