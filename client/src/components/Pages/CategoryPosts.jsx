@@ -20,13 +20,14 @@ const CategoryPosts = () => {
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
+    var [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
             try{
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -88,7 +89,7 @@ const CategoryPosts = () => {
     else {
         return (
         <div>
-            <Navbar page = "home"/>
+            <Navbar page = "home" unread = {unread}/>
             <Heading />
             <Container className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </Container>
             <CategoryMenu category_type = {type} message = "all" />

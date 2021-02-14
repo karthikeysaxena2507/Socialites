@@ -17,6 +17,7 @@ const Result = () => {
     var [foundPosts,setfoundPosts] = useState([]);
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
+    var [unread, setUnread] = useState(0);
 
     useEffect(() => {
         if(message === "all") {
@@ -24,7 +25,7 @@ const Result = () => {
                 try {
                     if(guest !== "true") {
                         const user = await checkUser();
-                        (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                        (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                     }
                     else {
                         setUsername("Guest");
@@ -140,7 +141,7 @@ const Result = () => {
     }
     else {
         return (<div>
-            <Navbar name={username} page = "result"/>
+            <Navbar name={username} page = "result" unread = {unread}/>
             <Heading />
             <div className="text-center"> <h2 className="margin"> Search Results </h2> </div>
             {foundPosts.reverse().map(createPost)}

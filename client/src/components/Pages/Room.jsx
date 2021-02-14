@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import ScrollToBottom from "react-scroll-to-bottom";
@@ -14,8 +13,8 @@ import { getRoomById } from "../../api/roomApis";
 import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
-const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
-// const ENDPOINT = "http://localhost:5000/";
+// const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
+const ENDPOINT = "http://localhost:5000/";
 
 const Room = () => {
 
@@ -194,7 +193,6 @@ const Room = () => {
     {
         return (
         <div>
-            <Navbar name={username} page = "allusers"/>
             <Heading />
             <div className="text-center"> 
                 <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room ID: {roomId} </h5>

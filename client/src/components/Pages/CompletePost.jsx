@@ -26,13 +26,14 @@ const CompletePost = () => {
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
     var [post,setPost] = useState({});
+    var [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -154,7 +155,7 @@ const CompletePost = () => {
         <div className="comment-name">
             <div> 
                 <span className="name author" onClick={SeeProfile}> {props.name} </span>
-                <button onClick={createRoom} className="move-right btn-dark expand"> Message {props.name} </button>
+                <button onClick={createRoom} style={(props.name === username) ? {display: "none"} : null} className="move-right btn-dark expand"> Message {props.name} </button>
             </div>
             <div>
                 <span className="move-right"> 
@@ -206,7 +207,7 @@ const CompletePost = () => {
     }
     else {
         return (<div className="container">
-        <Navbar name={username} page = "complete" />
+        <Navbar name={username} page = "complete" unread = {unread}/>
         <Heading />
         <div>
             <Post 

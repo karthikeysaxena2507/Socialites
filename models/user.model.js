@@ -11,7 +11,19 @@ const userSchema = new mongoose.Schema({
     expiresIn: Date,
     imageUrl: String,
     about: String,
-    rooms: [{roomId: String, roomName: String, isGroup: Boolean}]
+    totalUnread: Number,
+    chats: [{
+        roomId: String,
+        name: String,
+        unreadCount: Number,
+        lastCount: Number
+    }],
+    rooms: [{
+        roomId: String, 
+        roomName: String,
+        unreadCount: Number,
+        lastCount: Number
+    }]
 });
 
 const User = mongoose.model("User", userSchema);

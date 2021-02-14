@@ -33,13 +33,14 @@ const Reactions = () => {
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
     var [post,setPost] = useState({});
+    var [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -148,10 +149,11 @@ const Reactions = () => {
             return (<div className="container user" key={index}>
             <li className="profile"> 
                 <span onClick={SeeProfile}> {props.name} </span>
-                <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+                <button onClick={createRoom} style={props.name === username ? {display: "none"} : null} className="move-right btn-dark expand"> Chat </button>
             </li>
         </div>);
         }
+
         else {
 
             const createRoom = () => {
@@ -182,7 +184,7 @@ const Reactions = () => {
             return (<div className="container user" key={index}>
             <li className="profile"> 
                 <span onClick={SeeProfile}> {props.item.name} </span>
-                <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+                <button onClick={createRoom} style={props.item.name === username ? {display: "none"} : null} className="move-right btn-dark expand"> Chat </button>
             </li>
         </div>);
         }
@@ -237,7 +239,7 @@ const Reactions = () => {
     }
     else {
         return(<div>
-            <Navbar name={username} page="reactions"/>
+            <Navbar name={username} page="reactions" unread = {unread}/>
             <Heading />
             <div className="container">
                 <Post 

@@ -40,13 +40,14 @@ const Profile = () => {
     var [show, setShow] = useState(false);
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
+    var [unread, setUnread] = useState(0);
     
     useEffect(() => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
                     const response = await checkUser();
-                    (response === "INVALID") ? window.location = "/login" : setUsername(response.username);
+                    (response === "INVALID") ? window.location = "/login" : setUsername(response.username); setUnread(response.totalUnread);;
                 }
                 else {
                     setUsername("Guest");
@@ -281,7 +282,7 @@ const Profile = () => {
     else {
         return (
             <div>
-            <Navbar name={username} page = "profile"/>
+            <Navbar name={username} page = "profile" unread = {unread}/>
             <Heading />
             {loading}
             <div className="text-center"> <h3 className="margin"> {user}'s Profile </h3> </div>

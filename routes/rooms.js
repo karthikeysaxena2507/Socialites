@@ -15,12 +15,22 @@ router.get("/get/:id", async(req, res, next) => {
     }
 });
 
-//ACCESSING ALL ROOMS CREATED BY A USER
-router.get("/all/:username", async(req, res, next) => {
+//ACCESSING ALL CHAT GROUPS CREATED BY A USER
+router.get("/groups/:username", async(req, res, next) => {
     try {
-        const user = await User.findOne({username: req.params.username}).select(['rooms']);
-        const rooms = await user.rooms.filter((room) => {return (room.isGroup === true)});
-        res.json(rooms);
+        const userRooms = await User.findOne({username: req.params.username}).select(['rooms']);
+        res.json(userRooms);
+    }
+    catch(err) {
+        res.json(next(err));
+    }
+});
+
+//ACCESSING ALL CHATS OF A USER
+router.get("/chats/:username", async(req, res, next) => {
+    try {
+        const userChats = await User.findOne({username: req.params.username}).select(['chats']);
+        res.json(userChats);
     }
     catch(err) {
         res.json(next(err));
@@ -40,12 +50,23 @@ router.post("/chat", async(req, res, next) => {
                 messages: []
             });
             const user1 = await User.findOne({username: req.body.user1});
-            const userRoom = {roomId: req.body.roomId, roomName: req.body.roomName, isGroup: false};
-            user1.rooms.push(userRoom);
+            const userRoom1 = {
+                roomId: req.body.roomId, 
+                name: req.body.user2, 
+                lastCount: 1,
+                unreadCount: 0
+            };
+            user1.chats.push(userRoom1);
             user1.save()
             .then(async() => {
                 const user2 = await User.findOne({username: req.body.user2});
-                user2.rooms.push(userRoom);
+                const userRoom2 = {
+                    roomId: req.body.roomId, 
+                    name: req.body.user1, 
+                    lastCount: 1,
+                    unreadCount: 0
+                };
+                user2.chats.push(userRoom2);
                 user2.save()
                 .then(() => {
                     const message = {name: "Admin", content: `Hello Users`, time: time()};
@@ -86,7 +107,12 @@ router.post("/join", async(req, res, next) => {
             res.json("invalid");
         }
         else {
-            const userRoom = {roomId: room.roomId, roomName: room.roomName, isGroup: true};
+            const userRoom = {
+                roomId: room.roomId, 
+                roomName: room.roomName, 
+                unreadCount: 0,
+                lastCount: 1
+            };
             let flag = false;
             for (let item of user.rooms) {
                 if(item.roomId === room.roomId) {
@@ -105,8 +131,7 @@ router.post("/join", async(req, res, next) => {
                     })
                     .catch((err) => {
                         res.json(err);
-                    })
-                    res.json(room);
+                    });
                 })
                 .catch((err) => {
                     res.json(err);
@@ -136,9 +161,15 @@ router.post("/create", async(req, res, next) => {
                 roomName: req.body.roomName,
                 isGroup: true,
                 creator: req.body.username,
+                users: [],
                 messages: []
             });
-            const userRoom = {roomId, roomName: req.body.roomName, isGroup: true};
+            const userRoom = {
+                roomId: room.roomId, 
+                roomName: room.roomName, 
+                unreadCount: 0,
+                lastCount: 1
+            };
             const user = await User.findOne({username: req.body.username});
             user.rooms.push(userRoom);
             user.save()

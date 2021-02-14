@@ -479,3 +479,12 @@ textarea {
     margin-bottom: 20px;
   }
   
+  .dot {
+    height: 5px;
+    width: 5px;
+    background-color: #fff;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    border-radius: 50%;
+    display: inline-block;
+  }

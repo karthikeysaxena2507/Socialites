@@ -38,6 +38,7 @@ app.use("/rooms", roomsRouter);
 // SETTING UP SOCKET.IO FOR REAL TIME CHAT FEATURE
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
+const User = require("./models/user.model");
 
 const io = require('socket.io')(server, {
     cors: {
@@ -48,16 +49,37 @@ const io = require('socket.io')(server, {
 io.on("connection", (socket) => {
     socket.on("join", async(data) => {
         try {
+            const room = await Room.findOne({roomId: data.room});
             const existingUser = await Chat.findOne({name: data.name, room: data.room});
             if(existingUser === null) {
-                const chat = await new Chat({id: socket.id, name: data.name, room: data.room});
-                chat.save()
-                .then(() => {
-                    console.log("saved");
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+                const chat = new Chat({id: socket.id, name: data.name, room: data.room});
+                await chat.save();
+            }
+            const onlineUsers = await Chat.find({room: data.room});
+            for (let tempUser of onlineUsers) {
+                const user = await User.findOne({username: tempUser.name});
+                if(room.isGroup) {
+                    let temp = null;
+                    for (let item of user.rooms) {
+                        if(item.roomId === data.room) {
+                            temp = item;
+                            break;
+                        }
+                    }
+                    if(temp !== null) temp.lastCount = room.messages.length;
+                    await user.save();
+                }
+                else {
+                    let temp = null;
+                    for (let item of user.chats) {
+                        if(item.roomId === data.room) {
+                            temp = item;
+                            break;
+                        }
+                    }
+                    if(temp !== null) temp.lastCount = room.messages.length;
+                    await user.save();
+                }
             }
             const chat = await Chat.find({room: data.room});
             await socket.join(data.room);
@@ -72,7 +94,33 @@ io.on("connection", (socket) => {
     socket.on("sendmessage", async(data) => {
         try {
             const room = await Room.findOne({roomId: data.room});
+            const onlineUsers = await Chat.find({room: data.room});
             room.messages.push({name: data.name, content: data.message, time: data.time});
+            for (let tempUser of onlineUsers) {
+                const user = await User.findOne({username: tempUser.name});
+                if(room.isGroup) {
+                    let temp = null;
+                    for (let item of user.rooms) {
+                        if(item.roomId === data.room) {
+                            temp = item;
+                            break;
+                        }
+                    }
+                    if(temp !== null) temp.lastCount = room.messages.length;
+                    await user.save();
+                }
+                else {
+                    let temp = null;
+                    for (let item of user.chats) {
+                        if(item.roomId === data.room) {
+                            temp = item;
+                            break;
+                        }
+                    }
+                    if(temp !== null) temp.lastCount = room.messages.length;
+                    await user.save();
+                }
+            }    
             room.save()
             .then(async() => {
                 const chat = await Chat.find({room: data.room});

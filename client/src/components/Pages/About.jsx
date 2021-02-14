@@ -10,6 +10,7 @@ const About = () => {
 
     var [username, setUsername] = useState("");
     var [loading, setLoading] = useState(true);
+    var [unread, setUnread] = useState(0);
     var guest = localStorage.getItem("Guest");
     
     useEffect(()=> {
@@ -17,7 +18,7 @@ const About = () => {
             try {
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -37,7 +38,7 @@ const About = () => {
     else {
         return (
             <div>
-                <Navbar name={username} page = "about" />
+                <Navbar name={username} page = "about" unread = {unread} />
                     <Heading />
                     <Container className="about">
                         <div className="mt-3">

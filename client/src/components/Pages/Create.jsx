@@ -22,13 +22,14 @@ const Create = () => {
     var [category, setCategory] = useState("Select Category");
     var [preview, setPreview] = useState(""); 
     var guest = localStorage.getItem("Guest");
+    var [unread, setUnread] = useState(0);
 
     useEffect(()=> {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -65,10 +66,17 @@ const Create = () => {
     const uploadImage = async (imageSource) => {
         if(username !== "Guest") {
             try {
+                let value;
+                if(category === "Select Category") {
+                    value = "Other";
+                }
+                else {
+                    value = category;
+                }
                 const body = JSON.stringify({
                     data: imageSource,
                     author: username,
-                    title, content, category
+                    title, content, category: value
                 });
                 await addPost(body);
                 window.location = "/allposts";
@@ -86,16 +94,13 @@ const Create = () => {
         sound.play();
         setPreview("");
     }
-
-    var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
-    var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
  
     if(loading) {
         return <Loader />
     }
     else {
         return (<div className="text-center">
-        <Navbar name={username} page = "create"/>
+        <Navbar name={username} page = "create" unread = {unread}/>
         <Heading />
         <div> 
         <h1 className="margin"> Create Your Post Here </h1>
@@ -161,7 +166,7 @@ const Create = () => {
                 />
             </div>
             <div className="margin text-center"> Current Image </div>
-            <div className="margin text-center" style={styling}>
+            <div className="margin text-center" style={(!preview) ? {visibility: "visible"} : {visibility: "hidden"}}>
                 Image preview will be shown here
             </div>
             <div className="text-center">
@@ -169,7 +174,7 @@ const Create = () => {
                 src={preview} 
                 alt="invalid image" 
                 className="preview margin"
-                style={previewStyling} 
+                style={(preview) ? {visibility: "visible"} : {visibility: "hidden"}} 
                 />
             </div>
             <div className="text-center margin">
@@ -179,7 +184,7 @@ const Create = () => {
     <div className="space"></div>
     <Footer />
     </div>);        
-}
+    }
     
 }
 

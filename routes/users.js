@@ -1,6 +1,7 @@
 require("dotenv").config();
 const router = require("express").Router();
-let User = require("../models/user.model.js");
+const User = require("../models/user.model");
+const Room = require("../models/room.model");
 const brcypt = require("bcryptjs");
 const crypto = require("crypto");
 const redisClient = require("../redis/client");
@@ -19,11 +20,30 @@ router.get("/auth", async(req, res, next) => {
             if(userId !== null && userId !== undefined) {
                 const user = await User.findById(userId);
                 if(user) {
-                    res.json({
-                        id: user._id,
-                        username: user.username,
-                        about: user.about,
-                        imageUrl: user.imageUrl
+                    let totalUnread = 0;
+                    for (let tempRoom of user.rooms) {
+                        const room = await Room.findOne({roomId: tempRoom.roomId});
+                        tempRoom.unreadCount = (room.messages.length - tempRoom.lastCount);
+                        totalUnread += tempRoom.unreadCount;
+                    }
+                    for (let tempChat of user.chats) {
+                        const room = await Room.findOne({roomId: tempChat.roomId});
+                        tempChat.unreadCount = (room.messages.length - tempChat.lastCount);
+                        totalUnread += tempChat.unreadCount;
+                    }
+                    user.totalUnread = totalUnread;
+                    user.save()
+                    .then(() => {
+                        res.json({
+                            id: user._id,
+                            username: user.username,
+                            about: user.about,
+                            imageUrl: user.imageUrl,
+                            totalUnread
+                        });
+                    })
+                    .catch((err) => {
+                        res.json(err);
                     });
                 }
                 else {
@@ -73,6 +93,7 @@ router.post("/register", async(req, res, next) => {
                         verified: false,
                         imageUrl: "",
                         verifyToken: token,
+                        totalUnread: 0,
                         expiresIn: Date.now() + 1800000
                     });
                     brcypt.genSalt(10, (err, salt) => {
@@ -196,7 +217,7 @@ router.post("/googlelogin", async(req, res, next) => {
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
                     sameSite: true,
-                    secure: true,
+                    // secure: true,
                     maxAge: 7*24*60*60*1000
                 });
                 const {id, username, email} = user;
@@ -215,6 +236,7 @@ router.post("/googlelogin", async(req, res, next) => {
                     email,
                     about: `Hello, ${given_name} here`,
                     imageUrl: "",
+                    totalUnread: 0,
                     verified: true
                 });
                 newUser.save()

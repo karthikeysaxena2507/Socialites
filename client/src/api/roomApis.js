@@ -14,8 +14,17 @@ const getRoomById = async(id) => {
  * @param {String} username 
  */
 const getRoomsByUser = async(username) => {
-    const rooms = await axios.get(`/rooms/all/${username}`);
+    const rooms = await axios.get(`/rooms/groups/${username}`);
     return rooms.data;
+}
+
+/**
+ * The function to get all the chats of a user
+ * @param {String} username 
+ */
+const getChatsByUser = async(username) => {
+    const chats = await axios.get(`/rooms/chats/${username}`);
+    return chats.data;
 }
 
 /**
@@ -45,4 +54,4 @@ const joinChatRoom = async(roomId, username) => {
     return roomData.data;
 }
 
-export { getRoomById, createChat, createChatRoom, joinChatRoom, getRoomsByUser };
+export { getRoomById, createChat, createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser };

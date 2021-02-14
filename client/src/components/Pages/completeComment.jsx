@@ -29,13 +29,14 @@ const CompleteComment = () => {
     var [allreactions,setallreactions] = useState([]);
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
+    var [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
             try{
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -64,6 +65,7 @@ const CompleteComment = () => {
             }));
         }
     }
+
     const changeLove = () => {
         sound.play();
         if(!love) {
@@ -75,6 +77,7 @@ const CompleteComment = () => {
             }));
         }
     }
+
     const changeLaugh = () => {
         sound.play();
         if(!laugh) {
@@ -86,6 +89,7 @@ const CompleteComment = () => {
             }));
         }
     }
+
     const changeAll = () => {
         sound.play();
         setlike(false);    
@@ -93,6 +97,7 @@ const CompleteComment = () => {
         setlaugh(false);
         setreactions(allreactions);
     }
+
     const remove = () => {
         sound.play();
         if(username !== "Guest") {
@@ -111,6 +116,7 @@ const CompleteComment = () => {
             alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
         }
     }
+
     const renderUsers = (props, index) => {
 
         const createRoom = () => {
@@ -140,10 +146,11 @@ const CompleteComment = () => {
 
         return (<div className="container user" key={index}>
             <li className="profile"> <span onClick={SeeProfile}> {props.name} </span>
-            <button onClick={createRoom} className="move-right btn-dark expand"> Chat </button>
+            <button onClick={createRoom} className="move-right btn-dark expand" style={props.name === username ? {display: "none"} : null}> Chat </button>
             </li>
         </div>);
     }
+    
     const SeeProfile = (e) => {
         sound.play();
         window.location = (`/profile/${e.target.innerText}`);
@@ -189,7 +196,7 @@ const CompleteComment = () => {
         }
 
         return (<div>
-                <Navbar name={username} page = "comment"/>
+                <Navbar name={username} page = "comment" unread = {unread}/>
                 <Heading />
                 <div className="container">
                     <div className="container margin">

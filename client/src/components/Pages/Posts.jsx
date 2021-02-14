@@ -17,13 +17,14 @@ const Posts = () => {
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
     const guest = localStorage.getItem("Guest");
+    var [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async () => {
             try {
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -84,7 +85,7 @@ const Posts = () => {
     }
     else {
         return (<div>
-            <Navbar name={username} page = "home"/>
+            <Navbar name={username} page = "home" unread = {unread}/>
             <Heading />
             <div className="text-center"> <h3 className="margin"> All Posts </h3> </div>
             <CategoryMenu category_type = "Select Category" message = "all" />

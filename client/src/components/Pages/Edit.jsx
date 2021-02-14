@@ -22,13 +22,14 @@ const Edit = () => {
     var [preview, setPreview] = useState(""); 
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
+    var [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
             try {
                 if(guest !== "true") {
                     const user = await checkUser();
-                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else {
                     setUsername("Guest");
@@ -70,10 +71,17 @@ const Edit = () => {
     const uploadImage = async (imageSource) => {
         if(username !== "Guest") {
             try {
+                let value;
+                if(category === "Select Category") {
+                    value = "Other";
+                }
+                else {
+                    value = category;
+                }
                 const body = JSON.stringify({
                     data: imageSource,
                     author: username,
-                    title, content, category
+                    title, content, category: value
                 });
                 await editPost(body, id);
             }
@@ -104,6 +112,7 @@ const Edit = () => {
                 <Navbar 
                     name = {username}
                     page = "edit"
+                    unread = {unread}
                 />
                 <Heading />
                 <div className="text-center"> 
