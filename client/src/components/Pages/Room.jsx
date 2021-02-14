@@ -13,8 +13,8 @@ import { getRoomById } from "../../api/roomApis";
 import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
-// const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
-const ENDPOINT = "http://localhost:5000/";
+const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
+// const ENDPOINT = "http://localhost:5000/";
 
 const Room = () => {
 

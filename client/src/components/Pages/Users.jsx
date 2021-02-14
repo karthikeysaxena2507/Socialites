@@ -314,11 +314,17 @@ const Users = () => {
                 drop();
             }
         }
+
+        const SeeProfile = (e) => {
+            sound.play();
+            window.location = `/profile/${e.target.innerText}`;
+        }
         
         if(props.name !== undefined) {
             return (<div className="container user" key={index}>
                 <li className="profile">
-                    <span> {props.name} ({props.unreadCount}) </span>
+                    <span onClick={SeeProfile}> {props.name} </span>
+                    <span>({props.unreadCount}) </span>
                     <button onClick={join} className="move-right btn-dark expand"> Chat </button>
                 </li>
             </div>);
@@ -327,7 +333,8 @@ const Users = () => {
         else {
             return (<div className="container user" key={index}>
             <li className="profile">
-                <span> {props.item.name} ({props.item.unreadCount}) </span>
+                <span onClick={SeeProfile}> {props.item.name} </span>
+                <span> ({props.item.unreadCount}) </span>
                 <button onClick={join} className="move-right btn-dark expand"> Chat </button>
             </li>
         </div>);
