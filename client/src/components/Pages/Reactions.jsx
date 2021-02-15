@@ -11,11 +11,11 @@ import Post from "../helper/Post";
 import Heading from "../helper/Heading";
 import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
+import User from "../helper/User";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
 import { getPostById, addReactionToPost } from "../../api/postApis";
-import { createChat } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Reactions = () => {
@@ -120,73 +120,20 @@ const Reactions = () => {
     const renderUsers = (props, index) => {
 
         if(props.name !== undefined) {
-
-            const createRoom = () => {
-                sound.play();
-                if(username === "Guest") {
-                    alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
-                }
-                else {
-                    const drop = async() => {
-                        try {
-                            var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                            await createChat(room, username, props.name);
-                            window.location = `/room/${room}`;
-                        }
-                        catch(error) {
-                            console.log(error);
-                        }
-                    }
-                    drop();
-                }
-            }
-
-            const SeeProfile = (e) => {
-                sound.play();
-                window.location = (`/profile/${e.target.innerText}`);
-            }
-
-            return (<div className="container user" key={index}>
-            <li className="profile"> 
-                <span onClick={SeeProfile}> {props.name} </span>
-                <button onClick={createRoom} style={props.name === username ? {display: "none"} : null} className="move-right btn-dark expand"> Chat </button>
-            </li>
-        </div>);
+            return <User
+                    key={index}
+                    user1={username}
+                    user2={props.name}
+                    unreadCount={-1}
+            />                     
         }
-
         else {
-
-            const createRoom = () => {
-                sound.play();
-                if(username === "Guest") {
-                    alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
-                }
-                else {
-                    const drop = async() => {
-                        try {
-                            var room = (username < props.item.name) ? (username + "-" + props.item.name) : (props.item.name + "-" + username);
-                            await createChat(room, username, props.item.name);
-                            window.location = `/room/${room}`;
-                        }
-                        catch(error) {
-                            console.log(error);
-                        }
-                    }
-                    drop();
-                }
-            }
-
-            const SeeProfile = (e) => {
-                sound.play();
-                window.location = (`/profile/${e.target.innerText}`);
-            }
-            
-            return (<div className="container user" key={index}>
-            <li className="profile"> 
-                <span onClick={SeeProfile}> {props.item.name} </span>
-                <button onClick={createRoom} style={props.item.name === username ? {display: "none"} : null} className="move-right btn-dark expand"> Chat </button>
-            </li>
-        </div>);
+            return <User
+                    key={index}
+                    user1={username}
+                    user2={props.item.name}
+                    unreadCount={-1}
+            />                     
         }
     }
 

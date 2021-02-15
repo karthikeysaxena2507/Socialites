@@ -7,10 +7,11 @@ import search from "../../images/search.png";
 import Navbar from "../helper/Navbar";
 import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
+import User from "../helper/User";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser, getAllUsers } from "../../api/userApis"
-import { createChat, createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser } from "../../api/roomApis";
+import { createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Users = () => {
@@ -68,57 +69,23 @@ const Users = () => {
     },[guest]);
 
     const createUser = (props, index) => {
-
-        const createRoom = () => {
-            sound.play();
-            var room;
-            if(props.username !== undefined) {
-                room = (username < props.username) ? (username + "-" + props.username) : (props.username + "-" + username);
-            }
-            else {
-                room = (username < props.item.username) ? (username + "-" + props.item.username) : (props.item.username + "-" + username);
-            }
-            if(username === "Guest") {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
-            }
-            else {
-                const drop = async() => {
-                    try {
-                        await createChat(room, username, props.username);
-                        window.location = `/room/${room}`;
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
-            }
-        }
-
-        const SeeProfile = (e) => {
-            sound.play();
-            window.location = `/profile/${e.target.innerText}`;
-        }
-
         if(props.username !== undefined) {
             if(props.username !== "Guest") {
-                return (<div className="container user" key={index}>
-                <li className="profile">
-                    <span onClick={SeeProfile}> {props.username} </span>
-                    <button onClick={createRoom} style={props.username === username ? {visibility: "hidden"} : null} className="move-right btn-dark expand"> Chat </button>
-                </li>
-            </div>);
+                return <User
+                    key={index}
+                    user1={username}
+                    user2={props.username}
+                    unreadCount={-1}
+                />
             }
         } 
         else {
-            if(props.item.username !== "Guest") {
-                return (<div className="container user" key={index}>
-                <li className="profile">
-                    <span onClick={SeeProfile}> {props.item.username} </span>
-                    <button onClick={createRoom} style={props.item.username === username ? {visibility: "hidden"} : null} className="move-right btn-dark expand"> Chat </button>
-                </li>
-            </div>);
-            }
+            return <User
+                key={index}
+                user1={username}
+                user2={props.item.username}
+                unreadCount={-1}
+            />
         }
     }
 
@@ -150,7 +117,7 @@ const Users = () => {
         }
         else {
             setTempMessage(`Showing Search results for: ${searchRooms}` )
-            const fuse = new Fuse(rooms, {
+            const fuse = new Fuse(allRooms, {
                 keys: ["roomName"],
                 includeScore: true,
                 includeMatches: true
@@ -169,7 +136,7 @@ const Users = () => {
         }
         else {
             setChatMessage(`Showing Search results for: ${searchChats}` )
-            const fuse = new Fuse(chats, {
+            const fuse = new Fuse(allChats, {
                 keys: ["name"],
                 includeScore: true,
                 includeMatches: true
@@ -288,56 +255,21 @@ const Users = () => {
     }
 
     const printChats = (props, index) => {
-
-        const join = () => {
-            sound.play();
-            var room;
-            if(props.name !== undefined) {
-                room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-            }
-            else {
-                room = (username < props.item.name) ? (username + "-" + props.item.name) : (props.item.name + "-" + username);
-            }
-            if(username === "Guest") {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
-            }
-            else {
-                const drop = async() => {
-                    try {
-                        await createChat(room, username, props.name);
-                        window.location = `/room/${room}`;
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
-            }
-        }
-
-        const SeeProfile = (e) => {
-            sound.play();
-            window.location = `/profile/${e.target.innerText}`;
-        }
-        
         if(props.name !== undefined) {
-            return (<div className="container user" key={index}>
-                <li className="profile">
-                    <span onClick={SeeProfile}> {props.name} </span>
-                    <span>({props.unreadCount}) </span>
-                    <button onClick={join} className="move-right btn-dark expand"> Chat </button>
-                </li>
-            </div>);
-        }   
-
+            return <User
+                key={index}
+                user1={username}
+                user2={props.name}
+                unreadCount={props.unreadCount}
+            />
+        }
         else {
-            return (<div className="container user" key={index}>
-            <li className="profile">
-                <span onClick={SeeProfile}> {props.item.name} </span>
-                <span> ({props.item.unreadCount}) </span>
-                <button onClick={join} className="move-right btn-dark expand"> Chat </button>
-            </li>
-        </div>);
+            return <User
+                key={index}
+                user1={username}
+                user2={props.item.name}
+                unreadCount={props.item.unreadCount}
+            />
         }
     }
 

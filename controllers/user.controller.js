@@ -263,7 +263,7 @@ const loginWithGoogle = async(req, res, next) => {
 
 const getAllUsers = async(req, res, next) => {
     try {  
-        const users = await User.find({});
+        const users = await User.find({}).select(['username']);
         res.json(users);
     }
     catch(error) {

@@ -10,11 +10,11 @@ import laughed from "../../images/laugh.png";
 import trash from "../../images/trash.png";
 import Heading from "../helper/Heading";
 import Loader from "../helper/Loader";
+import User from "../helper/User";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
 import { getCommentData, deleteComment, addReactionToComment } from "../../api/postApis";
-import { createChat } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const CompleteComment = () => {
@@ -118,37 +118,12 @@ const CompleteComment = () => {
     }
 
     const renderUsers = (props, index) => {
-
-        const createRoom = () => {
-            sound.play();
-            if(username === "Guest") {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
-            }
-            else {
-                const drop = async() => {
-                    try {
-                        var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                        await createChat(room, username, props.name);
-                        window.location = `/room/${room}`;
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
-            }
-        }
-        
-        const SeeProfile = (e) => {
-            sound.play();
-            window.location = `/profile/${e.target.innerText}`;
-        }
-
-        return (<div className="container user" key={index}>
-            <li className="profile"> <span onClick={SeeProfile}> {props.name} </span>
-            <button onClick={createRoom} className="move-right btn-dark expand" style={props.name === username ? {display: "none"} : null}> Chat </button>
-            </li>
-        </div>);
+        return (<User
+            key={index}
+            user1={username}
+            user2={props.name}
+            unreadCount={-1}
+        />);
     }
     
     const SeeProfile = (e) => {
