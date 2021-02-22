@@ -13,11 +13,14 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const checkAuth = async(req, res, next) => {
     try {
-        if(req.cookies.SESSIONID !== undefined) {
+        if(req.cookies.SESSIONID !== undefined) 
+        {
             const userId = await getUserId(req.cookies.SESSIONID);
-            if(userId !== null && userId !== undefined) {
+            if(userId !== null && userId !== undefined) 
+            {
                 const user = await User.findById(userId);
-                if(user) {
+                if(user) 
+                {
                     let totalUnread = 0;
                     for (let tempRoom of user.rooms) {
                         const room = await Room.findOne({roomId: tempRoom.roomId});
@@ -44,22 +47,26 @@ const checkAuth = async(req, res, next) => {
                         res.json(err);
                     });
                 }
-                else {
+                else 
+                {
                     res.clearCookie("SESSIONID");
                     res.json("INVALID");
                 }     
             }
-            else {
+            else 
+            {
                 res.clearCookie("SESSIONID");
                 res.json("INVALID");
             }
         }
-        else {
+        else 
+        {
             res.clearCookie("SESSIONID");
             res.json("INVALID");
         }
     }
-    catch(error) {
+    catch(error) 
+    {
         res.json(next(error));
     }
 }
@@ -68,17 +75,21 @@ const registerUser = async(req, res, next) => {
     try {
         const {username, email, password} = req.body;
         const existingUser = await User.findOne({email});
-        if(existingUser) {
+        if(existingUser) 
+        {
             res.json("Email already exists");
         }
         else {
             const foundUser = await User.findOne({username});
-            if(foundUser) {
+            if(foundUser) 
+            {
                 res.json("Username already exists");
             }
             else {
-                crypto.randomBytes(32, (err, buffer) => {
-                    if(err) {
+                crypto.randomBytes(32, (err, buffer) => 
+                {
+                    if(err) 
+                    {
                         console.log(err);
                     }
                     const token = buffer.toString("hex");
@@ -93,33 +104,39 @@ const registerUser = async(req, res, next) => {
                         totalUnread: 0,
                         expiresIn: Date.now() + 1800000
                     });
-                    brcypt.genSalt(10, (err, salt) => {
-                        if(!err) {
-                        brcypt.hash(newUser.password, salt, (err, hash) => {
-                            if(err) {
-                                res.json(err);
-                            }
-                            else {
-                                newUser.password = hash;
-                                newUser.save()
-                                .then((user) => {
-                                    console.log(user);
-                                    sendEmailVerificationMail(user.verifyToken, user.email);
-                                    res.json({
-                                        user: {
-                                            id: user.id,
-                                            username: user.username,
-                                            email: user.email,
-                                            token: user.verifyToken
-                                        }
+                    brcypt.genSalt(10, (err, salt) => 
+                    {
+                        if(!err) 
+                        {
+                            brcypt.hash(newUser.password, salt, (err, hash) => 
+                            {
+                                if(err) 
+                                {
+                                    res.json(err);
+                                }
+                                else 
+                                {
+                                    newUser.password = hash;
+                                    newUser.save()
+                                    .then((user) => {
+                                        console.log(user);
+                                        sendEmailVerificationMail(user.verifyToken, user.email);
+                                        res.json({
+                                            user: {
+                                                id: user.id,
+                                                username: user.username,
+                                                email: user.email,
+                                                token: user.verifyToken
+                                            }
+                                        });
+                                    })
+                                    .catch((error) => {
+                                        res.json(error);
                                     });
-                                })
-                                .catch((error) => {
-                                    res.json(error);
-                                });
-                            }
-                        })
-                    }})
+                                }
+                            })
+                        }
+                    })
                 })
             }
         }
@@ -133,17 +150,22 @@ const loginUser = async(req, res, next) => {
     try {
         const {email, password, rememberMe} = req.body;
         const user = await User.findOne({email});
-        if(user) {
+        if(user) 
+        {
             brcypt.compare(password, user.password)
             .then((isMatch) => {
-                if(!isMatch) {
+                if(!isMatch) 
+                {
                     res.json("Password is not Correct");
                 }
-                else {
-                    if(user.verified) {
+                else 
+                {
+                    if(user.verified) 
+                    {
                         const sessionId = uuidv4().replace(/-/g,'');
                         const {id, username, email, verified} = user;
-                        if(rememberMe) {
+                        if(rememberMe) 
+                        {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
                                 sameSite: true,
@@ -152,7 +174,8 @@ const loginUser = async(req, res, next) => {
                             });
                             redisClient.setex(sessionId, 7*24*60*60, id); // 7 DAYS
                         }
-                        else {
+                        else 
+                        {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
                                 sameSite: true,
@@ -162,9 +185,12 @@ const loginUser = async(req, res, next) => {
                         }
                         res.json({user: {id, username, email, verified}});
                     }
-                    else {
-                        crypto.randomBytes(32, (err, buffer) => {
-                            if(err) {
+                    else 
+                    {
+                        crypto.randomBytes(32, (err, buffer) => 
+                        {
+                            if(err) 
+                            {
                                 console.log(err);
                             }
                             const verifyToken = buffer.toString("hex");
@@ -191,11 +217,13 @@ const loginUser = async(req, res, next) => {
                 }
             });
         }
-        else {
+        else 
+        {
             res.json("User does not exist");
         }
     }
-    catch(error) {
+    catch(error) 
+    {
         res.json(next(error));
     }
 }
@@ -205,9 +233,11 @@ const loginWithGoogle = async(req, res, next) => {
         var tokenId = req.body.token;
         const response = await client.verifyIdToken({idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID});
         var {email_verified, given_name, email} = response.payload;
-        if(email_verified) {
+        if(email_verified) 
+        {
             const user = await User.findOne({email});
-            if(user) {
+            if(user) 
+            {
                 const sessionId = uuidv4().replace(/-/g,'');
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
@@ -216,16 +246,20 @@ const loginWithGoogle = async(req, res, next) => {
                     maxAge: 7*24*60*60*1000
                 });
                 const {id, username, email} = user;
-                redisClient.setex(sessionId, 7*24*60*60, id, (err) => {
-                    if(err) {
+                redisClient.setex(sessionId, 7*24*60*60, id, (err) => 
+                {
+                    if(err) 
+                    {
                         res.json(err);
                     }
-                    else {
+                    else 
+                    {
                         res.json({user: {id, username, email}});     
                     }
                 });
             }
-            else {
+            else 
+            {
                 const newUser = new User({
                     username: given_name,
                     email,
@@ -252,11 +286,13 @@ const loginWithGoogle = async(req, res, next) => {
                 });
             }
         }
-        else {
+        else 
+        {
             res.json("INVALID");
         }
     }
-    catch(error) {
+    catch(error) 
+    {
         res.json(next(error));
     }
 }

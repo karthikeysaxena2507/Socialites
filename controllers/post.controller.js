@@ -47,13 +47,8 @@ const getPostsByUser = async(req, res, next) => {
 const getPostById = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
-        const edited_post = {
-            title: post.title,
-            content: post.content,
-            imageUrl: post.imageUrl,
-            category: post.category
-        }
-        res.json(edited_post);
+        const { title, content, imageUrl, category } = post;
+        res.json({ title, content, imageUrl, category });
     }
     catch(error) {
         res.json(next(error));
@@ -61,32 +56,38 @@ const getPostById = async(req, res, next) => {
 }
 
 const addReactionToPost = async(req, res, next) => {
-    try {
+    try 
+    {
         const post = await Post.findOne({_id: req.body._id});
-        const newReact = new React({
+        const newReaction = new React({
             name: req.params.username,
             type: req.params.react
         });
-        let index;
-        for (index = 0 ; index < post.reacts.length ; index++) {
-            if(post.reacts[index].name === newReact.name) {
-                if(newReact.type === post.reacts[index].type) {
-                    post[post.reacts[index].type]--;
+        let id = 0;
+        for (let reaction of post.reacts) 
+        {
+            if(reaction.name === newReaction.name) 
+            {
+                if(newReaction.type === reaction.type) 
+                {
+                    post[reaction.type]--;
                 }
-                else {
-                    post[post.reacts[index].type]--;
-                    post[req.params.react]++;
-                    post.reacts.push(newReact);
+                else 
+                {
+                    post[reaction.type]--;
+                    post[newReaction.type]++;
+                    post.reacts.push(newReaction);
                 }
                 break;
             }
+            id++;
         }
-        if(index === post.reacts.length) {
-            post[newReact.type]++;
-            post.reacts.push(newReact);
+        if(id === post.reacts.length) {
+            post[newReaction.type]++;
+            post.reacts.push(newReaction);
         }
         else {
-            post.reacts.splice(index, 1);
+            post.reacts.splice(id, 1);
         }
         post.save()
         .then((data) => {
@@ -141,12 +142,13 @@ const addPost = async(req, res, next) => {
             });
             imageUrl = uploadedResponse.url;
         }
+        const { author, title, content, category } = req.body;
         const post = new Post({
-            author: req.body.author,
-            title: req.body.title,
-            content: req.body.content,
-            category: req.body.category,
-            imageUrl: imageUrl,
+            author,
+            title,
+            content,
+            category,
+            imageUrl,
             reacts: [],
             comment_count: 0,
             like: 0,
@@ -189,29 +191,37 @@ const addReactionToComment = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.postId});
         var index = post.comments.findIndex((comment) => (comment._id == req.body._id));
-        const newReact = new React({
+        const newReaction = new React({
             name: req.params.username,
             type: req.params.react
         });
-        for (var cur = 0; cur < post.comments[index].reacts.length; cur++) {
-            if(post.comments[index].reacts[cur].name === req.params.username) {
-                if(req.params.react !== post.comments[index].reacts[cur].type) {
-                    post.comments[index][post.comments[index].reacts[cur].type]--;
-                    post.comments[index][req.params.react]++;
-                    post.comments[index].reacts.push(newReact);
+        let id = 0;
+        for (let reaction of post.comments[index].reacts) 
+        {
+            if(reaction.name === newReaction.name)
+            {
+                if(newReaction.type !== reaction.type)
+                {
+                    post.comments[index][reaction.type]--;
+                    post.comments[index][newReaction.type]++;
+                    post.comments[index].reacts.push(newReaction);
                 }
-                else {
-                    post.comments[index][req.params.react]--; 
+                else 
+                {
+                    post.comments[index][newReaction.type]--;
                 }
                 break;
             }
+            id++;
         }
-        if(cur === post.comments[index].reacts.length) {
-            post.comments[index].reacts.push(newReact);
-            post.comments[index][newReact.type]++;
+        if(id === post.comments[index].reacts.length) 
+        {
+            post.comments[index].reacts.push(newReaction);
+            post.comments[index][newReaction.type]++;
         }
-        else {
-            post.comments[index].reacts.splice(cur,1);
+        else 
+        {
+            post.comments[index].reacts.splice(id,1);
         }
         post.save()
         .then((data) => {
@@ -230,7 +240,8 @@ const deleteComment = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.id});
         var index = post.comments.findIndex((comment) => comment._id == req.body._id);
-        if(index !== -1) {
+        if(index !== -1) 
+        {
             post.comments.splice(index, 1);
             post.comment_count--;
         }
