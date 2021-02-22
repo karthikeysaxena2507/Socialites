@@ -321,7 +321,8 @@ const updateProfileImage = async(req, res, next) => {
     try {
         const user = await User.findOne({username: req.body.user});
         var imageUrl = "";
-        if(req.body.data !== "") {
+        if(req.body.data !== "") 
+        {
             var fileStr = req.body.data;
             var uploadedResponse = await cloudinary.uploader.
             upload(fileStr, {
