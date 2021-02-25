@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ import SearchBar from "../helper/SearchBar";
 import { Container } from "react-bootstrap";
 import { checkUser } from "../../api/userApis"
 import { getFilteredPosts, addReactionToPost } from "../../api/postApis";
+import { MessageContext } from "../../utils/Context";
 
 const CategoryPosts = () => {
 
@@ -21,6 +22,7 @@ const CategoryPosts = () => {
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
     var [unread, setUnread] = useState(0);
+    const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
         const fetch = async() => {
@@ -60,7 +62,7 @@ const CategoryPosts = () => {
                 drop();
             }
             else {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+                alert(guestMessage);
             }
         }
 

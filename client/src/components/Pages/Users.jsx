@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect,useState } from "react";
+import React, { useContext, useEffect,useState } from "react";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import search from "../../images/search.png";
@@ -11,32 +11,34 @@ import User from "../helper/User";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser, getAllUsers } from "../../api/userApis"
+import { MessageContext } from "../../utils/Context";
 import { createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Users = () => {
 
-    var [username, setUsername] = useState("");
-    var [users, setUsers] = useState([]);
-    var [allUsers, setAllUsers] = useState([]);
-    var [rooms, setRooms] = useState([]);
-    var [allRooms, setAllRooms] = useState([]);
-    var [chats, setChats] = useState([]);
-    var [allChats, setAllChats] = useState([]);
-    var [chatInfo, setChatInfo] = useState("");
-    var [roomInfo, setRoomInfo] = useState("");
-    var [searchUsers,setSearchUsers] = useState("");
-    var [searchRooms, setSearchRooms] = useState("");
-    var [searchChats, setSearchChats] = useState("");
-    var [message, setMessage] = useState("");
-    var [roomId, setRoomId] = useState("");
-    var [roomMessage, setRoomMessage] = useState("");
-    var [tempMessage, setTempMessage] = useState("");
-    var [chatMessage, setChatMessage] = useState("");
-    var [state, setState] = useState("");
-    var [loading, setLoading] = useState(true);
-    var [unread, setUnread] = useState(0);
-    var guest = localStorage.getItem("Guest");
+    const [username, setUsername] = useState("");
+    const [users, setUsers] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [rooms, setRooms] = useState([]);
+    const [allRooms, setAllRooms] = useState([]);
+    const [chats, setChats] = useState([]);
+    const [allChats, setAllChats] = useState([]);
+    const [chatInfo, setChatInfo] = useState("");
+    const [roomInfo, setRoomInfo] = useState("");
+    const [searchUsers,setSearchUsers] = useState("");
+    const [searchRooms, setSearchRooms] = useState("");
+    const [searchChats, setSearchChats] = useState("");
+    const [message, setMessage] = useState("");
+    const [roomId, setRoomId] = useState("");
+    const [roomMessage, setRoomMessage] = useState("");
+    const [tempMessage, setTempMessage] = useState("");
+    const [chatMessage, setChatMessage] = useState("");
+    const [state, setState] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [unread, setUnread] = useState(0);
+    const guest = localStorage.getItem("Guest");
+    const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
         const fetch = async() => {
@@ -155,12 +157,7 @@ const Users = () => {
             const drop = async() => {
                 try {
                     const roomData = await createChatRoom(username, roomId);
-                    if(roomData === "Room Name Already Exists") {
-                        setRoomMessage(roomData);
-                    }
-                    else {
-                        window.location = `/room/${roomData.roomId}`;
-                    }
+                    (roomData === "Room Name Already Exists") ? setRoomMessage(roomData) : window.location = `/room/${roomData.roomId}`;
                 }
                 catch(error) {
                     console.log(error);
@@ -170,106 +167,62 @@ const Users = () => {
         }
     }
 
-    const joinRoom = () => {
-        sound.play();
-        if(username === "Guest") {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+    const joinRoom = async(roomId, username) => {
+        try {
+            sound.play();
+            const roomData = await joinChatRoom(roomId, username);
+            (roomData === "invalid") ? setRoomMessage("invalid Room Id") : window.location = `/room/${roomId}`;
         }
-        else {
-            const drop = async() => {
-                try {
-                    const roomData = await joinChatRoom(roomId, username);
-                    if(roomData === "invalid") {
-                        setRoomMessage("invalid Room Id");
-                    }
-                    else {
-                        window.location = `/room/${roomId}`;
-                    }
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            }
-            drop();
+        catch(err) {
+            console.log(err);
         }
     }
 
-    const printRooms = (props, index) => {
-
+    const printRooms = (props) => {
         if(props.roomName !== undefined) {
-
-            const join = async() => {
-                sound.play();
-                const drop = async() => {
-                    try {
-                        const roomData = await joinChatRoom(props.roomId, username);
-                        if(roomData === "invalid") {
-                            setRoomMessage("invalid Room Id");
-                        }
-                        else {
-                            window.location = `/room/${props.roomId}`;
-                        }
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
-            }
-
-            return (<div className="container user" key={index}>
+            return (<div className="container user" key={props._id}>
                 <li className="profile">
                     <span> {props.roomName} ({props.unreadCount}) </span>
-                    <button onClick={join} className="move-right btn-dark expand"> Join </button>
+                    <button 
+                        onClick={() => (username === "Guest") ? alert(guestMessage) : joinRoom(props.roomId, username)} 
+                        className="move-right btn-dark expand"> 
+                        Join 
+                    </button>
                 </li>
             </div>);
         }   
         else {
-
-            const join = async() => {
-                sound.play();
-                const drop = async() => {
-                    try {
-                        const roomData = await joinChatRoom(props.item.roomId, username);
-                        if(roomData === "invalid") {
-                            setRoomMessage("invalid Room Id");
-                        }
-                        else {
-                            window.location = `/room/${props.item.roomId}`;
-                        }
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
-            }
-
-            return (<div className="container user" key={index}>
-            <li className="profile">
-                <span> {props.item.roomName} ({props.item.unreadCount}) </span>
-                <button onClick={join} className="move-right btn-dark expand"> Join </button>
-            </li>
+            return (<div className="container user" key={props.item._id}>
+                <li className="profile">
+                    <span> {props.item.roomName} ({props.item.unreadCount}) </span>
+                    <button 
+                        onClick={() => (username === "Guest") ? alert(guestMessage) : joinRoom(props.item.roomId, username)} 
+                        className="move-right btn-dark expand"> 
+                        Join 
+                    </button>
+                </li>
         </div>);
         }
     }
 
-    const printChats = (props, index) => {
+    const printChats = (props) => {
         if(props.name !== undefined) {
-            return <User
-                key={index}
+            return (
+            <User
+                key={props._id}
                 user1={username}
                 user2={props.name}
                 unreadCount={props.unreadCount}
-            />
+            />)
         }
         else {
-            return <User
-                key={index}
+            return (
+            <User
+                key={props.item._id}
                 user1={username}
                 user2={props.item.name}
                 unreadCount={props.item.unreadCount}
-            />
+            />)
         }
     }
 
@@ -296,7 +249,11 @@ const Users = () => {
                             placeholder="Enter Room Id" 
                             autoComplete="off"
                         />
-                        <button className="btn expand" onClick={joinRoom}> {state} </button>
+                        <button 
+                            className="btn expand" 
+                            onClick={() => (username === "Guest") ? alert(guestMessage) : joinRoom(roomId, username)} > 
+                            {state} 
+                        </button>
                     </div>
                     <div style={(state !== "Create") ? {display: "none"} : null}>
                         <input 

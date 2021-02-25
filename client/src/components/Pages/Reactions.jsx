@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../helper/Navbar"; 
 import liked from "../../images/like.png"
@@ -15,6 +15,7 @@ import User from "../helper/User";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
+import { MessageContext } from "../../utils/Context";
 import { getPostById, addReactionToPost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
@@ -34,6 +35,7 @@ const Reactions = () => {
     var guest = localStorage.getItem("Guest");
     var [post,setPost] = useState({});
     var [unread, setUnread] = useState(0);
+    const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
         const fetch = async() => {
@@ -158,7 +160,7 @@ const Reactions = () => {
 
     const changepost = (event, post) => {
         if(username === "Guest") {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
         else {
             const drop = async() => {

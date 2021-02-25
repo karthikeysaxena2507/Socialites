@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../helper/Navbar";
 import Post from "../helper/Post";
@@ -8,6 +8,7 @@ import Heading from "../helper/Heading";
 import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
 import { checkUser } from "../../api/userApis";
+import { MessageContext } from "../../utils/Context";
 import { getAllPosts, getPostsByUser, addReactionToPost } from "../../api/postApis";
 
 const Result = () => {
@@ -18,6 +19,7 @@ const Result = () => {
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
     var [unread, setUnread] = useState(0);
+    const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
         if(message === "all") {
@@ -113,7 +115,7 @@ const Result = () => {
                 drop();
             }
             else {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+                alert(guestMessage);
             }
         }
 

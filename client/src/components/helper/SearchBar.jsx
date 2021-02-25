@@ -11,10 +11,6 @@ const SearchBar = (props) => {
     var history = useHistory();
     var [searchContent,setsearchContent] = useState("");
 
-    const change_search_content = (event) => {
-        setsearchContent(event.target.value);
-    }
-
     const searchIt = () => {
         sound.play();
         history.push(`/result/${searchContent}/${props.message}/${props.type}`);
@@ -23,8 +19,21 @@ const SearchBar = (props) => {
 
     return (<div>
         <div className="margin container text-center">
-            <input type="search" placeholder="Search" className="width" onKeyPress={(e) => e.key === "Enter" ? searchIt() : null} onChange={change_search_content}/>
-            <button className="btn expand" onClick={searchIt}> <img src={search} className="expand"/> </button>
+            <input 
+                type="search" 
+                placeholder="Search" 
+                className="width" 
+                onKeyPress={(e) => e.key === "Enter" ? searchIt() : null} 
+                onChange={(e) => setsearchContent(e.target.value)}
+            />
+            <button 
+                className="btn expand" 
+                onClick={searchIt}> 
+                <img 
+                    src={search} 
+                    className="expand"
+                />
+            </button>
         </div>
     </div>);
 }

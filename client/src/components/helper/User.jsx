@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
-import { createChat } from "../../api/roomApis"
+import { createChat } from "../../api/roomApis";
+import { MessageContext } from "../../utils/Context";
 var sound = new Howl({src: [music]});
 
 const User = (props) => {
 
+    const guestMessage = useContext(MessageContext);
+
     const createRoom = () => {
         sound.play();
         if(props.user1 === "Guest") {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
         else {
             const drop = async() => {

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../helper/Navbar";
 import Post from "../helper/Post";
 import Footer from "../helper/Footer";
@@ -9,6 +9,7 @@ import Heading from "../helper/Heading";
 import SearchBar from "../helper/SearchBar";
 import Loader from "../helper/Loader";
 import { checkUser } from "../../api/userApis"
+import { MessageContext } from "../../utils/Context";
 import { getAllPosts, addReactionToPost,  } from "../../api/postApis";
 
 const Posts = () => {
@@ -18,6 +19,7 @@ const Posts = () => {
     var [loading, setLoading] = useState(true);
     const guest = localStorage.getItem("Guest");
     var [unread, setUnread] = useState(0);
+    const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
         const fetch = async () => {
@@ -57,7 +59,7 @@ const Posts = () => {
                 drop();
             }
             else {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+                alert(guestMessage);
             }
         }
 

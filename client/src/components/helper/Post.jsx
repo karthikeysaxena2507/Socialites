@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import like from "../../images/like.png";
 import love from "../../images/love.png";
 import laugh from "../../images/laugh.png";
@@ -10,12 +10,14 @@ import { useHistory } from "react-router-dom";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { addCommentToPost } from "../../api/postApis";
+import { MessageContext } from "../../utils/Context";
 var sound = new Howl({src: [music]});
 
 const Post = (props) => {
 
     var history = useHistory();
     var [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
+    const guestMessage = useContext(MessageContext);
 
     const change = (event) => {
         var {name, value} = event.target;
@@ -48,7 +50,7 @@ const Post = (props) => {
             }
         }
         else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
     }
 

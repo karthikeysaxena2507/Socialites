@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import { useParams } from "react-router-dom";
@@ -14,6 +14,7 @@ import User from "../helper/User";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis";
+import { MessageContext } from "../../utils/Context";
 import { getCommentData, deleteComment, addReactionToComment } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
@@ -30,6 +31,7 @@ const CompleteComment = () => {
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
     var [unread, setUnread] = useState(0);
+    const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
         const fetch = async() => {
@@ -113,7 +115,7 @@ const CompleteComment = () => {
             drop();
         }
         else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
     }
 
@@ -166,7 +168,7 @@ const CompleteComment = () => {
                 drop();
             }
             else {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+                alert(guestMessage);
             }
         }
 

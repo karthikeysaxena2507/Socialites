@@ -69,29 +69,19 @@ const Edit = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        if(username !== "Guest") {
-            try {
-                let value;
-                if(category === "Select Category") {
-                    value = "Other";
-                }
-                else {
-                    value = category;
-                }
-                const body = JSON.stringify({
-                    data: imageSource,
-                    author: username,
-                    title, content, category: value
-                });
-                await editPost(body, id);
-            }
-            catch(error) {
-                console.log(error);
-            }
+        try {
+            let value;
+            (category === "Select Category") ? value = "Other" : value = category;
+            const body = JSON.stringify({
+                data: imageSource,
+                author: username,
+                title, content, category: value
+            });
+            await editPost(body, id);
             window.location = "/myposts";
         }
-        else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+        catch(error) {
+            console.log(error);
         }
     }
 
@@ -100,9 +90,6 @@ const Edit = () => {
         sound.play();
         setPreview("");
     }
-
-    var previewStyling = (preview) ? {visibility: "visible"} : {visibility: "hidden"};
-    var styling = (!preview) ? {visibility: "visible"} : {visibility: "hidden"};
 
     if(loading) {
         return <Loader />
@@ -177,7 +164,7 @@ const Edit = () => {
                         />
                     </div>
                     <div className="margin text-center"> Current Image </div>
-                    <div className="margin text-center" style={styling}>
+                    <div className="margin text-center" style={(!preview) ? {visibility: "visible"} : {visibility: "hidden"}}>
                         Image preview will be shown here
                     </div>
                     <div className="text-center">
@@ -185,7 +172,7 @@ const Edit = () => {
                         src={preview} 
                         alt="invalid image" 
                         className="preview margin"
-                        style={previewStyling} 
+                        style={(preview) ? {visibility: "visible"} : {visibility: "hidden"}} 
                         />
                     </div>
                     <div className="text-center margin">

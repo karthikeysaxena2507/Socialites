@@ -11,17 +11,24 @@ const redisClient = redis.createClient(process.env.REDIS_URL, {
  * Print all key value pairs in redis
  */
 const printRedisValues = () => {
-    redisClient.keys("*", (err, keys) => {
-        if(err) {
+    redisClient.keys("*", (err, keys) => 
+    {
+        if(err) 
+        {
             console.log(err);
         }
-        else {
-            keys.map((key) => {
-                redisClient.get(key, (err, value) => {
-                    if(err) {
+        else 
+        {
+            keys.map((key) => 
+            {
+                redisClient.get(key, (err, value) => 
+                {
+                    if(err) 
+                    {
                         console.log(err);
                     }
-                    else {
+                    else 
+                    {
                         console.log(key, value);
                     }
                 });
@@ -35,11 +42,14 @@ const printRedisValues = () => {
  * The function to delete all values from redis
  */
 const deleteAllRedisValues = () => {
-    redisClient.flushall((err, res) => {
-        if(err) {
+    redisClient.flushall((err, res) => 
+    {
+        if(err) 
+        {
             console.log(err);
         }
-        else {
+        else 
+        {
             console.log(res);
         }
     })
@@ -50,11 +60,14 @@ const deleteAllRedisValues = () => {
  * @param {String} sessionId 
  */
 const deleteBySessionId = (sessionId) => {
-    redisClient.del(sessionId, (err, response) => {
-        if(err) {
+    redisClient.del(sessionId, (err, response) => 
+    {
+        if(err) 
+        {
             return err;
         }
-        else {
+        else 
+        {
             return response;
         }
     });

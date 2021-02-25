@@ -16,7 +16,7 @@ var messageSound = new Howl({src: [newMessage]});
 const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 // const ENDPOINT = "http://localhost:5000/";
 
-const Room = () => {
+const Rooms = () => {
 
     var socket = useRef(null);
     var { roomId } = useParams();
@@ -234,4 +234,4 @@ const Room = () => {
     }
 }
 
-export default Room;
+export default Rooms;

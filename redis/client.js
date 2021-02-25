@@ -6,10 +6,12 @@ const redisClient = redis.createClient(process.env.REDIS_URL, {
 
 // CHECKING IF REDIS IS CONNECTED OR NOT
 redisClient.on("connect", (err) => {
-    if(err) {
+    if(err) 
+    {
         console.log(err);    
     }
-    else {
+    else 
+    {
         console.log("Redis cluster connected Successfully");    
     }
 });

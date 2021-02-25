@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useParams } from 'react-router-dom';
 import { Pie } from "react-chartjs-2";
 import { Howl } from "howler";
@@ -19,6 +19,7 @@ import music from "../../sounds/button.mp3";
 import { checkUser, getUserData, updateUserBio, updateUserImage } from "../../api/userApis"
 import { getPostsByUser, addReactionToPost, deletePost } from "../../api/postApis";
 import { createChat } from "../../api/roomApis";
+import { MessageContext } from "../../utils/Context";
 var sound = new Howl({src: [music]});
 
 const Profile = () => {
@@ -41,6 +42,7 @@ const Profile = () => {
     var [loading, setLoading] = useState(true);
     var guest = localStorage.getItem("Guest");
     var [unread, setUnread] = useState(0);
+    const guestMessage = useContext(MessageContext);
     
     useEffect(() => {
         const fetch = async() => {
@@ -84,7 +86,7 @@ const Profile = () => {
         
         const changepost = (event, post) => {
             if(username === "Guest") {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+                alert(guestMessage);
             }
             else {
                 const drop = async() => {
@@ -159,7 +161,7 @@ const Profile = () => {
     const createRoom = () => {
         sound.play();
         if(username === "Guest") {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
         else {
             const drop = async() => {
@@ -215,7 +217,7 @@ const Profile = () => {
             drop();
         }
         else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
     }
 
@@ -250,7 +252,7 @@ const Profile = () => {
             }
         }
         else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
     }
 
@@ -271,7 +273,7 @@ const Profile = () => {
             }
         }
         else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
     } 
 

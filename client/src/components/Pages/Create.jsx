@@ -2,7 +2,7 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../helper/Navbar";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
@@ -11,6 +11,7 @@ import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
 import { addPost } from "../../api/postApis";
+import { MessageContext } from "../../utils/Context";
 var sound = new Howl({src: [music]});
 
 const Create = () => {
@@ -23,6 +24,7 @@ const Create = () => {
     var [preview, setPreview] = useState(""); 
     var guest = localStorage.getItem("Guest");
     var [unread, setUnread] = useState(0);
+    const guestMessage = useContext(MessageContext);
 
     useEffect(()=> {
         const fetch = async() => {
@@ -67,12 +69,7 @@ const Create = () => {
         if(username !== "Guest") {
             try {
                 let value;
-                if(category === "Select Category") {
-                    value = "Other";
-                }
-                else {
-                    value = category;
-                }
+                (category === "Select Category") ? value = "Other" : value = category;
                 const body = JSON.stringify({
                     data: imageSource,
                     author: username,
@@ -86,7 +83,7 @@ const Create = () => {
             }
         }
         else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            alert(guestMessage);
         }
     }
 
