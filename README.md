@@ -20,10 +20,10 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 
 
 ## Technical Features:
-1. The front end is built using Reactjs, HTML, CSS and Bootstrap.
+1. The frontend is built using Reactjs (Hooks for state management), HTML, CSS and Bootstrap.
 2. The backend is built using Nodejs and Expressjs with MongoDB database.
 3. Used sessions with cookies and Bcryptjs for user authentication.
-4. Used redis for mapping session data to user data.
+4. Used Redis for mapping session data to user data.
 5. Used Socket.io library for adding real time chat feature.
 6. Used Google OAuth2 API for authentication with google.
 7. Used Cloudinary API for uploading and storing images uploaded by user.
