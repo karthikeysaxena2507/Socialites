@@ -9,23 +9,14 @@ const User = (props) => {
 
     const guestMessage = useContext(MessageContext);
 
-    const createRoom = () => {
-        sound.play();
-        if(props.user1 === "Guest") {
-            alert(guestMessage);
+    const createRoom = async() => {
+        try {
+            var room = (props.user1 < props.user2) ? (props.user1 + "-" + props.user2) : (props.user2 + "-" + props.user1);
+            await createChat(room, props.user1, props.user2);
+            window.location = `/room/${room}`;
         }
-        else {
-            const drop = async() => {
-                try {
-                    var room = (props.user1 < props.user2) ? (props.user1 + "-" + props.user2) : (props.user2 + "-" + props.user1);
-                    await createChat(room, props.user1, props.user2);
-                    window.location = `/room/${room}`;
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            }
-            drop();
+        catch(error) {
+            console.log(error);
         }
     }
 
@@ -39,7 +30,7 @@ const User = (props) => {
             <span onClick={SeeProfile}> {props.user2} </span>
             <span style={props.unreadCount < 0 ? {display: "none"} : null}> ({props.unreadCount}) </span>
             <button 
-                onClick={createRoom} 
+                onClick={() => (props.user1 !== "Guest") ? (sound.play(), createRoom()) : (sound.play(), alert(guestMessage))} 
                 style={props.user2 === props.user1 ? {display: "none"} : null} 
                 className="move-right btn-dark expand">
                 Chat 

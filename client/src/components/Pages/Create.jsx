@@ -16,14 +16,14 @@ var sound = new Howl({src: [music]});
 
 const Create = () => {
 
-    var [username, setUsername] = useState("");
-    var [loading, setLoading] = useState(true);
-    var [title, setTitle] = useState("");
-    var [content, setContent] = useState("");
-    var [category, setCategory] = useState("Select Category");
-    var [preview, setPreview] = useState(""); 
-    var guest = localStorage.getItem("Guest");
-    var [unread, setUnread] = useState(0);
+    const [username, setUsername] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [category, setCategory] = useState("Select Category");
+    const [preview, setPreview] = useState(""); 
+    const guest = localStorage.getItem("Guest");
+    const [unread, setUnread] = useState(0);
     const guestMessage = useContext(MessageContext);
 
     useEffect(()=> {
@@ -33,9 +33,7 @@ const Create = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 setLoading(false);
             }
             catch(error) {
@@ -44,11 +42,6 @@ const Create = () => {
         }
         fetch();
     },[guest]);
-    
-    const changeCategory = (e) => {
-        sound.play();
-        setCategory(e.target.innerText);
-    }
 
     const handleFileInputChange = (e) => {
         const file = e.target.files[0];
@@ -66,37 +59,24 @@ const Create = () => {
     }
 
     const uploadImage = async (imageSource) => {
-        if(username !== "Guest") {
-            try {
-                let value;
-                (category === "Select Category") ? value = "Other" : value = category;
-                const body = JSON.stringify({
-                    data: imageSource,
-                    author: username,
-                    title, content, category: value
-                });
-                await addPost(body);
-                window.location = "/allposts";
-            }
-            catch(error) {
-                console.log(error);
-            }
+        try {
+            let value;
+            (category === "Select Category") ? value = "Other" : value = category;
+            const body = JSON.stringify({
+                data: imageSource,
+                author: username,
+                title, content, category: value
+            });
+            await addPost(body);
+            window.location = "/allposts";
         }
-        else {
-            alert(guestMessage);
+        catch(error) {
+            console.log(error);
         }
-    }
-
-    const removeImage = (e) => {
-        sound.play();
-        setPreview("");
     }
  
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div className="text-center">
+    return (loading) ? <Loader /> :
+    <div className="text-center">
         <Navbar name={username} page = "create" unread = {unread}/>
         <Heading />
         <div> 
@@ -107,20 +87,20 @@ const Create = () => {
                 {category}
             </button>
             <div className="dropdown-menu">
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
-                <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Art </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Motivational </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Political </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Funny </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Music </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Food </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Fashion </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> General Knowledge </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Lifestyle </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Travel </a>
+                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Other </a>
             </div>
         </div>
-        <form onSubmit={handleSubmitFile}>
+        <form onSubmit={() => (username !== "Guest") ? handleSubmitFile() : alert(guestMessage)}>
             <div className="text-center margin">
                 <textarea
                     name="title"
@@ -151,7 +131,7 @@ const Create = () => {
                     </span>
                 </label>
                 <span className="text-center margin">
-                    <span className="btn expand" onClick={removeImage}> Remove Image </span> 
+                    <span className="btn expand" onClick={() => {sound.play(); setPreview("")}}> Remove Image </span> 
                 </span>
             </div>
                 <input
@@ -178,11 +158,8 @@ const Create = () => {
                 <button className="btn btn-lg expand margin" type="submit"> Create </button> 
             </div>
         </form>
-    <div className="space"></div>
     <Footer />
-    </div>);        
-    }
-    
+    </div>
 }
 
 export default Create;

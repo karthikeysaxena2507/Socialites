@@ -4,9 +4,12 @@ var date = new Date();
 var year = date.getFullYear();
 
 const Footer = () => {
-    return (<footer className="text-center container">
+    return (<div>
+    <div className="space"></div>
+    <footer className="text-center container">
         Copyright @ Karthikey Saxena {year}
-    </footer>);
+    </footer>
+    </div>);
 }
 
 export default Footer;

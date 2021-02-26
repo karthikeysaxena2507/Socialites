@@ -35,12 +35,7 @@ const ResetPassword = () => {
 
     const check = (e) => {
         setNewPassword(e.target.value);
-        if(e.target.value.length >= 8) {
-            setCorrect(true);
-        }
-        else {
-            setCorrect(false);
-        }
+        (e.target.value.length >= 8) ? setCorrect(true) : setCorrect(false);
     }
 
     const reset = () => {
@@ -68,12 +63,9 @@ const ResetPassword = () => {
         }
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div className="container text-center">
-    <Heading />
+    return (loading) ? <Loader /> :
+    <div className="container text-center">
+        <Heading />
         <h5 className="margin"> Set New Password </h5>
         <div>
             <input 
@@ -102,8 +94,7 @@ const ResetPassword = () => {
             <p className="margin"> {message} </p>
         </div>
         <div className="margin"><button className="btn btn-lg expand margin" onClick={reset}> Set Password </button> </div>
-    </div>);
-    }
+    </div>
 }
 
 export default ResetPassword;

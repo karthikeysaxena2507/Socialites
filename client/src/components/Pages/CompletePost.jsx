@@ -17,17 +17,16 @@ import { checkUser } from "../../api/userApis";
 import { MessageContext } from "../../utils/Context";
 import { getPostById, addReactionToPost, addReactionToComment, deleteComment } from "../../api/postApis";
 import { createChat } from "../../api/roomApis.js";
-
 var sound = new Howl({src: [music]});
 
 const CompletePost = () => {
     
-    var [username, setUsername] = useState("");
-    var { id } = useParams();
-    var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
-    var [post,setPost] = useState({});
-    var [unread, setUnread] = useState(0);
+    const [username, setUsername] = useState("");
+    const { id } = useParams();
+    const [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
+    const [post,setPost] = useState({});
+    const [unread, setUnread] = useState(0);
     const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
@@ -37,9 +36,7 @@ const CompletePost = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 const postData = await getPostById(id);
                 setPost(postData);
                 setLoading(false);
@@ -51,113 +48,71 @@ const CompletePost = () => {
         fetch();
     },[guest, id]);
 
-    const changepost = (event, post) => {
-        if(username !== "Guest") {
-            const drop = async() => {
-                try {
-                    await addReactionToPost(event.target.name, post.name, post);
-                    const postData = await getPostById(id);
-                    setPost(postData);
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            }
-            drop();
+    const addReaction = async(e, post) => {
+        try {
+            await addReactionToPost(e.target.name, post.name, post);
+            const postData = await getPostById(id);
+            setPost(postData);
         }
-        else {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+        catch(error) {
+            console.log(error);
         }
     }
 
-    const createComment = (props, index) => {
+    const createComment = (props) => {
 
-        const reactToComment = (event) => {
-            sound.play();
-            if(username !== "Guest") {
-                const drop = async() => {
-                    try {
-                        await addReactionToComment(event.target.name, id, username, props);
-                        const postData = await getPostById(id);
-                        setPost(postData);
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
+        const reactToComment = async(e) => {
+            try {
+                await addReactionToComment(e.target.name, id, username, props);
+                const postData = await getPostById(id);
+                setPost(postData);
             }
-            else {
-                alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+            catch(error) {
+                console.log(error);
             }
         }
 
-        const remove = () => {
-            sound.play();
-            if(username !== "Guest") {
-                const drop = async() => {
-                    try {
-                        await deleteComment(id, props);
-                        window.location = `/complete/${id}`;
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
+        const remove = async() => {
+            try {
+                await deleteComment(id, props);
+                window.location = `/complete/${id}`;
             }
-            else {
-                alert(guestMessage);
+            catch(error) {
+                console.log(error);
             }
         }
 
-        const SeeAll = () => {
-            sound.play();
-            window.location = `/comment/${props._id}/${id}`;
-        }
-
-        const createRoom = () => {
-            sound.play();
-            if(username === "Guest") {
-                alert(guestMessage);
+        const createRoom = async() => {
+            try {
+                var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
+                await createChat(room, username, props.name);
+                window.location = `/room/${room}`;
             }
-            else {
-                const drop = async() => {
-                    try {
-                        var room = (username < props.name) ? (username + "-" + props.name) : (props.name + "-" + username);
-                        await createChat(room, username, props.name);
-                        window.location = `/room/${room}`;
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
+            catch(error) {
+                console.log(error);
             }
-        }
-
-        const SeeProfile = (e) => {
-            sound.play();
-            window.location = `/profile/${e.target.innerText}`;
         }
 
         const check = (type) => {
             const reactions = props.reacts;
-            let flag = false;
             for(let reaction of reactions) {
                 if(reaction.name === username && reaction.type === type) {
-                    flag = true;
-                    break;
+                    return true;
                 }
             }
-            return flag;
+            return false;
         }
 
-        return <div className="container margin" key={index}>
+        return <div className="container margin" key={props._id}>
         <div className="comment-name">
             <div> 
-                <span className="name author" onClick={SeeProfile}> {props.name} </span>
-                <button onClick={createRoom} style={(props.name === username) ? {display: "none"} : null} className="move-right btn-dark expand"> Message {props.name} </button>
+                <span className="name author" onClick={(e) => {sound.play(); window.location = (`/profile/${e.target.innerText}`)}}> {props.name} </span>
+                <button 
+                    onClick={() => (username !== "Guest") ? (sound.play(), createRoom()) : (sound.play(), alert(guestMessage))} 
+                    style={(props.name === username) ? {display: "none"} : null} 
+                    className="move-right btn-dark expand"> 
+                    Message {props.name} 
+                </button>
             </div>
             <div>
                 <span className="move-right"> 
@@ -165,7 +120,7 @@ const CompletePost = () => {
                         <img 
                             src={like}   
                             name = "likes"
-                            onClick={reactToComment}
+                            onClick={(e) => (username !== "Guest") ? (sound.play(), reactToComment(e)) : (sound.play(), alert(guestMessage))}
                             style={check("likes") ? {backgroundColor: "white", padding: "5px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
                             className="expand one"
                         /> 
@@ -174,7 +129,7 @@ const CompletePost = () => {
                     <span className="one">
                         <img 
                             src={love}   
-                            onClick={reactToComment}
+                            onClick={(e) => (username !== "Guest") ? (sound.play(), reactToComment(e)) : (sound.play(), alert(guestMessage))}
                             name = "loves"
                             style={check("loves") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
                             className="expand one"
@@ -184,7 +139,7 @@ const CompletePost = () => {
                     <span className="one">
                         <img 
                             src={laugh}   
-                            onClick={reactToComment}
+                            onClick={(e) => (username !== "Guest") ? (sound.play(), reactToComment(e)) : (sound.play(), alert(guestMessage))}
                             name = "laughs"
                             style={check("laughs") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
                             className="expand one"
@@ -192,23 +147,20 @@ const CompletePost = () => {
                         {props.laughs}
                     </span>
                     <span className="all">
-                        <a onClick={SeeAll} className="expand"> All </a> 
+                        <a onClick={() => {sound.play(); window.location = `/comment/${props._id}/${id}`}} className="expand"> All </a> 
                     </span>
                 </span> 
             </div>
         </div>
         <div className="comment-content"> {props.content} </div>            
         <div className="comment-options text-center" style={(props.name === username) ? {visibility: "visible"} : {visibility: "hidden"}}>
-            <img src={trash} onClick={remove} className="expand one"/>
+            <img src={trash} onClick={() => (username !== "Guest") ? remove() : (sound.play(), alert(guestMessage))} className="expand one"/>
         </div>
     </div>
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div className="container">
+    return (loading) ? <Loader /> :
+    <div className="container">
         <Navbar name={username} page = "complete" unread = {unread}/>
         <Heading />
         <div>
@@ -224,7 +176,7 @@ const CompletePost = () => {
                     love = {post.love}
                     laugh = {post.laugh}
                     comment_count = {post.comments.length}
-                    change = {changepost}
+                    change = {(e, post) => (username !== "Guest") ? addReaction(e, post) : alert(guestMessage)}
                     show_comments = {false}
                     imageUrl = {post.imageUrl}
                     reactions = {post.reacts}
@@ -232,10 +184,8 @@ const CompletePost = () => {
             <h3 className="margin text-center"> Comments </h3>
             {post.comments.map(createComment)}
         </div>
-        <div className="space"></div>
         <Footer />
-        </div>);
-    }
+    </div>
 }
 
 export default CompletePost;

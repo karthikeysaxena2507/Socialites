@@ -19,12 +19,12 @@ var sound = new Howl({src: [music]});
 
 const MyCategoryPosts = () => {
 
-    var [username, setUsername] = useState("");
-    var { type } = useParams();
-    var [posts,setPosts] = useState([]);
-    var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
-    var [unread, setUnread] = useState(0);
+    const [username, setUsername] = useState("");
+    const { type } = useParams();
+    const [posts,setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
+    const [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
@@ -51,34 +51,28 @@ const MyCategoryPosts = () => {
 
     const MyPost = (props, index) => {
 
-        const changepost = (event, post) => {
-            const drop = async() => {
-                try {
-                    await addReactionToPost(event.target.name, post.name, post);
-                    const postsData = await getPostsByUser(post.name);
-                    setPosts(postsData.filter((post) => {
-                        return (post.category === type);
-                    }));
-                }   
-                catch(error) {
-                    console.log(error);
-                }
+        const changepost = async(event, post) => {
+            try {
+                await addReactionToPost(event.target.name, post.name, post);
+                const postsData = await getPostsByUser(post.name);
+                setPosts(postsData.filter((post) => {
+                    return (post.category === type);
+                }));
+            }   
+            catch(error) {
+                console.log(error);
             }
-            drop();
         }
 
-        const remove = () => {
-            sound.play();
-            const del = async() => {
-                try {
-                    await deletePost(props._id);
-                    window.location = `/myposts`;
-                }
-                catch(error) {
-                    console.log(error);
-                }
+        const remove = async() => {
+            try {
+                sound.play();
+                await deletePost(props._id);
+                window.location = `/myposts`;
             }
-            del();
+            catch(error) {
+                console.log(error);
+            }
         }
 
         const update = () => {
@@ -86,46 +80,40 @@ const MyCategoryPosts = () => {
             window.location = `/edit/${props._id}`;
         }
 
-        return (<div className="container" key ={index}>
+        return (<div className="container" key ={props._id}>
          <Post 
-                name = {username}
-                _id = {props._id}
-                author = {props.author}
-                title = {props.title}
-                content = {props.content}
-                category = {props.category}
-                like = {props.like}
-                love = {props.love}
-                laugh = {props.laugh}
-                comment_count = {props.comment_count}
-                change = {changepost}
-                show_comments = {true}
-                imageUrl = {props.imageUrl}
-                reactions = {props.reacts}
+            name = {username}
+            _id = {props._id}
+            author = {props.author}
+            title = {props.title}
+            content = {props.content}
+            category = {props.category}
+            like = {props.like}
+            love = {props.love}
+            laugh = {props.laugh}
+            comment_count = {props.comment_count}
+            change = {changepost}
+            show_comments = {true}
+            imageUrl = {props.imageUrl}
+            reactions = {props.reacts}
         />
         <div className="post-options text-center">
-            <img src={trash} onClick={remove} className="expand one"/>
+            <img src={trash} onClick={() => remove} className="expand one"/>
             <img src={edit} onClick={update} className="expand"/>
         </div>
     </div>);
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div>
-            <Navbar name={username} page = "myposts" unread = {unread}/>
-            <Heading />
-            <div className="text-center"> <h3 className="margin"> My Posts </h3> </div>
-            <CategoryMenu category_type = {type} message = "my" />
-            <SearchBar type = {type} message = "personal"/>
-            {posts.map(MyPost)}
-            <div className="space"></div>
-            <Footer />
-            </div>
-        );
-    }
+    return (loading) ? <Loader /> :
+    <div>
+        <Navbar name={username} page = "myposts" unread = {unread}/>
+        <Heading />
+        <div className="text-center"> <h3 className="margin"> My Posts </h3> </div>
+        <CategoryMenu category_type = {type} message = "my" />
+        <SearchBar type = {type} message = "personal"/>
+        {posts.map(MyPost)}
+        <Footer />
+    </div>
 }
 
 export default MyCategoryPosts;

@@ -11,30 +11,22 @@ const Verified = () => {
 
     var { token } = useParams();
 
-    const submit = () => {
-        sound.play();
-        const drop = async() => {
-            try {
-                const response = await axios.post("/users/verify/", {token});
-                if(response.data === "INVALID") {
-                    alert("You are not a Registered User, Please go to the site and register yourself Or the Email Verification link has expired");
-                }
-                else {
-                    console.log(response.data);
-                    window.location = "/login";
-                }
-            }
-            catch(error) {
-                console.log(error);
-            }
+    const submit = async() => {
+        try {
+            sound.play();
+            const response = await axios.post("/users/verify/", {token});
+            (response.data === "INVALID") ?
+            alert("You are not a Registered User, Please go to the site and register yourself Or the Email Verification link has expired")
+            : window.location = "/login";
         }
-        drop();
+        catch(error) {
+            console.log(error);
+        }
     }
 
     return <div className="container text-center">
         <Heading />
-        <div className="margin"> <button className="btn btn-lg expand" onClick={submit}> Verify Email and Register </button> </div>
-        <div className="space"></div>
+        <div className="margin"> <button className="btn btn-lg expand" onClick={() => submit()}> Verify Email and Register </button> </div>
         <Footer />
     </div>
 }

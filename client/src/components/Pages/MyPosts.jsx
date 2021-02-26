@@ -33,9 +33,7 @@ const MyPosts = () => {
                     const postsData = await getPostsByUser(user.username);
                     setPosts(postsData);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 setLoading(false);
             }
             catch(error) {
@@ -45,34 +43,27 @@ const MyPosts = () => {
         fetch();
     },[guest, username]);
 
-    const MyPost = (props, index) => {
+    const MyPost = (props) => {
 
-        const changepost = (event, post) => {
-            const drop = async() => {
-                try {
-                    await addReactionToPost(event.target.name, post.name, post);
-                    const postsData = await getPostsByUser(post.name);
-                    setPosts(postsData);
-                }
-                catch(error) {
-                    console.log(error);
-                }
+        const addReaction = async(event, post) => {
+            try {
+                await addReactionToPost(event.target.name, post.name, post);
+                const postsData = await getPostsByUser(post.name);
+                setPosts(postsData);
             }
-            drop();
+            catch(error) {
+                console.log(error);
+            }
         }
 
-        const remove = () => {
-            sound.play();
-            const del = async() => {
-                try {
-                    await deletePost(props._id);
-                    window.location = `/allposts`;
-                }
-                catch(error) {
-                    console.log(error);
-                }
+        const remove = async() => {
+            try {
+                await deletePost(props._id);
+                window.location = `/allposts`;
             }
-            del();
+            catch(error) {
+                console.log(error);
+            }
         }
 
         const update = () => {
@@ -80,7 +71,7 @@ const MyPosts = () => {
             window.location = `/edit/${props._id}`;
         }
 
-        return (<div className="container" key ={index}>
+        return (<div className="container" key ={props._id}>
          <Post 
                 name = {username}
                 _id = {props._id}
@@ -92,33 +83,28 @@ const MyPosts = () => {
                 love = {props.love}
                 laugh = {props.laugh}
                 comment_count = {props.comment_count}
-                change = {changepost}
+                change = {(e, post) => addReaction(e, post)}
                 show_comments = {true}
                 imageUrl = {props.imageUrl}
                 reactions = {props.reacts}
         />
         <div className="post-options text-center">
-            <img src={trash} onClick={remove} className="expand one"/>
+            <img src={trash} onClick={() => remove()} className="expand one"/>
             <img src={edit} onClick={update} className="expand"/>
         </div>
     </div>);
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div>
-            <Navbar name={username} page = "myposts" unread = {unread}/>
-            <Heading />
-            <div className="text-center"><h3 className="margin"> My Posts </h3> </div>
-            <CategoryMenu category_type = "Select Category" message = "my"/>
-            <SearchBar message = "personal" type = "none" />
-            {posts.map(MyPost)}
-            <div className="space"></div>
-            <Footer />
-    </div>);
-    }
+    return (loading) ? <Loader /> :
+    <div>
+        <Navbar name={username} page = "myposts" unread = {unread}/>
+        <Heading />
+        <div className="text-center"><h3 className="margin"> My Posts </h3> </div>
+        <CategoryMenu category_type = "Select Category" message = "my"/>
+        <SearchBar message = "personal" type = "none" />
+        {posts.map(MyPost)}
+        <Footer />
+    </div>
 }
 
 export default MyPosts;

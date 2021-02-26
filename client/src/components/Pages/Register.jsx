@@ -13,21 +13,19 @@ var sound = new Howl({src: [music]});
 
 const Register = () => {
 
-    var [username, setUsername] = useState("");
-    var [email, setEmail] = useState("");
-    var [password, setPassword] = useState("");
-    var [message, setMessage] = useState(" ");
-    var [correct, setCorrect] = useState(false);
-    var [loading, setLoading] = useState(true);
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [message, setMessage] = useState(" ");
+    const [correct, setCorrect] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const check = async() => {
             try {
                 const user = await checkUser();
                 setLoading(false);
-                if(user !== "INVALID") {
-                    window.location = `/profile/${user.username}`;
-                }
+                (user !== "INVALID") && (window.location = `/profile/${user.username}`)
             }
             catch(err) {
                 console.log(err);
@@ -38,12 +36,7 @@ const Register = () => {
 
     const check = (e) => {
         setPassword(e.target.value);
-        if(e.target.value.length >= 8) {
-            setCorrect(true);
-        }
-        else {
-            setCorrect(false);
-        }
+        (e.target.value.length >= 8) ? setCorrect(true) : setCorrect(false)
     }
 
     const add = (event) => {
@@ -93,11 +86,8 @@ const Register = () => {
         localStorage.setItem("Guest", true);
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div className="text-center">
+    return (loading) ? <Loader /> :
+    <div className="text-center">
         <Heading />
         <h2> Register Your Account </h2>
             <form onSubmit={add}>
@@ -162,10 +152,8 @@ const Register = () => {
             <Link to="/allposts">
                 <span className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </span>
             </Link>
-        <div className="space"></div>
         <Footer />
-    </div>);
-    }
+    </div>
 }
 
 export default Register;

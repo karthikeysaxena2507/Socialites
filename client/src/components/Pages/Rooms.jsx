@@ -18,18 +18,18 @@ const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 
 const Rooms = () => {
 
-    var socket = useRef(null);
-    var { roomId } = useParams();
-    var [roomName, setRoomName] = useState("");
-    var [creator, setCreator] = useState("");
-    var [isGroup, setIsGroup] = useState(false);
-    var [username, setUsername] = useState("");
-    var [message, setMessage] = useState("");
-    var [messages,setMessages] = useState([]);
-    var [loading, setLoading] = useState(true);
-    var [onlineUsers, setOnlineUsers] = useState([]);
-    var [allUsers, setAllUsers] = useState([]);
-    var [state, setState] = useState("Show");
+    const socket = useRef(null);
+    const { roomId } = useParams();
+    const [roomName, setRoomName] = useState("");
+    const [creator, setCreator] = useState("");
+    const [isGroup, setIsGroup] = useState(false);
+    const [username, setUsername] = useState("");
+    const [message, setMessage] = useState("");
+    const [messages,setMessages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [state, setState] = useState("Show");
 
     useEffect(() => 
     {
@@ -83,11 +83,12 @@ const Rooms = () => {
         }
     }
 
-    const createMessage = (props, index) => 
+    const createMessage = (props) => 
     {
-        if(props.name === username) {
+        if(props.name === username) 
+        {
             return (
-            <div key={index}>
+            <div key={props._id}>
                 <div className="messageContainer justifyEnd mt-3">
                     <div>
                         <div className="text-right"> {username} </div>
@@ -101,9 +102,10 @@ const Rooms = () => {
                 </div>
             </div>);
         }
-        else {
+        else 
+        {
             return (
-            <div key={index}>
+            <div key={props._id}>
                 <div className="messageContainer justifyStart mt-3">
                 <div>
                     <div> {props.name} </div>
@@ -120,8 +122,7 @@ const Rooms = () => {
     const changeState = () => 
     {
         buttonSound.play();
-        if(state === "Show") setState("Hide");
-        else setState("Show");
+        (state === "Show") ? setState("Hide") : setState("Show")
     }
 
     const renderUsers = (props, index) => 
@@ -134,16 +135,11 @@ const Rooms = () => {
 
         const isOnline = () => 
         {
-            let flag = false;
             for (let user of onlineUsers) 
             {
-                if(user.name === props.name) 
-                {
-                    flag = true;
-                    break;
-                }
+                if(user.name === props.name) return true;
             }
-            return flag;
+            return false;
         }
 
         return (
@@ -185,53 +181,44 @@ const Rooms = () => {
         );
     } 
 
-    if(loading) 
-    {
-        return <Loader />
-    }
-    else 
-    {
-        return (
-        <div>
-            <Heading />
-            <div className="text-center"> 
-                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room ID: {roomId} </h5>
-                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Name: {roomName} </h5>
-                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Creator: {creator} </h5>
-                <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Share the above room id with users whom you want to join <strong> {roomName} </strong> </h5>
-                <h5 className="mt-1" style={isGroup ? {display: "none"} : null}> Chat between {roomId} </h5>
-                <button className="btn" onClick={changeState} style={!isGroup ? {display: "none"} : null}> {state} All Users in {roomName} </button>
-                <button className="btn" onClick={changeState} style={isGroup ? {display: "none"} : null}> {state} Status </button>
-            </div>
-            <div className="mt-3" style={(state === "Show") ? {display: "none"} : null}>
-                {allUsers.map(renderUsers)}
-            </div>
-            <div className="outerContainer mt-2">
-                <div className="innerContainer">
-                <ScrollToBottom className="messages">
-                    {messages.map(createMessage)}
-                </ScrollToBottom>
-                <form className="form">
-                    <input
-                        className="input"
-                        type="text"
-                        placeholder="Type a message..."
-                        value={message}
-                        onChange={(e) => {setMessage(e.target.value)}}
-                        onKeyPress={event => event.key === "Enter" ? sendMessage(event) : null}
-                    />
-                    <button type="submit" className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
-                </form>
-                </div>
-            </div>
-            <div className="text-center">
-                Note: The messages from the admin are system generated
-            </div>
-            <div className="space"></div>
-            <Footer />
+    (loading) ? <Loader /> :
+    <div>
+        <Heading />
+        <div className="text-center"> 
+            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room ID: {roomId} </h5>
+            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Name: {roomName} </h5>
+            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Creator: {creator} </h5>
+            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Share the above room id with users whom you want to join <strong> {roomName} </strong> </h5>
+            <h5 className="mt-1" style={isGroup ? {display: "none"} : null}> Chat between {roomId} </h5>
+            <button className="btn" onClick={changeState} style={!isGroup ? {display: "none"} : null}> {state} All Users in {roomName} </button>
+            <button className="btn" onClick={changeState} style={isGroup ? {display: "none"} : null}> {state} Status </button>
         </div>
-        );
-    }
+        <div className="mt-3" style={(state === "Show") ? {display: "none"} : null}>
+            {allUsers.map(renderUsers)}
+        </div>
+        <div className="outerContainer mt-2">
+            <div className="innerContainer">
+            <ScrollToBottom className="messages">
+                {messages.map(createMessage)}
+            </ScrollToBottom>
+            <form className="form">
+                <input
+                    className="input"
+                    type="text"
+                    placeholder="Type a message..."
+                    value={message}
+                    onChange={(e) => {setMessage(e.target.value)}}
+                    onKeyPress={event => event.key === "Enter" ? sendMessage(event) : null}
+                />
+                <button type="submit" className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
+            </form>
+            </div>
+        </div>
+        <div className="text-center">
+            Note: The messages from the admin are system generated
+        </div>
+        <Footer />
+    </div>
 }
 
 export default Rooms;

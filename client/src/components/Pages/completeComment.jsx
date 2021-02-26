@@ -20,17 +20,17 @@ var sound = new Howl({src: [music]});
 
 const CompleteComment = () => {
 
-    var [username, setUsername] = useState("");
-    var { commentId,id } = useParams();
-    var [comment, setComment] = useState({});
-    var [like,setlike] = useState(false);
-    var [love,setlove] = useState(false);
-    var [laugh,setlaugh] = useState(false);
-    var [reactions,setreactions] = useState([]);
-    var [allreactions,setallreactions] = useState([]);
-    var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
-    var [unread, setUnread] = useState(0);
+    const [username, setUsername] = useState("");
+    const { commentId,id } = useParams();
+    const [comment, setComment] = useState({});
+    const [like,setlike] = useState(false);
+    const [love,setlove] = useState(false);
+    const [laugh,setlaugh] = useState(false);
+    const [reactions,setreactions] = useState([]);
+    const [allreactions,setallreactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
+    const [unread, setUnread] = useState(0);
     const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
@@ -40,9 +40,7 @@ const CompleteComment = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 const commentData = await getCommentData(commentId, id);
                 setComment(commentData);
                 setallreactions(commentData.reacts.reverse());
@@ -100,142 +98,112 @@ const CompleteComment = () => {
         setreactions(allreactions);
     }
 
-    const remove = () => {
-        sound.play();
-        if(username !== "Guest") {
-            const drop = async() => {
-                try {
-                    await deleteComment(id, comment);
-                    window.location = `/complete/${id}`;        
-                }
-                catch (error) {
-                    console.log(error);
-                }
-            }
-            drop();
+    const remove = async() => {
+        try {
+            sound.play();
+            await deleteComment(id, comment);
+            window.location = `/complete/${id}`;        
         }
-        else {
-            alert(guestMessage);
+        catch (error) {
+            console.log(error);
         }
     }
 
-    const renderUsers = (props, index) => {
+    const renderUsers = (props) => {
         return (<User
-            key={index}
+            key={props._id}
             user1={username}
             user2={props.name}
             unreadCount={-1}
         />);
     }
-    
-    const SeeProfile = (e) => {
-        sound.play();
-        window.location = (`/profile/${e.target.innerText}`);
-    }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-
-        const check = (type) => {
-            const reactions = comment.reacts;
-            let flag = false;
-            for(let reaction of reactions) {
-                if(reaction.name === username && reaction.type === type) {
-                    flag = true;
-                    break;
-                }
-            }
-            return flag;
-        } 
-
-        const reactToComment = (event) => {
-            sound.play();
-            if(username !== "Guest") {
-                const drop = async() => {
-                    try {
-                        await addReactionToComment(event.target.name, id, username, comment);
-                        const commentData = await getCommentData(commentId, id);
-                        setComment(commentData);
-                        setallreactions(commentData.reacts.reverse());
-                        setreactions(commentData.reacts.reverse());
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
-            }
-            else {
-                alert(guestMessage);
+    const check = (type) => {
+        const reactions = comment.reacts;
+        for(let reaction of reactions) {
+            if(reaction.name === username && reaction.type === type) {
+                return true;
             }
         }
+        return false;
+    } 
 
-        return (<div>
-                <Navbar name={username} page = "comment" unread = {unread}/>
-                <Heading />
-                <div className="container">
-                    <div className="container margin">
-                    <div className="comment-name">
-                        <div> 
-                            <span className="name author" onClick={SeeProfile}> {comment.name} </span>
-                        </div>
-                        <div>
-                            <span className="move-right"> 
-                                <span className="one">
-                                    <img 
-                                        src={liked} 
-                                        name="likes"
-                                        onClick={reactToComment}
-                                        className="expand one" 
-                                        style={check("likes") ? {backgroundColor: "white", padding: "5px 5px", borderRadius: "5px", border: "2px solid brown"} : null}                                        
-                                    /> 
-                                    {comment.likes}
-                                </span>
-                                <span className="one">
-                                    <img 
-                                        src={loved} 
-                                        name="loves"
-                                        onClick={reactToComment}
-                                        className="expand one" 
-                                        style={check("loves") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
-                                    />
-                                    {comment.loves}
-                                </span>
-                                <span className="one">
-                                    <img 
-                                        src={laughed}
-                                        name="laughs" 
-                                        onClick={reactToComment}
-                                        className="expand one" 
-                                        style={check("laughs") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}                                        
-                                    />
-                                    {comment.laughs}
-                                </span>
-                            </span> 
-                        </div>
-                    </div>
-                    <div className="comment-content"> {comment.content} </div>            
-                    <div className="comment-options text-center" style={(comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"}}>
-                        <img src={trash} onClick={remove} className="expand mr-3"/>
-                    </div>
-                    </div>
-                    <div className="margin text-center">
-                        <h2> Users who reacted: </h2>
-                        <button className="expand mb-4 mt-3 mr-3 allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
-                        <button className="expand mb-4 mt-3 mr-3" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
-                        <button className="expand mb-4 mt-3 mr-3" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
-                        <button className="expand mb-4 mt-3 mr-3" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
-                    </div>
-                    <div className="margin">
-                        {reactions.map(renderUsers)}    
-                    </div>
-                </div>    
-                <div className="space"></div>
-                <Footer />
-        </div>);
+    const reactToComment = async(e) => {
+        try {
+            await addReactionToComment(e.target.name, id, username, comment);
+            const commentData = await getCommentData(commentId, id);
+            setComment(commentData);
+            setallreactions(commentData.reacts.reverse());
+            setreactions(commentData.reacts.reverse());
+        }
+        catch(error) {
+            console.log(error);
+        }
     }
+
+    return (loading) ? <Loader /> :
+    <div>
+        <Navbar name={username} page = "comment" unread = {unread}/>
+        <Heading />
+        <div className="container">
+            <div className="container margin">
+            <div className="comment-name">
+                <div> 
+                    <span className="name author" onClick={(e) => {sound.play(); window.location = (`/profile/${e.target.innerText}`)}}> {comment.name} </span>
+                </div>
+                <div>
+                    <span className="move-right"> 
+                        <span className="one">
+                            <img 
+                                src={liked} 
+                                name="likes"
+                                onClick={(e) => (username !== "Guest") ? (sound.play(), reactToComment(e)) : (sound.play(), alert(guestMessage))}
+                                className="expand one" 
+                                style={check("likes") ? {backgroundColor: "white", padding: "5px 5px", borderRadius: "5px", border: "2px solid brown"} : null}                                        
+                            /> 
+                            {comment.likes}
+                        </span>
+                        <span className="one">
+                            <img 
+                                src={loved} 
+                                name="loves"
+                                onClick={(e) => (username !== "Guest") ? (sound.play(), reactToComment(e)) : (sound.play(), alert(guestMessage))}
+                                className="expand one" 
+                                style={check("loves") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}
+                            />
+                            {comment.loves}
+                        </span>
+                        <span className="one">
+                            <img 
+                                src={laughed}
+                                name="laughs" 
+                                onClick={(e) => (username !== "Guest") ? (sound.play(), reactToComment(e)) : (sound.play(), alert(guestMessage))}
+                                className="expand one" 
+                                style={check("laughs") ? {backgroundColor: "white", padding: "2px 5px", borderRadius: "5px", border: "2px solid brown"} : null}                                        
+                            />
+                            {comment.laughs}
+                        </span>
+                    </span> 
+                </div>
+            </div>
+            <div className="comment-content"> {comment.content} </div>            
+            <div className="comment-options text-center" style={(comment.name === username) ? {visibility: "visible"} : {visibility: "hidden"}}>
+                <img src={trash} onClick={() => (username !== "Guest") ? remove() : (sound.play(), alert(guestMessage))} className="expand mr-3"/>
+            </div>
+            </div>
+            <div className="margin text-center">
+                <h2> Users who reacted: </h2>
+                <button className="expand mb-4 mt-3 mr-3 allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
+                <button className="expand mb-4 mt-3 mr-3" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
+                <button className="expand mb-4 mt-3 mr-3" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
+                <button className="expand mb-4 mt-3 mr-3" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
+            </div>
+            <div className="margin">
+                {reactions.map(renderUsers)}    
+            </div>
+        </div>    
+        <Footer />
+    </div>
 }
 
 export default CompleteComment;

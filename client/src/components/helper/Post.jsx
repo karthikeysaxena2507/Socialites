@@ -6,7 +6,6 @@ import like from "../../images/like.png";
 import love from "../../images/love.png";
 import laugh from "../../images/laugh.png";
 import all from "../../images/all.png";
-import { useHistory } from "react-router-dom";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { addCommentToPost } from "../../api/postApis";
@@ -15,8 +14,7 @@ var sound = new Howl({src: [music]});
 
 const Post = (props) => {
 
-    var history = useHistory();
-    var [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
+    const [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
     const guestMessage = useContext(MessageContext);
 
     const change = (event) => {
@@ -61,29 +59,27 @@ const Post = (props) => {
 
     const check = (type) => {
         const reactions = props.reactions;
-        let flag = false;
         for(let reaction of reactions) {
             if(reaction.name === props.name && reaction.type === type) {
-                flag = true;
-                break;
+                return true;
             }
         }
-        return flag;
+        return false;
     }
 
     const SeeAll = () => {
         sound.play();
-        history.push(`/post/${props._id}`);
+        window.location = `/post/${props._id}`;
     }
 
     const SeeComplete = () => {
         sound.play();
-        history.push(`/complete/${props._id}`);
+        window.location = `/complete/${props._id}`;
     }
 
     const SeeProfile = (e) => {
         sound.play();
-        history.push(`/profile/${e.target.innerText}`);
+        window.location = `/profile/${e.target.innerText}`;
     }
     
     return(<div className="container margin post"> 

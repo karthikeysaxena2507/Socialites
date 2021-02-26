@@ -14,15 +14,15 @@ var sound = new Howl({src: [music]});
 
 const Edit = () => {
 
-    var { id } = useParams();
-    var [username, setUsername] = useState("");
-    var [title, setTitle] = useState("");
-    var [content, setContent] = useState("");
-    var [category, setCategory] = useState("Select Category");
-    var [preview, setPreview] = useState(""); 
-    var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
-    var [unread, setUnread] = useState(0);
+    const { id } = useParams();
+    const [username, setUsername] = useState("");
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [category, setCategory] = useState("Select Category");
+    const [preview, setPreview] = useState(""); 
+    const [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
+    const [unread, setUnread] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
@@ -31,9 +31,7 @@ const Edit = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 const post = await getPostForEdit(id);
                 setTitle(post.title);
                 setContent(post.content);
@@ -91,98 +89,94 @@ const Edit = () => {
         setPreview("");
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div>
-                <Navbar 
-                    name = {username}
-                    page = "edit"
-                    unread = {unread}
+    return (loading) ? <Loader /> :
+    <div>
+        <Navbar 
+            name = {username}
+            page = "edit"
+            unread = {unread}
+        />
+        <Heading />
+        <div className="text-center"> 
+            <h1 className="margin"> Edit Your Post Here </h1> 
+        </div> 
+        <div className="dropdown container text-center">
+            <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {category}
+            </button>
+            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
+                <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
+            </div>
+        </div>
+        <form onSubmit={handleSubmitFile}>
+            <div className="text-center margin">
+                <textarea
+                    name="title"
+                    value={title}
+                    placeholder="Title of your Post"
+                    rows="1"
+                    cols="50"
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
                 />
-                <Heading />
-                <div className="text-center"> 
-                    <h1 className="margin"> Edit Your Post Here </h1> 
-                </div> 
-                <div className="dropdown container text-center">
-                    <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {category}
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Art </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Motivational </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Political </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Funny </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Music </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Food </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Fashion </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> General Knowledge </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Lifestyle </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Travel </a>
-                        <a className="dropdown-item" href="#" onClick={changeCategory}> Other </a>
-                    </div>
-                </div>
-                <form onSubmit={handleSubmitFile}>
-                    <div className="text-center margin">
-                        <textarea
-                            name="title"
-                            value={title}
-                            placeholder="Title of your Post"
-                            rows="1"
-                            cols="50"
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="text-center margin">
-                        <textarea
-                            name="content"
-                            value={content}
-                            placeholder="Content of your Post"
-                            rows="9"
-                            cols="50"
-                            onChange={(e) => setContent(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="margin">
-                    <div className="text-center">
-                        <label for="file"> 
-                            <span className="btn expand"> Select Image </span>
-                        </label>
-                        <span className="center-text margin">
-                            <button className="btn expand" onClick={removeImage}> Remove Image </button> 
-                        </span>
-                    </div>
-                        <input
-                            type="file" 
-                            name="image" 
-                            style={{visibility: "hidden"}}
-                            id="file"
-                            onChange={handleFileInputChange}
-                        />
-                    </div>
-                    <div className="margin text-center"> Current Image </div>
-                    <div className="margin text-center" style={(!preview) ? {visibility: "visible"} : {visibility: "hidden"}}>
-                        Image preview will be shown here
-                    </div>
-                    <div className="text-center">
-                    <img 
-                        src={preview} 
-                        alt="invalid image" 
-                        className="preview margin"
-                        style={(preview) ? {visibility: "visible"} : {visibility: "hidden"}} 
-                        />
-                    </div>
-                    <div className="text-center margin">
-                        <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
-                    </div>
-                </form>
-            <div className="space"></div>
-            <Footer />
-        </div>);
-    }
+            </div>
+            <div className="text-center margin">
+                <textarea
+                    name="content"
+                    value={content}
+                    placeholder="Content of your Post"
+                    rows="9"
+                    cols="50"
+                    onChange={(e) => setContent(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="margin">
+            <div className="text-center">
+                <label for="file"> 
+                    <span className="btn expand"> Select Image </span>
+                </label>
+                <span className="center-text margin">
+                    <button className="btn expand" onClick={removeImage}> Remove Image </button> 
+                </span>
+            </div>
+                <input
+                    type="file" 
+                    name="image" 
+                    style={{visibility: "hidden"}}
+                    id="file"
+                    onChange={handleFileInputChange}
+                />
+            </div>
+            <div className="margin text-center"> Current Image </div>
+            <div className="margin text-center" style={(!preview) ? {visibility: "visible"} : {visibility: "hidden"}}>
+                Image preview will be shown here
+            </div>
+            <div className="text-center">
+            <img 
+                src={preview} 
+                alt="invalid image" 
+                className="preview margin"
+                style={(preview) ? {visibility: "visible"} : {visibility: "hidden"}} 
+                />
+            </div>
+            <div className="text-center margin">
+                <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
+            </div>
+        </form>
+    <Footer />
+    </div>
+    
 }
 
 export default Edit;

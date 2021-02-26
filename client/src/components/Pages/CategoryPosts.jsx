@@ -16,12 +16,12 @@ import { MessageContext } from "../../utils/Context";
 
 const CategoryPosts = () => {
 
-    var [username, setUsername] = useState("");
-    var { type } = useParams();
-    var [posts,setPosts] = useState([]);
-    var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
-    var [unread, setUnread] = useState(0);
+    const [username, setUsername] = useState("");
+    const { type } = useParams();
+    const [posts,setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
+    const [unread, setUnread] = useState(0);
     const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
@@ -31,9 +31,7 @@ const CategoryPosts = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 const filteredPosts = await getFilteredPosts(type);
                 setPosts(filteredPosts);
                 setLoading(false);
@@ -45,29 +43,21 @@ const CategoryPosts = () => {
         fetch();
     },[guest, type]);
 
-    const createPost = (props, index) => {
+    const createPost = (props) => {
 
-        const changepost = (event, post) => {
-            if(username !== "Guest") {
-                const drop = async() => {
-                    try{
-                        await addReactionToPost(event.target.name, post.name, post);
-                        const filteredPosts = await getFilteredPosts(type);
-                        setPosts(filteredPosts);
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
+        const addReaction = async(e, post) => {
+            try {
+                await addReactionToPost(e.target.name, post.name, post);
+                const filteredPosts = await getFilteredPosts(type);
+                setPosts(filteredPosts);
             }
-            else {
-                alert(guestMessage);
+            catch(error) {
+                console.log(error);
             }
         }
 
         return <Post 
-                key = {index}
+                key = {props._id}
                 name = {username}
                 _id = {props._id}
                 author = {props.author}
@@ -78,29 +68,23 @@ const CategoryPosts = () => {
                 love = {props.love}
                 laugh = {props.laugh}
                 comment_count = {props.comment_count}
-                change = {changepost}
+                change = {(e, post) => (username !== "Guest") ? addReaction(e, post) : alert(guestMessage)}
                 show_comments={true}
                 imageUrl = {props.imageUrl}
                 reactions = {props.reacts}
         />
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (
-        <div>
-            <Navbar page = "home" unread = {unread}/>
-            <Heading />
-            <Container className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </Container>
-            <CategoryMenu category_type = {type} message = "all" />
-            <SearchBar type = {type} message = "all" />
-            {posts.map(createPost)}
-            <div className="space"></div>
-            <Footer />
-        </div>)
-    }
+    return (loading) ? <Loader /> :
+    <div>
+        <Navbar page = "home" unread = {unread}/>
+        <Heading />
+        <Container className="container text-center mt-3"> <h3 className="margin"> All Posts </h3> </Container>
+        <CategoryMenu category_type = {type} message = "all" />
+        <SearchBar type = {type} message = "all" />
+        {posts.map(createPost)}
+        <Footer />
+    </div>
 }
 
 export default CategoryPosts;

@@ -8,6 +8,7 @@ import Navbar from "../helper/Navbar";
 import Fuse from "fuse.js";
 import Loader from "../helper/Loader";
 import User from "../helper/User";
+import Room from "../helper/Room";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser, getAllUsers } from "../../api/userApis"
@@ -55,9 +56,7 @@ const Users = () => {
                     setChats(chatsData.chats);
                     setAllChats(chatsData.chats);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 const usersData = await getAllUsers();
                 setUsers(usersData);
                 setAllUsers(usersData);
@@ -70,11 +69,11 @@ const Users = () => {
         fetch();
     },[guest]);
 
-    const createUser = (props, index) => {
+    const createUser = (props) => {
         if(props.username !== undefined) {
             if(props.username !== "Guest") {
                 return <User
-                    key={index}
+                    key={props._id}
                     user1={username}
                     user2={props.username}
                     unreadCount={-1}
@@ -83,7 +82,7 @@ const Users = () => {
         } 
         else {
             return <User
-                key={index}
+                key={props.item._id}
                 user1={username}
                 user2={props.item.username}
                 unreadCount={-1}
@@ -148,22 +147,13 @@ const Users = () => {
         }
     }
 
-    const createRoom = () => {
-        sound.play();
-        if(username === "Guest") {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
+    const createRoom = async() => {
+        try {
+            const roomData = await createChatRoom(username, roomId);
+            (roomData === "Room Name Already Exists") ? setRoomMessage(roomData) : window.location = `/room/${roomData.roomId}`;
         }
-        else {
-            const drop = async() => {
-                try {
-                    const roomData = await createChatRoom(username, roomId);
-                    (roomData === "Room Name Already Exists") ? setRoomMessage(roomData) : window.location = `/room/${roomData.roomId}`;
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            }
-            drop();
+        catch(error) {
+            console.log(error);
         }
     }
 
@@ -180,28 +170,20 @@ const Users = () => {
 
     const printRooms = (props) => {
         if(props.roomName !== undefined) {
-            return (<div className="container user" key={props._id}>
-                <li className="profile">
-                    <span> {props.roomName} ({props.unreadCount}) </span>
-                    <button 
-                        onClick={() => (username === "Guest") ? alert(guestMessage) : joinRoom(props.roomId, username)} 
-                        className="move-right btn-dark expand"> 
-                        Join 
-                    </button>
-                </li>
-            </div>);
+            return <Room
+                key={props._id}
+                roomName={props.roomName}
+                unreadCount={props.unreadCount}
+                joinRoom={() => joinRoom(props.roomId, username)}
+            />
         }   
         else {
-            return (<div className="container user" key={props.item._id}>
-                <li className="profile">
-                    <span> {props.item.roomName} ({props.item.unreadCount}) </span>
-                    <button 
-                        onClick={() => (username === "Guest") ? alert(guestMessage) : joinRoom(props.item.roomId, username)} 
-                        className="move-right btn-dark expand"> 
-                        Join 
-                    </button>
-                </li>
-        </div>);
+            return <Room
+                key={props.item._id}
+                roomName={props.item.roomName}
+                unreadCount={props.item.unreadCount}
+                joinRoom={() => joinRoom(props.item.roomId, username)}
+            />
         }
     }
 
@@ -226,97 +208,96 @@ const Users = () => {
         }
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div>
-            <Navbar name={username} page = "allusers" unread = {unread}/>
-            <Heading />
-            <div className="container margin text-center">
+    return (loading) ? <Loader /> :
+    <div>
+        <Navbar name={username} page = "allusers" unread = {unread}/>
+        <Heading />
+        <div className="container margin text-center">
+            <div>
+                <h3 className="margin"> Chats </h3>
                 <div>
-                    <h3 className="margin"> Chats </h3>
-                    <div>
-                        <button className="btn expand" onClick={() => {setState("Create"); setRoomId(""); sound.play()}}> Create a room </button>
-                        <button className="btn expand" onClick={() => {setState("Join"); setRoomId(""); sound.play()}}> Join a room </button>
-                    </div>
-                    <div style={(state !== "Join") ? {display: "none"} : null}>
-                        <input 
-                            type="text" 
-                            value={roomId} 
-                            onChange={(e) => (setRoomId(e.target.value))} 
-                            className="width" 
-                            placeholder="Enter Room Id" 
-                            autoComplete="off"
-                        />
-                        <button 
-                            className="btn expand" 
-                            onClick={() => (username === "Guest") ? alert(guestMessage) : joinRoom(roomId, username)} > 
-                            {state} 
-                        </button>
-                    </div>
-                    <div style={(state !== "Create") ? {display: "none"} : null}>
-                        <input 
-                            type="text" 
-                            value={roomId} 
-                            onChange={(e) => (setRoomId(e.target.value))} 
-                            className="width" 
-                            placeholder="Enter Room Name" 
-                            autoComplete="off"
-                        />
-                        <button className="btn expand" onClick={createRoom}> {state} </button>
-                    </div>
-                    <p className="mt-1"> {roomMessage} </p>
+                    <button className="btn expand" onClick={() => {setState("Create"); setRoomId(""); sound.play()}}> Create a room </button>
+                    <button className="btn expand" onClick={() => {setState("Join"); setRoomId(""); sound.play()}}> Join a room </button>
                 </div>
-                <div>
-                    <h3> All Users </h3>
+                <div style={(state !== "Join") ? {display: "none"} : null}>
                     <input 
                         type="text" 
-                        value={searchUsers} 
-                        onKeyPress={(e) => e.key === "Enter" ? searchAmongUsers(e) : null} onChange={(e) => {setSearchUsers(e.target.value)}} 
+                        value={roomId} 
+                        onChange={(e) => (setRoomId(e.target.value))} 
                         className="width" 
-                        placeholder="Search Users" 
+                        placeholder="Enter Room Id" 
                         autoComplete="off"
                     />
-                    <button className="btn expand" onClick={searchAmongUsers}> <img src={search} /> </button>
-                    <p className="mt-1"> {message} </p>
-                    <div className="mt-4"> {users.map(createUser)} </div>
+                    <button 
+                        className="btn expand" 
+                        onClick={() => (username === "Guest") ? alert(guestMessage) : joinRoom(roomId, username)} > 
+                        {state} 
+                    </button>
                 </div>
-                <div className="mt-4">
-                    <h3> My Chats </h3>
+                <div style={(state !== "Create") ? {display: "none"} : null}>
                     <input 
                         type="text" 
-                        value={searchChats} 
-                        onKeyPress={(e) => e.key === "Enter" ? searchAmongChats(e) : null} onChange={(e) => {setSearchChats(e.target.value)}} 
+                        value={roomId} 
+                        onChange={(e) => (setRoomId(e.target.value))} 
                         className="width" 
-                        placeholder="Search Chats" 
+                        placeholder="Enter Room Name" 
                         autoComplete="off"
                     />
-                    <button className="btn expand" onClick={searchAmongChats}> <img src={search} /> </button>
-                    <p className="mt-1"> {chatMessage} </p>
-                    <p className="mt-1"> {chatInfo} </p>
-                    <div className="mt-4"> {chats.map(printChats)} </div>
+                    <button 
+                        className="btn expand" 
+                        onClick={() => (username === "Guest") ? (sound.play(), alert(guestMessage)) : (sound.play(), createRoom())}> 
+                        {state} 
+                    </button>
                 </div>
-                <div className="mt-4">
-                    <h3 className="mt-5"> My Chat Rooms </h3>
-                    <input 
-                        type="text" 
-                        value={searchRooms} 
-                        onKeyPress={(e) => e.key === "Enter" ? searchAmongRooms(e) : null} onChange={(e) => {setSearchRooms(e.target.value)}} 
-                        className="width mt-4" 
-                        placeholder="Search Chat Rooms" 
-                        autoComplete="off"
-                    />
-                    <button className="btn expand" onClick={searchAmongRooms}> <img src={search} /> </button>
-                    <p className="mt-1"> {tempMessage} </p>
-                    <p className="mt-2"> {roomInfo} </p>
-                    <div className="mt-3"> {rooms.map(printRooms)} </div>
-                </div>
+                <p className="mt-1"> {roomMessage} </p>
             </div>
-            <div className="space"></div>
-            <Footer />
-        </div>);
-    }
+            <div>
+                <h3> All Users </h3>
+                <input 
+                    type="text" 
+                    value={searchUsers} 
+                    onKeyPress={(e) => e.key === "Enter" ? searchAmongUsers(e) : null} onChange={(e) => {setSearchUsers(e.target.value)}} 
+                    className="width" 
+                    placeholder="Search Users" 
+                    autoComplete="off"
+                />
+                <button className="btn expand" onClick={searchAmongUsers}> <img src={search} /> </button>
+                <p className="mt-1"> {message} </p>
+                <div className="mt-4"> {users.map(createUser)} </div>
+            </div>
+            <div className="mt-4">
+                <h3> My Chats </h3>
+                <input 
+                    type="text" 
+                    value={searchChats} 
+                    onKeyPress={(e) => e.key === "Enter" ? searchAmongChats(e) : null} onChange={(e) => {setSearchChats(e.target.value)}} 
+                    className="width" 
+                    placeholder="Search Chats" 
+                    autoComplete="off"
+                />
+                <button className="btn expand" onClick={searchAmongChats}> <img src={search} /> </button>
+                <p className="mt-1"> {chatMessage} </p>
+                <p className="mt-1"> {chatInfo} </p>
+                <div className="mt-4"> {chats.map(printChats)} </div>
+            </div>
+            <div className="mt-4">
+                <h3 className="mt-5"> My Chat Rooms </h3>
+                <input 
+                    type="text" 
+                    value={searchRooms} 
+                    onKeyPress={(e) => e.key === "Enter" ? searchAmongRooms(e) : null} onChange={(e) => {setSearchRooms(e.target.value)}} 
+                    className="width mt-4" 
+                    placeholder="Search Chat Rooms" 
+                    autoComplete="off"
+                />
+                <button className="btn expand" onClick={searchAmongRooms}> <img src={search} /> </button>
+                <p className="mt-1"> {tempMessage} </p>
+                <p className="mt-2"> {roomInfo} </p>
+                <div className="mt-3"> {rooms.map(printRooms)} </div>
+            </div>
+        </div>
+        <Footer />
+    </div>
 }
 
 export default Users;

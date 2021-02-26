@@ -4,22 +4,21 @@ import Heading from "../helper/Heading";
 import { Howl } from "howler";
 import Loader from "../helper/Loader";
 import music from "../../sounds/button.mp3";
+import Footer from "../helper/Footer";
 import { checkUser } from "../../api/userApis"
 var sound = new Howl({src: [music]});
 
 const ForgotPassword = () => {
 
-    var [email, setEmail] = useState("");
-    var [loading, setLoading] = useState(true);
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const check = async() => {
             try {
                 const user = await checkUser();
                 setLoading(false);
-                if(user !== "INVALID") {
-                    window.location = `/profile/${user.username}`;
-                }
+                (user !== "INVALID") && (window.location = `/profile/${user.username}`)
             }
             catch(err) {
                 console.log(err);
@@ -39,11 +38,7 @@ const ForgotPassword = () => {
         }
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (
+    return (loading) ? <Loader /> :
     <div className="container text-center">
         <Heading />
         <h5 className="margin"> Enter your registered email to reset password </h5>
@@ -63,8 +58,8 @@ const ForgotPassword = () => {
                 Send 
             </button> 
         </div>
-    </div>);
-    }
+        <Footer />
+    </div>
 }
 
 export default ForgotPassword;

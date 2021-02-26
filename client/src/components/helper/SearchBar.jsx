@@ -1,20 +1,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
 import search from "../../images/search.png";
-import { useHistory } from "react-router-dom";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
 const SearchBar = (props) => {
 
-    var history = useHistory();
-    var [searchContent,setsearchContent] = useState("");
+    const [searchContent,setsearchContent] = useState("");
 
     const searchIt = () => {
         sound.play();
-        history.push(`/result/${searchContent}/${props.message}/${props.type}`);
         setsearchContent("");
+        window.location = `/result/${searchContent}/${props.message}/${props.type}`;
     }
 
     return (<div>

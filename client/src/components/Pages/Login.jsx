@@ -13,11 +13,11 @@ var sound = new Howl({src: [music]});
 
 const Login = () => {
 
-    var [email, setEmail] = useState("");
-    var [password, setPassword] = useState("");
-    var [message, setMessage] = useState(" ");
-    var [rememberMe, setRememberMe] = useState(false);
-    var [loading, setLoading] = useState(true);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [message, setMessage] = useState(" ");
+    const [rememberMe, setRememberMe] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const check = async() => {
@@ -81,72 +81,67 @@ const Login = () => {
         window.location = "/";
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div className="text-center">
-            <Heading />
-            <h2> Login to Your Account </h2>
-            <form onSubmit={add}>
-                <div>
-                    <input 
-                        type="email" 
-                        value={email}
-                        className="margin width" 
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email" 
-                        autoComplete="off" 
-                        required 
-                    />
-                </div>
-                <div>
-                    <input 
-                        type="password" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="margin width" 
-                        placeholder="Password" 
-                        required 
-                    />
-                </div>
-                <div className="margin">
-                    <p className="margin"> {message} </p>
-                </div>
-                <div className="margin">
-                    <input type="checkbox" onChange={() => {setRememberMe(!rememberMe); sound.play();}} className="mr-2"/> Remember Me
-                </div>
-                <div className="margin">
-                    <input type="submit" className="btn btn-lg expand margin" value="Login"/> 
-                </div>
-            </form>
-                <div className="margin">
-                    New User ? 
-                    <Link to="/register" onClick={() => sound.play()}> Create a New account </Link>
-                </div>
-                <div className="margin">
-                    <Link to="/forgot" onClick={() => sound.play()}> Forgot Password </Link>
-                </div>
-                <div className="margin">
-                    <h3> OR </h3>
-                </div>
-                <div>
-                    <GoogleLogin
-                        clientId={process.env.REACT_APP_CLIENT_ID}
-                        buttonText="Login With Google"
-                        onSuccess={successGoogle}
-                        onFailure={failureGoogle}
-                        className="btn google"
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <Link to="/allposts">
-                    <span className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </span>
-                    </Link>
-                </div>
-            <div className="space"></div>
-            <Footer />
-    </div>);
-    }
+    return (loading) ? <Loader /> :
+    <div className="text-center">
+        <Heading />
+        <h2> Login to Your Account </h2>
+        <form onSubmit={add}>
+            <div>
+                <input 
+                    type="email" 
+                    value={email}
+                    className="margin width" 
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email" 
+                    autoComplete="off" 
+                    required 
+                />
+            </div>
+            <div>
+                <input 
+                    type="password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="margin width" 
+                    placeholder="Password" 
+                    required 
+                />
+            </div>
+            <div className="margin">
+                <p className="margin"> {message} </p>
+            </div>
+            <div className="margin">
+                <input type="checkbox" onChange={() => {setRememberMe(!rememberMe); sound.play();}} className="mr-2"/> Remember Me
+            </div>
+            <div className="margin">
+                <input type="submit" className="btn btn-lg expand margin" value="Login"/> 
+            </div>
+        </form>
+            <div className="margin">
+                New User ? 
+                <Link to="/register" onClick={() => sound.play()}> Create a New account </Link>
+            </div>
+            <div className="margin">
+                <Link to="/forgot" onClick={() => sound.play()}> Forgot Password </Link>
+            </div>
+            <div className="margin">
+                <h3> OR </h3>
+            </div>
+            <div>
+                <GoogleLogin
+                    clientId={process.env.REACT_APP_CLIENT_ID}
+                    buttonText="Login With Google"
+                    onSuccess={successGoogle}
+                    onFailure={failureGoogle}
+                    className="btn google"
+                    cookiePolicy={'single_host_origin'}
+                />
+                <Link to="/allposts">
+                <span className="mt-1"> <button className="btn btn-lg expand" onClick={guestLogin}> Login as Guest </button> </span>
+                </Link>
+            </div>
+        <Footer />
+    </div>
 }
 
 export default Login;

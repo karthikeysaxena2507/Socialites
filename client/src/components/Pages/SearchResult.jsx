@@ -13,12 +13,12 @@ import { getAllPosts, getPostsByUser, addReactionToPost } from "../../api/postAp
 
 const Result = () => {
 
-    var [username, setUsername] = useState("");
-    var { searchContent,message,type } = useParams();
-    var [foundPosts,setfoundPosts] = useState([]);
-    var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
-    var [unread, setUnread] = useState(0);
+    const [username, setUsername] = useState("");
+    const { searchContent,message,type } = useParams();
+    const [foundPosts,setfoundPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
+    const [unread, setUnread] = useState(0);
     const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
@@ -29,9 +29,7 @@ const Result = () => {
                         const user = await checkUser();
                         (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                     }
-                    else {
-                        setUsername("Guest");
-                    }
+                    else setUsername("Guest");
                     const postsData = await getAllPosts();
                     setLoading(false);
                     const fuse = new Fuse(postsData, {
@@ -41,11 +39,7 @@ const Result = () => {
                     });
                     const results = fuse.search(searchContent);
                     setfoundPosts(results);
-                    if(type !== "none") {
-                        setfoundPosts(results.filter((post) => {
-                            return (post.item.category === type);
-                        }));
-                    }
+                    (type !== "none") && (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
                 }
                 catch(error) {
                     console.log(error);
@@ -67,11 +61,7 @@ const Result = () => {
                     });
                     const results = fuse.search(searchContent);
                     setfoundPosts(results.reverse());
-                    if(type !== "none") {
-                        setfoundPosts(results.filter((post) => {
-                            return (post.item.category === type);
-                        }));
-                    }
+                    (type !== "none") (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
                 }
                 catch(error) {
                     console.log(error);
@@ -83,74 +73,52 @@ const Result = () => {
 
     const createPost = (props, index) => {
 
-        const changepost = (event, post) => {
-            if(username !== "Guest") {
-                const drop = async() => {
-                    try {
-                        await addReactionToPost(event.target.name, post.name, post);
-                        var response;
-                        if(message === "all") {
-                            response = await getAllPosts();
-                        }
-                        else if(message === "personal") {
-                            response = await getPostsByUser(username);
-                        }
-                        const fuse = new Fuse(response, {
-                            keys: ['author', 'title', 'content'],
-                            includeScore: true,
-                            includeMatches: true
-                        });
-                        const results = fuse.search(searchContent);
-                        setfoundPosts(results);
-                        if(type !== "none") {
-                            setfoundPosts(results.filter((post) => {
-                                return (post.item.category === type);
-                            }));
-                        }
-                    }
-                    catch(error) {
-                        console.log(error);
-                    }
-                }
-                drop();
+        const addReaction = async(event, post) => {
+            try {
+                await addReactionToPost(event.target.name, post.name, post);
+                let response;
+                (message === "all") ? response = await getAllPosts() : response = await getPostsByUser(username)
+                const fuse = new Fuse(response, {
+                    keys: ['author', 'title', 'content'],
+                    includeScore: true,
+                    includeMatches: true
+                });
+                const results = fuse.search(searchContent);
+                setfoundPosts(results);
+                (type !== "none") && (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
             }
-            else {
-                alert(guestMessage);
+            catch(error) {
+                console.log(error);
             }
         }
 
         return <Post 
-                key = {index}
-                name = {username}
-                _id = {props.item._id}
-                author = {props.item.author}
-                title = {props.item.title}
-                content = {props.item.content}
-                category = {props.item.category}
-                like = {props.item.like}
-                love = {props.item.love}
-                laugh = {props.item.laugh}
-                comment_count = {props.item.comment_count}
-                change = {changepost}
-                show_comments = {true}
-                imageUrl = {props.item.imageUrl}
-                reactions = {props.item.reacts}
-            />
+            key = {index}
+            name = {username}
+            _id = {props.item._id}
+            author = {props.item.author}
+            title = {props.item.title}
+            content = {props.item.content}
+            category = {props.item.category}
+            like = {props.item.like}
+            love = {props.item.love}
+            laugh = {props.item.laugh}
+            comment_count = {props.item.comment_count}
+            change = {(e, post) => (username !== "Guest") ? addReaction(e, post) : alert(guestMessage)}
+            show_comments = {true}
+            imageUrl = {props.item.imageUrl}
+            reactions = {props.item.reacts}
+        />
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return (<div>
-            <Navbar name={username} page = "result" unread = {unread}/>
-            <Heading />
-            <div className="text-center"> <h2 className="margin"> Search Results </h2> </div>
-            {foundPosts.reverse().map(createPost)}
-            <div className="space"></div>
-            <Footer />
-    </div>);
-    }
+    (loading) ? <Loader /> :
+    <div>
+        <Navbar name={username} page = "result" unread = {unread}/>
+        <Heading />
+        <div className="text-center"> <h2 className="margin"> Search Results </h2> </div>
+        {foundPosts.reverse().map(createPost)}
+        <Footer />
+    </div>
 }
 
 export default Result;

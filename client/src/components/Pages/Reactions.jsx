@@ -21,20 +21,20 @@ var sound = new Howl({src: [music]});
 
 const Reactions = () => {
 
-    var [username, setUsername] = useState("");
-    var { id } = useParams();
-    var [like,setlike] = useState(false);
-    var [love,setlove] = useState(false);
-    var [laugh,setlaugh] = useState(false);
-    var [searchContent,setsearchContent] = useState("");
-    var [reactions,setreactions] = useState([]);
-    var [allreactions,setallreactions] = useState([]);
-    var [tempreactions,settempreactions] = useState([]);
-    var [message, setMessage] = useState("");
-    var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
-    var [post,setPost] = useState({});
-    var [unread, setUnread] = useState(0);
+    const [username, setUsername] = useState("");
+    let { id } = useParams();
+    const [like,setlike] = useState(false);
+    const [love,setlove] = useState(false);
+    const [laugh,setlaugh] = useState(false);
+    const [searchContent,setsearchContent] = useState("");
+    const [reactions,setreactions] = useState([]);
+    const [allreactions,setallreactions] = useState([]);
+    const [tempreactions,settempreactions] = useState([]);
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(true);
+    const guest = localStorage.getItem("Guest");
+    const [post,setPost] = useState({});
+    const [unread, setUnread] = useState(0);
     const guestMessage = useContext(MessageContext);
 
     useEffect(() => {
@@ -44,9 +44,7 @@ const Reactions = () => {
                     const user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 const postData = await getPostById(id);
                 setallreactions(postData.reacts.reverse());
                 setreactions(postData.reacts.reverse());
@@ -123,18 +121,18 @@ const Reactions = () => {
 
         if(props.name !== undefined) {
             return <User
-                    key={index}
-                    user1={username}
-                    user2={props.name}
-                    unreadCount={-1}
+                key={index}
+                user1={username}
+                user2={props.name}
+                unreadCount={-1}
             />                     
         }
         else {
             return <User
-                    key={index}
-                    user1={username}
-                    user2={props.item.name}
-                    unreadCount={-1}
+                key={index}
+                user1={username}
+                user2={props.item.name}
+                unreadCount={-1}
             />                     
         }
     }
@@ -158,80 +156,67 @@ const Reactions = () => {
         }
     }
 
-    const changepost = (event, post) => {
-        if(username === "Guest") {
-            alert(guestMessage);
+    const addReaction = async(event, post) => {
+        try {
+            await addReactionToPost(event.target.name, post.name, post);
+            const postData = await getPostById(id);
+            setallreactions(postData.reacts.reverse());
+            setreactions(postData.reacts.reverse());
+            settempreactions(postData.reacts.reverse());
+            setPost(postData);
+            setlike(false);
+            setlove(false);
+            setlaugh(false);
         }
-        else {
-            const drop = async() => {
-                try {
-                    await addReactionToPost(event.target.name, post.name, post);
-                    const postData = await getPostById(id);
-                    setallreactions(postData.reacts.reverse());
-                    setreactions(postData.reacts.reverse());
-                    settempreactions(postData.reacts.reverse());
-                    setPost(postData);
-                    setlike(false);
-                    setlove(false);
-                    setlaugh(false);
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            }
-            drop();
+        catch(error) {
+            console.log(error);
         }
     }
 
-    if(loading) {
-        return <Loader />
-    }
-    else {
-        return(<div>
-            <Navbar name={username} page="reactions" unread = {unread}/>
-            <Heading />
-            <div className="container">
-                <Post 
-                        key = {post._id}
-                        name = {username}
-                        _id = {post._id}
-                        author = {post.author}
-                        title = {post.title}
-                        content = {post.content}
-                        category = {post.category}
-                        like = {post.like}
-                        love = {post.love}
-                        laugh = {post.laugh}
-                        comment_count = {post.comments.length}
-                        change = {changepost}
-                        show_comments = {true}
-                        imageUrl = {post.imageUrl}
-                        reactions = {post.reacts}
-                />
-                <div className="text-center">
-                    <h2 className="margin"> Users who Reacted: </h2>
-                    <div>
-                        <button className="expand mb-3 mt-3 mr-3 allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
-                        <button className="expand mb-3 mt-3 mr-3" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
-                        <button className="expand mb-3 mt-3 mr-3" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
-                        <button className="expand mb-3 mt-3 mr-3" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
-                    </div>
-                    <div>
-                        <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => setsearchContent(e.target.value)} className="width" placeholder="Search" autoComplete="off"/>
-                        <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
-                    </div>
-                </div>    
-            </div>
-            <div className="mt-2 text-center">
-                 {message} 
-            </div>
-            <div className="mt-4">
-                {reactions.map(renderUsers)}    
-            </div>
-            <div className="space"></div>
-            <Footer />
-        </div>);
-    }
+    return (loading) ? <Loader /> :
+    <div>
+        <Navbar name={username} page="reactions" unread = {unread}/>
+        <Heading />
+        <div className="container">
+            <Post 
+                key = {post._id}
+                name = {username}
+                _id = {post._id}
+                author = {post.author}
+                title = {post.title}
+                content = {post.content}
+                category = {post.category}
+                like = {post.like}
+                love = {post.love}
+                laugh = {post.laugh}
+                comment_count = {post.comments.length}
+                change = {(e, post) => (username !== "Guest") ? addReaction(e, post) : alert(guestMessage)}
+                show_comments = {true}
+                imageUrl = {post.imageUrl}
+                reactions = {post.reacts}
+            />
+            <div className="text-center">
+                <h2 className="margin"> Users who Reacted: </h2>
+                <div>
+                    <button className="expand mb-3 mt-3 mr-3 allbtn" onClick={changeAll} style={(!like && !love && !laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> All </button> 
+                    <button className="expand mb-3 mt-3 mr-3" onClick={changeLike} style={(like) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={liked} name="like" className="expand"/> </button> 
+                    <button className="expand mb-3 mt-3 mr-3" onClick={changeLove} style={(love) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={loved} name="love" className="expand"/> </button> 
+                    <button className="expand mb-3 mt-3 mr-3" onClick={changeLaugh} style={(laugh) ? {backgroundColor: "white"}:{backgroundColor: "rgb(211, 115, 36)"}}> <img src={laughed} name="laugh" className="expand"/> </button> 
+                </div>
+                <div>
+                    <input type="text" value={searchContent} onKeyPress={(e) => e.key === "Enter" ? searchIt(e) : null} onChange={(e) => setsearchContent(e.target.value)} className="width" placeholder="Search" autoComplete="off"/>
+                    <button className="btn expand" onClick={searchIt}> <img src={search} /> </button>
+                </div>
+            </div>    
+        </div>
+        <div className="mt-2 text-center">
+            {message} 
+        </div>
+        <div className="mt-4">
+            {reactions.map(renderUsers)}    
+        </div>
+        <Footer />
+    </div>
 }
 
 export default Reactions;

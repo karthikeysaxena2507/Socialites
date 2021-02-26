@@ -11,18 +11,10 @@ const CategoryMenu = (props) => {
 
     const changeCategory = (event) => {
         sound.play();
-        if(event.target.innerText === "All" && props.message === "my") {
-            history.push(`/myposts`);
-        }
-        else if(event.target.innerText !== "All" && props.message === "my") {
-            history.push(`/mycategoryposts/${event.target.innerText}`);
-        }
-        else if(event.target.innerText === "All" && props.message === "all") {
-            history.push(`/allposts`);
-        }
-        else if(event.target.innerText !== "All" && props.message === "all") {
-            history.push(`/categoryposts/${event.target.innerText}`);
-        }
+        (event.target.innerText === "All" && props.message === "my") && (history.push(`/myposts`))
+        (event.target.innerText !== "All" && props.message === "my") && (history.push(`/mycategoryposts/${event.target.innerText}`))
+        (event.target.innerText === "All" && props.message === "all") && (history.push(`/allposts`))
+        (event.target.innerText !== "All" && props.message === "all") && (history.push(`/categoryposts/${event.target.innerText}`))        
     }
 
     return <div className="dropdown text-center">
