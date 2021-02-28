@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useRef, useState } from 'react'
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
@@ -6,6 +7,7 @@ import io from "socket.io-client";
 import Loader from "../helper/Loader";
 import { useParams } from 'react-router-dom';
 import { Howl } from "howler";
+import trash from "../../images/trash.png";
 import button from "../../sounds/button.mp3";
 import newMessage from "../../sounds/message.mp3";
 import { checkUser } from "../../api/userApis"
@@ -54,6 +56,9 @@ const Rooms = () => {
                 socket.current.on("users", (data) => {
                     setOnlineUsers(data.chat);
                 });
+                socket.current.on("updatemessages", (data) => {
+                    setMessages(data.messages);
+                });
                 return () => {
                     socket.current.emit("disconnect");
                     socket.current.off();
@@ -69,21 +74,20 @@ const Rooms = () => {
     const sendMessage = (e) => 
     {
         e.preventDefault();
-        if(username === null || username === "Guest") 
+        if(message) 
         {
-            alert("You Logged In as a Guest, Please Register or login with an existing ID to make changes");
-        }
-        else 
-        {
-            if(message) 
-            {
-                socket.current.emit("sendmessage", {message, name: username, room: roomId, time: time()}, () => {});
-                setMessage("");
-            }
+            socket.current.emit("sendmessage", {message, name: username, room: roomId, time: time()}, () => {});
+            setMessage("");
         }
     }
 
-    const createMessage = (props) => 
+    const deleteMessage = (messageId) => 
+    {
+        buttonSound.play();
+        socket.current.emit("deletemessage", {room: roomId, messageId})
+    }
+
+    const printMessages = (props) => 
     {
         if(props.name === username) 
         {
@@ -96,6 +100,11 @@ const Rooms = () => {
                             <div className="messageBox backgroundOrange">
                                 <p className="messageText text-white"> {props.content} </p>
                             </div>
+                            <img 
+                                src={trash} 
+                                onClick={() => deleteMessage(props._id)} 
+                                className="move-right expand ml-1 mt-1" 
+                            />
                         </div>
                         <div className="text-right"> {props.time} </div>
                     </div>
@@ -199,7 +208,7 @@ const Rooms = () => {
         <div className="outerContainer mt-2">
             <div className="innerContainer">
             <ScrollToBottom className="messages">
-                {messages.map(createMessage)}
+                {messages.map(printMessages)}
             </ScrollToBottom>
             <form className="form">
                 <input

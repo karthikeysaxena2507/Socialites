@@ -137,6 +137,55 @@ io.on("connection", (socket) => {
         }
     });
 
+    socket.on("deletemessage", async(data) => {
+        try {
+            const room = await Room.findOne({roomId: data.room});
+            const onlineUsers = await Chat.find({room: data.room});
+            const messageIndex = await room.messages.findIndex((message) => (message._id == data.messageId));
+            await room.messages.splice(messageIndex, 1);
+            for(let tempUser of onlineUsers) 
+            {
+                const user = await User.findOne({username: tempUser.name});
+                if(room.isGroup)
+                {
+                    let temp = null;
+                    for (let item of user.rooms) {
+                        if(item.roomId === data.room) {
+                            temp = item;
+                            break;
+                        }
+                    }
+                    if(temp !== null) temp.lastCount = room.messages.length;
+                    await user.save();
+                }
+                else 
+                {
+                    let temp = null;
+                    for (let item of user.chats) {
+                        if(item.roomId === data.room) {
+                            temp = item;
+                            break;
+                        }
+                    }
+                    if(temp !== null) temp.lastCount = room.messages.length;
+                    await user.save();
+                }
+            }
+            room.save()
+            .then(async() => {
+                const chat = await Chat.find({room: data.room});
+                await io.to(data.room).emit("users", {chat});
+                await io.to(data.room).emit("updatemessages", {messages: room.messages});
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
+        catch(error) {
+            console.log(error);
+        }
+    });
+
     socket.on("disconnect", async() => {
         try {
             await Chat.deleteOne({id: socket.id});
@@ -145,6 +194,7 @@ io.on("connection", (socket) => {
             console.log(error);
         }
     });
+
 });
 
 // HANDLING THE PRODUCTION BUILD FOR HEROKU

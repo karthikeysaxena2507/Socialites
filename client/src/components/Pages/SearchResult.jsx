@@ -110,8 +110,8 @@ const Result = () => {
                     includeMatches: true
                 });
                 const results = fuse.search(searchContent);
-                setfoundPosts(results);
-                (type !== "none") && (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
+                setfoundPosts(results.reverse());
+                (type !== "none") && (setfoundPosts(results.reverse().filter((post) => {return (post.item.category === type)})))
             }
             catch(error) {
                 console.log(error);
