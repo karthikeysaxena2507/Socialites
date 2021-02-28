@@ -119,16 +119,24 @@ const Profile = () => {
             try {
                 sound.play();
                 await deletePost(props._id);
-                window.location = `/myposts`;
+                const postData = await getPostsByUser(user);
+                setPosts(postData);
+                let cmct = 0, lkct = 0, lvct = 0, lgct = 0;
+                for(let post of postData) {
+                    cmct+=post.comment_count;
+                    lkct+=post.like;
+                    lvct+=post.love;
+                    lgct+=post.laugh;
+                }
+                setData((data) => {return [...data, lkct, lvct, lgct, cmct, lkct + lvct + lgct]});
+                setLikes(lkct);
+                setLoves(lvct);
+                setLaughs(lgct);
+                setComments(cmct);
             }
             catch(error) {
                 console.log(error);
             }
-        }
-
-        const update = () => {
-            sound.play();
-            window.location = `/edit/${props._id}`;
         }
 
         return (<div className="container" key ={props._id}>
@@ -149,8 +157,8 @@ const Profile = () => {
             reactions = {props.reacts}
         />
         <div style={ (user !== username) ? {visibility: "hidden"} : null } className="post-options text-center">
-            <img src={trash} onClick={() => remove} className="expand one"/>
-            <img src={editIcon} onClick={update} className="expand"/>
+            <img src={trash} onClick={remove} className="expand one"/>
+            <img src={editIcon} onClick={() => {sound.play(); window.location = `/edit/${props._id}`}} className="expand"/>
         </div>
     </div>);
     }

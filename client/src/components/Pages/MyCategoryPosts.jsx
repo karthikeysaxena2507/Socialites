@@ -49,7 +49,7 @@ const MyCategoryPosts = () => {
         fetch();
     },[guest, type, username]);
 
-    const MyPost = (props, index) => {
+    const MyPost = (props) => {
 
         const changepost = async(event, post) => {
             try {
@@ -68,20 +68,19 @@ const MyCategoryPosts = () => {
             try {
                 sound.play();
                 await deletePost(props._id);
-                window.location = `/myposts`;
+                const postsData = await getPostsByUser(username);
+                setPosts(postsData.filter((post) => {
+                    return (post.category === type);
+                }));
             }
             catch(error) {
                 console.log(error);
             }
         }
 
-        const update = () => {
-            sound.play();
-            window.location = `/edit/${props._id}`;
-        }
-
-        return (<div className="container" key ={props._id}>
-         <Post 
+        return (<div key={props._id}>
+        <Post 
+            key = {props._id}
             name = {username}
             _id = {props._id}
             author = {props.author}
@@ -98,15 +97,23 @@ const MyCategoryPosts = () => {
             reactions = {props.reacts}
         />
         <div className="post-options text-center">
-            <img src={trash} onClick={() => remove} className="expand one"/>
-            <img src={edit} onClick={update} className="expand"/>
+            <img 
+                src={trash} 
+                onClick={remove} 
+                className="expand one"
+            />
+            <img 
+                src={edit} 
+                onClick={() => {sound.play(); window.location = `/edit/${props._id}`}} 
+                className="expand"
+            />
         </div>
     </div>);
     }
 
     return (loading) ? <Loader /> :
-    <div>
-        <Navbar name={username} page = "myposts" unread = {unread}/>
+    <div className="container">
+        <Navbar name = {username} page = "myposts" unread = {unread}/>
         <Heading />
         <div className="text-center"> <h3 className="margin"> My Posts </h3> </div>
         <CategoryMenu category_type = {type} message = "my" />

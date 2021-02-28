@@ -6,10 +6,16 @@ import Post from "../helper/Post";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import Fuse from "fuse.js";
+import trash from "../../images/trash.png";
+import edit from "../../images/edit.png";
 import Loader from "../helper/Loader";
 import { checkUser } from "../../api/userApis";
+import music from "../../sounds/button.mp3";
+import { Howl } from "howler";
 import { MessageContext } from "../../utils/Context";
 import { getAllPosts, getPostsByUser, addReactionToPost } from "../../api/postApis";
+import { deletePost } from "../../api/postApis";
+var sound = new Howl({src: [music]});
 
 const Result = () => {
 
@@ -61,7 +67,7 @@ const Result = () => {
                     });
                     const results = fuse.search(searchContent);
                     setfoundPosts(results.reverse());
-                    (type !== "none") (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
+                    (type !== "none") && (setfoundPosts(results.reverse().filter((post) => {return (post.item.category === type)})))
                 }
                 catch(error) {
                     console.log(error);
@@ -71,7 +77,7 @@ const Result = () => {
         }
     },[guest, message, searchContent, type, username]);
 
-    const createPost = (props, index) => {
+    const createPost = (props) => {
 
         const addReaction = async(event, post) => {
             try {
@@ -92,8 +98,28 @@ const Result = () => {
             }
         }
 
-        return <Post 
-            key = {index}
+        const remove = async() => {
+            try {
+                sound.play();
+                await deletePost(props.item._id);
+                const postsData = await getPostsByUser(username);
+                setLoading(false);
+                const fuse = new Fuse(postsData, {
+                    keys: ['author', 'title', 'content'],
+                    includeScore: true,
+                    includeMatches: true
+                });
+                const results = fuse.search(searchContent);
+                setfoundPosts(results);
+                (type !== "none") && (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+
+        return <div key = {props.item._id}>
+        <Post 
             name = {username}
             _id = {props.item._id}
             author = {props.item.author}
@@ -109,9 +135,14 @@ const Result = () => {
             imageUrl = {props.item.imageUrl}
             reactions = {props.item.reacts}
         />
+        <div className="post-options text-center" style={(message !== "personal") ? {display: "none"} : null}>
+            <img src={trash} onClick={remove} className="expand one"/>
+            <img src={edit} onClick={() => {sound.play(); window.location = `/edit/${props.item._id}`}} className="expand"/>
+        </div>
+    </div>
     }
 
-    (loading) ? <Loader /> :
+    return (loading) ? <Loader /> :
     <div>
         <Navbar name={username} page = "result" unread = {unread}/>
         <Heading />

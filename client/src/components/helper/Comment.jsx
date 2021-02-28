@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
-import music from "../../sounds/button.mp3";
 import { Howl } from "howler";
+import music from "../../sounds/button.mp3";
 import like from "../../images/like.png";
 import love from "../../images/love.png";
 import laugh from "../../images/laugh.png";
@@ -38,7 +38,7 @@ const Comment = (props) => {
     <div className="container margin">
         <div className="comment-name">
             <div> 
-                <span className="name author" onClick={(e) => {sound.play(); window.location = (`/profile/${e.target.innerText}`)}}> {props.name} </span>
+                <span className="name author" onClick={async(e) =>  {sound.play(); window.location = (`/profile/${e.target.innerText}`)}}> {props.name} </span>
                 <button 
                     onClick={() => (props.username !== "Guest") ? createRoom() : alert(props.guestMessage)} 
                     style={(props.name === props.username) ? {display: "none"} : null} 

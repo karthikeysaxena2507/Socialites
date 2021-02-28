@@ -10,8 +10,8 @@ import CategoryMenu from "../helper/CategoryMenu";
 import Heading from "../helper/Heading";
 import SearchBar from "../helper/SearchBar";
 import Loader from "../helper/Loader";
-import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
+import { Howl } from "howler";
 import { checkUser } from "../../api/userApis";
 import { getPostsByUser, addReactionToPost, deletePost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
@@ -21,8 +21,8 @@ const MyPosts = () => {
     var [username, setUsername] = useState("");
     var [posts,setPosts] = useState([]);
     var [loading, setLoading] = useState(true);
-    var guest = localStorage.getItem("Guest");
     var [unread, setUnread] = useState(0);
+    var guest = localStorage.getItem("Guest");
 
     useEffect(() => {
         const fetch = async() => {
@@ -58,17 +58,14 @@ const MyPosts = () => {
 
         const remove = async() => {
             try {
+                sound.play();
                 await deletePost(props._id);
-                window.location = `/allposts`;
+                const postsData = await getPostsByUser(username);
+                setPosts(postsData);
             }
             catch(error) {
                 console.log(error);
             }
-        }
-
-        const update = () => {
-            sound.play();
-            window.location = `/edit/${props._id}`;
         }
 
         return (<div className="container" key ={props._id}>
@@ -89,8 +86,8 @@ const MyPosts = () => {
                 reactions = {props.reacts}
         />
         <div className="post-options text-center">
-            <img src={trash} onClick={() => remove()} className="expand one"/>
-            <img src={edit} onClick={update} className="expand"/>
+            <img src={trash} onClick={remove} className="expand one"/>
+            <img src={edit} onClick={() => {sound.play(); window.location = `/edit/${props._id}`}} className="expand"/>
         </div>
     </div>);
     }

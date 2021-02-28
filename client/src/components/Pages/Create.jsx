@@ -100,7 +100,7 @@ const Create = () => {
                 <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Other </a>
             </div>
         </div>
-        <form onSubmit={() => (username !== "Guest") ? handleSubmitFile() : alert(guestMessage)}>
+        <form onSubmit={(e) => (username !== "Guest") ? handleSubmitFile(e) : alert(guestMessage)}>
             <div className="text-center margin">
                 <textarea
                     name="title"

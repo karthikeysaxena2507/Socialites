@@ -92,7 +92,12 @@ const Post = (props) => {
         <div className="post-content">
             {props.content}
             <div className="margin text-center">
-                <img src={props.imageUrl} style={(props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"}} className="post-image" alt="image not found"/>
+                <img 
+                    src={props.imageUrl} 
+                    style={(props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"}} 
+                    className="post-image" 
+                    alt="image not found"
+                />
             </div>
         </div>
         <div className="post-info"> 
@@ -124,7 +129,11 @@ const Post = (props) => {
                 <span onClick={SeeAll} > {props.laugh} </span>
             </span>
             <span className="all">
-                <a onClick={SeeAll} className="expand"> All </a> 
+                <a 
+                    onClick={SeeAll} 
+                    className="expand"> 
+                    All 
+                </a> 
             </span>
             <span className="move-right">
              <img 
@@ -135,11 +144,29 @@ const Post = (props) => {
                 <span onClick={SeeAll} > {props.laugh + props.love + props.like} </span>
             </span>
             <div className="margin">
-                <input type="text" onChange={change} name="content" value={comment.content} placeholder="Add a Comment" required/>
+                <input 
+                    type="text" 
+                    onChange={change} 
+                    name="content" 
+                    value={comment.content} 
+                    placeholder="Add a Comment" 
+                    required
+                    autoComplete="off"
+                />
             </div>
             <div className="comment">
-                <a onClick={SeeComplete} style={(props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"}} className="expand"> {props.comment_count} comments </a>
-                <button onClick={addComment} className="move-right btn-dark expand"> Add Comment </button>
+                <a 
+                    onClick={SeeComplete} 
+                    style={(props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"}} 
+                    className="expand"> 
+                    {props.comment_count} 
+                    comments 
+                </a>
+                <button 
+                    onClick={addComment} 
+                    className="move-right btn-dark expand"> 
+                    Add Comment 
+                </button>
             </div>
         </div>
     </div>);
