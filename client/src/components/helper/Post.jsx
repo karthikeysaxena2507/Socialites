@@ -159,8 +159,7 @@ const Post = (props) => {
                     onClick={SeeComplete} 
                     style={(props.show_comments) ? {visibility: "visible"}:{visibility: "hidden"}} 
                     className="expand"> 
-                    {props.comment_count} 
-                    comments 
+                    {props.comment_count} comments 
                 </a>
                 <button 
                     onClick={addComment} 
