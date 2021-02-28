@@ -3,34 +3,41 @@ const User = require("../models/user.model");
 const Room = require("../models/room.model");
 const brcypt = require("bcryptjs");
 const crypto = require("crypto");
-const redisClient = require("../redis/client");
 const { cloudinary } = require("../utils/cloudinary");
 const { OAuth2Client } = require("google-auth-library");
 const { v4: uuidv4 } = require("uuid");
 const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
-const { deleteBySessionId, getUserId } = require("../redis/functions"); 
+const redis = require("../redis/functions"); 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const checkAuth = async(req, res, next) => {
     try {
         if(req.cookies.SESSIONID !== undefined) 
         {
-            const userId = await getUserId(req.cookies.SESSIONID);
+            const userId = await redis.getUserId(req.cookies.SESSIONID);
             if(userId !== null && userId !== undefined) 
             {
                 const user = await User.findById(userId);
                 if(user) 
                 {
                     let totalUnread = 0;
-                    for (let tempRoom of user.rooms) {
+                    for (let tempRoom of user.rooms) 
+                    {
                         const room = await Room.findOne({roomId: tempRoom.roomId});
-                        tempRoom.unreadCount = (room.messages.length - tempRoom.lastCount);
-                        totalUnread += tempRoom.unreadCount;
+                        if(room) 
+                        {
+                            tempRoom.unreadCount = (room.messages.length - tempRoom.lastCount);
+                            totalUnread += tempRoom.unreadCount;
+                        }
                     }
-                    for (let tempChat of user.chats) {
+                    for (let tempChat of user.chats) 
+                    {
                         const room = await Room.findOne({roomId: tempChat.roomId});
-                        tempChat.unreadCount = (room.messages.length - tempChat.lastCount);
-                        totalUnread += tempChat.unreadCount;
+                        if(room) 
+                        {
+                            tempChat.unreadCount = (room.messages.length - tempChat.lastCount);
+                            totalUnread += tempChat.unreadCount;
+                        }
                     }
                     user.totalUnread = totalUnread;
                     user.save()
@@ -172,7 +179,7 @@ const loginUser = async(req, res, next) => {
                                 secure: true,
                                 maxAge: 7*24*60*60*1000 // (7 DAYS)
                             });
-                            redisClient.setex(sessionId, 7*24*60*60, id); // 7 DAYS
+                            redis.setRedisValue(sessionId, id, 7*24*60*60); // 7 DAYS
                         }
                         else 
                         {
@@ -181,7 +188,7 @@ const loginUser = async(req, res, next) => {
                                 sameSite: true,
                                 secure: true
                             });
-                            redisClient.setex(sessionId, 6*60*60, id); // 10 HOURS
+                            redis.setRedisValue(sessionId, id, 6*60*60); // 10 HOURS
                         }
                         res.json({user: {id, username, email, verified}});
                     }
@@ -242,21 +249,12 @@ const loginWithGoogle = async(req, res, next) => {
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
                     sameSite: true,
-                    secure: true,
+                    // secure: true,
                     maxAge: 7*24*60*60*1000
                 });
                 const {id, username, email} = user;
-                redisClient.setex(sessionId, 7*24*60*60, id, (err) => 
-                {
-                    if(err) 
-                    {
-                        res.json(err);
-                    }
-                    else 
-                    {
-                        res.json({user: {id, username, email}});     
-                    }
-                });
+                redis.setRedisValue(sessionId, id, 7*24*60*60); 
+                res.json({user: {id, username, email}});
             }
             else 
             {
@@ -278,7 +276,7 @@ const loginWithGoogle = async(req, res, next) => {
                         maxAge: 7*24*60*60*1000
                     });
                     const {id, username, email} = data;
-                    redisClient.setex(sessionId, 7*24*60*60, id);
+                    redis.setRedisValue(sessionId, id, 7*24*60*60);
                     res.json({user: {id, username, email}});
                 })
                 .catch((error) => {
@@ -470,7 +468,7 @@ const verifyUser = async(req, res, next) => {
 
 const logoutUser = async(req, res, next) => {
     try {
-        const response = deleteBySessionId(req.cookies.SESSIONID);
+        const response = redis.deleteBySessionId(req.cookies.SESSIONID);
         res.clearCookie("SESSIONID");
         res.json(response);
     }

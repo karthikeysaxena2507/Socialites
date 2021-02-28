@@ -190,7 +190,7 @@ const addComment = async(req, res, next) => {
 const addReactionToComment = async(req, res, next) => {
     try {
         const post = await Post.findOne({_id: req.params.postId});
-        var index = post.comments.findIndex((comment) => (comment._id == req.body._id));
+        let index = await post.comments.findIndex((comment) => (comment._id == req.body._id));
         const newReaction = new React({
             name: req.params.username,
             type: req.params.react
@@ -216,12 +216,12 @@ const addReactionToComment = async(req, res, next) => {
         }
         if(id === post.comments[index].reacts.length) 
         {
-            post.comments[index].reacts.push(newReaction);
+            await post.comments[index].reacts.push(newReaction);
             post.comments[index][newReaction.type]++;
         }
         else 
         {
-            post.comments[index].reacts.splice(id,1);
+            await post.comments[index].reacts.splice(id,1);
         }
         post.save()
         .then((data) => {

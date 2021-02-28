@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useContext } from "react";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
@@ -11,7 +12,7 @@ const User = (props) => {
 
     const createRoom = async() => {
         try {
-            var room = (props.user1 < props.user2) ? (props.user1 + "-" + props.user2) : (props.user2 + "-" + props.user1);
+            let room = (props.user1 < props.user2) ? (props.user1 + "-" + props.user2) : (props.user2 + "-" + props.user1);
             await createChat(room, props.user1, props.user2);
             window.location = `/room/${room}`;
         }

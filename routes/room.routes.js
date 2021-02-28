@@ -19,4 +19,11 @@ router.post("/join", roomCtrl.joinRoom);
 // CREATING A NEW ROOM
 router.post("/create", roomCtrl.createRoom);
 
+// DELETING A MESSAGE FROM A CHAT
+router.post("/delete/message", roomCtrl.deleteMessage);
+
+// DELETING A CHAT ROOM
+router.post("/delete/room", roomCtrl.deleteRoom);
+
+
 module.exports = router;

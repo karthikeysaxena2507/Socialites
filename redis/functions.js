@@ -7,6 +7,11 @@ const redisClient = redis.createClient(process.env.REDIS_URL, {
     auth_pass: process.env.REDIS_PASSWORD
 });
 
+redisClient.on("connect", (err) => {
+    if(err) console.log(err);    
+    else console.log("Redis cluster connected Successfully");    
+});
+
 /**
  * Print all key value pairs in redis
  */
@@ -82,4 +87,20 @@ const getUserId = async(sessionId) => {
     return userId;
 }
 
-module.exports = { printRedisValues, deleteAllRedisValues, deleteBySessionId, getUserId };
+/**
+ * The function to insert new Session in redis
+ * @param {String} sessionId
+ * @param {String} userId
+ * @param {String} duration
+ */
+const setRedisValue = async(sessionId, userId, duration) => {
+    redisClient.setex(sessionId, duration, userId);
+}
+
+module.exports = { 
+    printRedisValues, 
+    deleteAllRedisValues, 
+    deleteBySessionId, 
+    getUserId,
+    setRedisValue
+};

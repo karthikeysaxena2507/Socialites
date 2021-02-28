@@ -54,4 +54,31 @@ const joinChatRoom = async(roomId, username) => {
     return roomData.data;
 }
 
-export { getRoomById, createChat, createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser };
+/**
+ * The function to delete a chat room of a user
+ * @param {String} id 
+ * @param {String} roomId 
+ * @param {String} username 
+ */
+const deleteRoom = async(id, roomId, username) => {
+    const rooms = await axios.post("/rooms/delete/room", {username, id, roomId});
+    return rooms.data;
+}
+
+/**
+ * The function to delete a message from a chat
+ */
+const deleteMessage = async() => {
+
+}
+
+export { 
+    getRoomById, 
+    createChat, 
+    createChatRoom, 
+    joinChatRoom, 
+    getRoomsByUser, 
+    getChatsByUser,
+    deleteRoom,
+    deleteMessage
+};

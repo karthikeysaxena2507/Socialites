@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useContext, useEffect,useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import search from "../../images/search.png";
@@ -13,7 +13,7 @@ import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import { checkUser, getAllUsers } from "../../api/userApis"
 import { MessageContext } from "../../utils/Context";
-import { createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser } from "../../api/roomApis";
+import { createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser, deleteRoom } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
 const Users = () => {
@@ -69,27 +69,6 @@ const Users = () => {
         fetch();
     },[guest]);
 
-    const createUser = (props) => {
-        if(props.username !== undefined) {
-            if(props.username !== "Guest") {
-                return <User
-                    key={props._id}
-                    user1={username}
-                    user2={props.username}
-                    unreadCount={-1}
-                />
-            }
-        } 
-        else {
-            return <User
-                key={props.item._id}
-                user1={username}
-                user2={props.item.username}
-                unreadCount={-1}
-            />
-        }
-    }
-
     const searchAmongUsers = (e) => {
         e.preventDefault();
         sound.play();
@@ -131,11 +110,13 @@ const Users = () => {
     const searchAmongChats = (e) => {
         e.preventDefault();
         sound.play();
-        if(searchChats === "") {
+        if(searchChats === "") 
+        {
             setChatMessage("Showing All Chats");
             setChats(allChats);
         }
-        else {
+        else 
+        {
             setChatMessage(`Showing Search results for: ${searchChats}` )
             const fuse = new Fuse(allChats, {
                 keys: ["name"],
@@ -168,44 +149,71 @@ const Users = () => {
         }
     }
 
+    const deleteUserRoom = async(id, roomId, username) => {
+        try {
+            sound.play();
+            const rooms = await deleteRoom(id, roomId, username);
+            setAllRooms(rooms)
+            setRooms(rooms);
+        }
+        catch(error) {
+            console.log(error);
+        }
+    }
+
     const printRooms = (props) => {
-        if(props.roomName !== undefined) {
-            return <Room
-                key={props._id}
-                roomName={props.roomName}
-                unreadCount={props.unreadCount}
-                joinRoom={() => joinRoom(props.roomId, username)}
-            />
-        }   
+        return (props.roomName !== undefined) ?
+        <Room
+            key={props._id}
+            roomName={props.roomName}
+            unreadCount={props.unreadCount}
+            joinRoom={() => joinRoom(props.roomId, username)}
+            remove={() => deleteUserRoom(props._id, props.roomId, username)}
+        /> :
+        <Room
+            key={props.item._id}
+            roomName={props.item.roomName}
+            unreadCount={props.item.unreadCount}
+            joinRoom={() => joinRoom(props.item.roomId, username)}
+            remove={() => deleteUserRoom(props.item._id, props.item.roomId, username)}
+        />
+    } 
+
+    const printUsers = (props) => {
+        if(props.username !== undefined) {
+            if(props.username !== "Guest") {
+                return <User
+                    key={props._id}
+                    user1={username}
+                    user2={props.username}
+                    unreadCount={-1}
+                />
+            }
+        } 
         else {
-            return <Room
+            return <User
                 key={props.item._id}
-                roomName={props.item.roomName}
-                unreadCount={props.item.unreadCount}
-                joinRoom={() => joinRoom(props.item.roomId, username)}
+                user1={username}
+                user2={props.item.username}
+                unreadCount={-1}
             />
         }
     }
 
     const printChats = (props) => {
-        if(props.name !== undefined) {
-            return (
-            <User
-                key={props._id}
-                user1={username}
-                user2={props.name}
-                unreadCount={props.unreadCount}
-            />)
-        }
-        else {
-            return (
-            <User
-                key={props.item._id}
-                user1={username}
-                user2={props.item.name}
-                unreadCount={props.item.unreadCount}
-            />)
-        }
+        return (props.name !== undefined) ?
+        <User
+            key={props._id}
+            user1={username}
+            user2={props.name}
+            unreadCount={props.unreadCount}
+        /> :
+        <User
+            key={props.item._id}
+            user1={username}
+            user2={props.item.name}
+            unreadCount={props.item.unreadCount}
+        />
     }
 
     return (loading) ? <Loader /> :
@@ -263,7 +271,7 @@ const Users = () => {
                 />
                 <button className="btn expand" onClick={searchAmongUsers}> <img src={search} /> </button>
                 <p className="mt-1"> {message} </p>
-                <div className="mt-4"> {users.map(createUser)} </div>
+                <div className="mt-4"> {users.map(printUsers)} </div>
             </div>
             <div className="mt-4">
                 <h3> My Chats </h3>

@@ -188,11 +188,50 @@ const createRoom = async(req, res, next) => {
     }
 }
 
+const deleteRoom = async(req, res, next) => {
+    try {
+        const { username, id, roomId } = req.body;
+        const user = await User.findOne({username});
+        const room = await Room.findOne({roomId, isGroup: true});
+        let userIndex = await room.users.findIndex((user) => (user.name === username));
+        let roomIndex = await user.rooms.findIndex((room) => (room._id == id));
+        await user.rooms.splice(roomIndex, 1);
+        await room.users.splice(userIndex, 1);
+        user.save()
+        .then(async() => {
+            room.save()
+            .then(() => {
+                res.json(user.rooms);
+            })
+            .catch((error) => {
+                res.json(error);
+            })
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    catch(error) {
+        res.json(next(error));
+    }
+}
+
+const deleteMessage = async(req, res, next) => {
+    try {
+
+    }
+    catch(error) {
+        res.json(next(error));
+    }
+}
+
 module.exports = {
                     getRoom,
                     getChatsByUser,
                     getRoomsByUser,
                     createChat,
                     createRoom,
-                    joinRoom
+                    joinRoom,
+                    deleteRoom,
+                    deleteMessage
                  }
