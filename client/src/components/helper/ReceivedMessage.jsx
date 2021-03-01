@@ -7,7 +7,8 @@ const ReceivedMessage = (props) => {
         <div>
             <div> {props.name} </div>
             <div className="messageBox backgroundLight">
-                <p className="messageText"> {props.content} </p>
+                <p className="messageText" style={(props.content !== "") ? {display: "none"} : null}> <i> message deleted </i> </p>
+                <p className="messageText" style={(props.content === "") ? {display: "none"} : null}> {props.content} </p>
             </div>
             <div> {props.time} </div>
         </div>

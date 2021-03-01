@@ -18,8 +18,8 @@ import { getRoomById } from "../../api/roomApis";
 import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
-// const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
-const ENDPOINT = "http://localhost:5000/";
+const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
+// const ENDPOINT = "http://localhost:5000/";
 
 const Rooms = () => {
 
@@ -82,34 +82,35 @@ const Rooms = () => {
             socket.current.emit("sendmessage", {message, name: username, room: roomId, time: time()}, () => {});
             setMessage("");
         }
-    }
-
-    const deleteMessage = (messageId) => 
-    {
-        buttonSound.play();
-        socket.current.emit("deletemessage", {room: roomId, messageId})
+        console.log(messages);
     }
 
     const printMessages = (props) => 
     {
+
+        const deleteMessage = (messageId) => 
+        {
+            buttonSound.play();
+            socket.current.emit("deletemessage", {room: roomId, messageId});
+        }
+
         return (props.name === username) ?
-        <div key = {props._id}>
-            <SentMessage 
-                _id = {props._id}
-                username = {username}
-                content = {props.content}
-                time = {props.time}
-                delete = {(messageId) => deleteMessage(messageId)}  
-            />
-        </div> :
-        <div key = {props._id}>
-            <ReceivedMessage 
-                _id = {props._id}
-                name = {props.name}
-                content = {props.content}
-                time = {props.time}
-            />
-        </div>
+        <SentMessage 
+            key = {props._id}
+            _id = {props._id}
+            username = {username}
+            content = {props.content}
+            time = {props.time}
+            delete = {(messageId) => deleteMessage(messageId)}  
+        />
+        :
+        <ReceivedMessage 
+            key = {props._id}
+            _id = {props._id}
+            name = {props.name}
+            content = {props.content}
+            time = {props.time}
+        />
     }
 
     const changeState = () => 

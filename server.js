@@ -38,7 +38,6 @@ app.use("/rooms", roomsRouter);
 // SETTING UP SOCKET.IO FOR REAL TIME CHAT FEATURE
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
-const User = require("./models/user.model");
 const helper = require("./helper/chat");
 
 const io = require('socket.io')(server, {
@@ -63,7 +62,6 @@ io.on("connection", (socket) => {
             const chat = await Chat.find({room: data.room});
             await socket.join(data.room);
             await io.to(data.room).emit("users", {chat: chat});
-            await io.to(data.room).emit("message", {name: "Admin", content: `Hello ${data.name}, Welcome`, time: time()});
         }
         catch(error) {
             console.log(error);
@@ -75,11 +73,11 @@ io.on("connection", (socket) => {
             const room = await Room.findOne({roomId: data.room});
             await room.messages.push({name: data.name, content: data.message, time: data.time});
             await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);    
+            const chat = await Chat.find({room: data.room});
             room.save()
-            .then(async() => {
-                const chat = await Chat.find({room: data.room});
-                await io.to(data.room).emit("users", {chat: chat});
-                await io.to(data.room).emit("message", {name: data.name, content: data.message, time: data.time});
+            .then(async () => {
+                io.to(data.room).emit("users", {chat: chat});
+                io.to(data.room).emit("message", {name: data.name, content: data.message, time: data.time});
             })
             .catch((err) => {
                 console.log(err);
@@ -93,15 +91,14 @@ io.on("connection", (socket) => {
     socket.on("deletemessage", async(data) => {
         try {
             const room = await Room.findOne({roomId: data.room});
+            const chat = await Chat.find({room: data.room});
             const messageIndex = await room.messages.findIndex((message) => (message._id == data.messageId));
-            await room.messages.splice(messageIndex, 1);
-            await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);
-            await helper.updateOfflineUsers(data.room, messageIndex + 1, room.isGroup);
+            room.messages[messageIndex].content = "";
+            await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);    
             room.save()
-            .then(async() => {
-                const chat = await Chat.find({room: data.room});
+            .then(async (roomData) => {
                 await io.to(data.room).emit("users", {chat});
-                await io.to(data.room).emit("updatemessages", {messages: room.messages});
+                await io.to(data.room).emit("updatemessages", {messages: roomData.messages});
             })
             .catch((error) => {
                 console.log(error);
