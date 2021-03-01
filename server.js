@@ -74,10 +74,12 @@ io.on("connection", (socket) => {
             await room.messages.push({name: data.name, content: data.message, time: data.time});
             await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);    
             const chat = await Chat.find({room: data.room});
+            const messagesCount = room.messages.length;
             room.save()
-            .then(async () => {
+            .then(async (roomData) => {
+                const messageId = roomData.messages[messagesCount - 1]._id;
                 io.to(data.room).emit("users", {chat: chat});
-                io.to(data.room).emit("message", {name: data.name, content: data.message, time: data.time});
+                io.to(data.room).emit("message", { _id: messageId , name: data.name, content: data.message, time: data.time});
             })
             .catch((err) => {
                 console.log(err);

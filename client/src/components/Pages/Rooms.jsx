@@ -94,23 +94,27 @@ const Rooms = () => {
             socket.current.emit("deletemessage", {room: roomId, messageId});
         }
 
-        return (props.name === username) ?
-        <SentMessage 
-            key = {props._id}
-            _id = {props._id}
-            username = {username}
-            content = {props.content}
-            time = {props.time}
-            delete = {(messageId) => deleteMessage(messageId)}  
+        if(props.name === username) 
+        {
+            return <SentMessage 
+                key={props._id}
+                _id = {props._id}
+                username = {username}
+                content = {props.content}
+                time = {props.time}
+                delete = {(messageId) => deleteMessage(messageId)}  
+            />
+        }
+        else 
+        {
+            return <ReceivedMessage 
+                key={props._id}
+                _id = {props._id}
+                name = {props.name}
+                content = {props.content}
+                time = {props.time}
         />
-        :
-        <ReceivedMessage 
-            key = {props._id}
-            _id = {props._id}
-            name = {props.name}
-            content = {props.content}
-            time = {props.time}
-        />
+        }
     }
 
     const changeState = () => 

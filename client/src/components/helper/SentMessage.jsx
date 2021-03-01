@@ -4,7 +4,7 @@ import trash from "../../images/trash.png";
 
 const SentMessage = (props) => {
     return (
-    <div>
+    <div key={props._id}>
         <div className="messageContainer justifyEnd mt-3">
             <div>
                 <div className="text-right"> {props.username} </div>

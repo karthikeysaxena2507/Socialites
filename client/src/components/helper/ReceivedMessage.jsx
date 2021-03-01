@@ -2,7 +2,7 @@ import React from "react";
 
 const ReceivedMessage = (props) => {
     return (
-    <div>
+    <div key={props._id}>
         <div className="messageContainer justifyStart mt-3">
         <div>
             <div> {props.name} </div>
