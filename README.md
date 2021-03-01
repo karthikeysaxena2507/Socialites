@@ -11,12 +11,13 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 6. The posts can be filtered based on category or any content searched by the user.
 7. Users can customize their profile page as they want by adding a profile picture and writing a suitable Bio.
 8. Users can also chat with other users in real time, either personally or by creating a room and sharing that roomID.
-9. Search option, sound effects and many filters have been added to provide good user experience.
-10. For a quick look, Users can also take a tour of the website by logging in as a guest.
-11. Users can check the "remember me" option to login once for 7 days.
-12. Users can see which other users are online in a group or a personal chat.
-13. Users can see the number of unread messages in their chats and rooms.
-14. Users can see a pie chart based on the different types of reactions and comments on their posts.
+9. Users also have an option leave chat groups and delete their messages from chat.
+10. Search option, sound effects and many filters have been added to provide good user experience.
+11. For a quick look, Users can also take a tour of the website by logging in as a guest.
+12. Users can check the "remember me" option to login once for 7 days.
+13. Users can see which other users are online in a group or a personal chat.
+14. Users can see the number of unread messages in their chats and rooms.
+15. Users can see a pie chart based on the different types of reactions and comments on their posts.
 
 
 ## Technical Features:
