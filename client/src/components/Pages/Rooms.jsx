@@ -82,7 +82,6 @@ const Rooms = () => {
             socket.current.emit("sendmessage", {message, name: username, room: roomId, time: time()}, () => {});
             setMessage("");
         }
-        console.log(messages);
     }
 
     const printMessages = (props) => 
