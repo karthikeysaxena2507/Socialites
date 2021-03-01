@@ -44,12 +44,9 @@ const ResetPassword = () => {
             const drop = async() => {
                 try {
                     const response = await axios.post("/users/reset", {token, newPassword});
-                    if(response.data === "INVALID") {
-                        alert("You are not a Registered User, Please go to the site and register yourself. Or it is possible that the link to reset password has expired");
-                    }
-                    else {
-                        window.location = "/login";    
-                    }
+                    (response.data === "INVALID") ?
+                    alert("You are not a Registered User, Please go to the site and register yourself. Or it is possible that the link to reset password has expired")
+                    : window.location = "/login";    
                 }
                 catch(error) {
                     console.log(error);

@@ -12,6 +12,7 @@ import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
 import { addPost } from "../../api/postApis";
 import { MessageContext } from "../../utils/Context";
+import Dropdown from "../helper/Dropdown";
 var sound = new Howl({src: [music]});
 
 const Create = () => {
@@ -74,31 +75,27 @@ const Create = () => {
             console.log(error);
         }
     }
+
+    const changeCategory = (e) => {
+        sound.play();
+        setCategory(e.target.innerText);
+    }
  
     return (loading) ? <Loader /> :
     <div className="text-center">
         <Navbar name={username} page = "create" unread = {unread}/>
         <Heading />
-        <div> 
-        <h1 className="margin"> Create Your Post Here </h1>
-        </div> 
+        <div> <h1 className="margin"> Create Your Post Here </h1> </div> 
         <div className="dropdown text-center">
-            <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+            <button 
+                className="btn dropdown-toggle" 
+                type="button" 
+                id="dropdownMenuButton" 
+                data-toggle="dropdown" 
+                aria-expanded="false">
                 {category}
             </button>
-            <div className="dropdown-menu">
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Art </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Motivational </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Political </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Funny </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Music </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Food </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Fashion </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> General Knowledge </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Lifestyle </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Travel </a>
-                <a className="dropdown-item" href="#" onClick={(e)=> {sound.play(); setCategory(e.target.innerText)}}> Other </a>
-            </div>
+            <Dropdown change={(e) => changeCategory(e)} />
         </div>
         <form onSubmit={(e) => (username !== "Guest") ? handleSubmitFile(e) : alert(guestMessage)}>
             <div className="text-center margin">

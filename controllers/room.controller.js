@@ -1,7 +1,7 @@
 const Room = require("../models/room.model");
 const User = require("../models/user.model");
 const { v4: uuidv4 } = require("uuid");
-const { time } = require("../utils/date");
+const { time } = require("../helper/date");
 
 const getRoom = async(req, res, next) => {
     try {

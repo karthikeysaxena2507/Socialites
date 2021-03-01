@@ -18,11 +18,11 @@ var sound = new Howl({src: [music]});
 
 const MyPosts = () => {
 
-    var [username, setUsername] = useState("");
-    var [posts,setPosts] = useState([]);
-    var [loading, setLoading] = useState(true);
-    var [unread, setUnread] = useState(0);
-    var guest = localStorage.getItem("Guest");
+    const [username, setUsername] = useState("");
+    const [posts,setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [unread, setUnread] = useState(0);
+    const guest = localStorage.getItem("Guest");
 
     useEffect(() => {
         const fetch = async() => {

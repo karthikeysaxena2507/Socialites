@@ -98,27 +98,25 @@ const CompletePost = () => {
     <div className="container">
         <Navbar name={username} page = "complete" unread = {unread}/>
         <Heading />
-        <div>
-            <Post 
-                    key = {id}
-                    name = {username}
-                    _id = {id}
-                    author = {post.author}
-                    title = {post.title}
-                    content = {post.content}
-                    category = {post.category}
-                    like = {post.like}
-                    love = {post.love}
-                    laugh = {post.laugh}
-                    comment_count = {post.comments.length}
-                    change = {(e, post) => (username !== "Guest") ? addReaction(e, post) : alert(guestMessage)}
-                    show_comments = {false}
-                    imageUrl = {post.imageUrl}
-                    reactions = {post.reacts}
-            />
-            <h3 className="margin text-center"> Comments </h3>
-            {post.comments.map(printComments)}
-        </div>
+        <Post 
+            key = {id}
+            name = {username}
+            _id = {id}
+            author = {post.author}
+            title = {post.title}
+            content = {post.content}
+            category = {post.category}
+            like = {post.like}
+            love = {post.love}
+            laugh = {post.laugh}
+            comment_count = {post.comments.length}
+            change = {(e, post) => (username !== "Guest") ? addReaction(e, post) : alert(guestMessage)}
+            show_comments = {false}
+            imageUrl = {post.imageUrl}
+            reactions = {post.reacts}
+        />
+        <h3 className="margin text-center"> Comments </h3>
+        {post.comments.map(printComments)}
         <Footer />
     </div>
 }

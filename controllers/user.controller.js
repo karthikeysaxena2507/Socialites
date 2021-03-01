@@ -27,6 +27,7 @@ const checkAuth = async(req, res, next) => {
                         if(room) 
                         {
                             tempRoom.unreadCount = (room.messages.length - tempRoom.lastCount);
+                            if(tempRoom.unreadCount < 0) tempRoom.unreadCount = 0;
                             totalUnread += tempRoom.unreadCount;
                         }
                     }
@@ -36,6 +37,7 @@ const checkAuth = async(req, res, next) => {
                         if(room) 
                         {
                             tempChat.unreadCount = (room.messages.length - tempChat.lastCount);
+                            if(tempChat.unreadCount < 0) tempChat.unreadCount = 0;
                             totalUnread += tempChat.unreadCount;
                         }
                     }
@@ -249,7 +251,7 @@ const loginWithGoogle = async(req, res, next) => {
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
                     sameSite: true,
-                    secure: true,
+                    // secure: true,
                     maxAge: 7*24*60*60*1000
                 });
                 const {id, username, email} = user;

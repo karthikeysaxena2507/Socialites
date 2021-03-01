@@ -17,6 +17,7 @@ import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
 import { MessageContext } from "../../utils/Context";
 import { getPostById, addReactionToPost } from "../../api/postApis";
+import { props } from "bluebird";
 var sound = new Howl({src: [music]});
 
 const Reactions = () => {
@@ -117,24 +118,21 @@ const Reactions = () => {
         setMessage("Showing All Users Who Reacted");
     }
 
-    const renderUsers = (props, index) => {
+    const renderUsers = (props) => {
 
-        if(props.name !== undefined) {
-            return <User
-                key={index}
-                user1={username}
-                user2={props.name}
-                unreadCount={-1}
-            />                     
-        }
-        else {
-            return <User
-                key={index}
-                user1={username}
-                user2={props.item.name}
-                unreadCount={-1}
-            />                     
-        }
+        return (props.name !== undefined) ? 
+        <User
+            key={props._id}
+            user1={username}
+            user2={props.name}
+            unreadCount={-1}
+        /> :                    
+        <User
+            key={props.item._id}
+            user1={username}
+            user2={props.item.name}
+            unreadCount={-1}
+        />                     
     }
 
     const searchIt = (event) => {

@@ -5,9 +5,12 @@ import Heading from "../helper/Heading";
 import ScrollToBottom from "react-scroll-to-bottom";
 import io from "socket.io-client";
 import Loader from "../helper/Loader";
+import User from "../helper/ChatRoomUser";
+import SentMessage from "../helper/SentMessage";
+import ReceivedMessage from "../helper/ReceivedMessage";
+import RoomData from "../helper/roomData";
 import { useParams } from 'react-router-dom';
 import { Howl } from "howler";
-import trash from "../../images/trash.png";
 import button from "../../sounds/button.mp3";
 import newMessage from "../../sounds/message.mp3";
 import { checkUser } from "../../api/userApis"
@@ -15,8 +18,8 @@ import { getRoomById } from "../../api/roomApis";
 import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
-const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
-// const ENDPOINT = "http://localhost:5000/";
+// const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
+const ENDPOINT = "http://localhost:5000/";
 
 const Rooms = () => {
 
@@ -89,43 +92,24 @@ const Rooms = () => {
 
     const printMessages = (props) => 
     {
-        if(props.name === username) 
-        {
-            return (
-            <div key={props._id}>
-                <div className="messageContainer justifyEnd mt-3">
-                    <div>
-                        <div className="text-right"> {username} </div>
-                        <div className="text-right">
-                            <div className="messageBox backgroundOrange">
-                                <p className="messageText text-white"> {props.content} </p>
-                            </div>
-                            <img 
-                                src={trash} 
-                                onClick={() => deleteMessage(props._id)} 
-                                className="move-right expand ml-1 mt-1" 
-                            />
-                        </div>
-                        <div className="text-right"> {props.time} </div>
-                    </div>
-                </div>
-            </div>);
-        }
-        else 
-        {
-            return (
-            <div key={props._id}>
-                <div className="messageContainer justifyStart mt-3">
-                <div>
-                    <div> {props.name} </div>
-                    <div className="messageBox backgroundLight">
-                        <p className="messageText"> {props.content} </p>
-                    </div>
-                    <div> {props.time} </div>
-                </div>
-                </div>
-            </div>);
-        }
+        return (props.name === username) ?
+        <div key = {props._id}>
+            <SentMessage 
+                _id = {props._id}
+                username = {username}
+                content = {props.content}
+                time = {props.time}
+                delete = {(messageId) => deleteMessage(messageId)}  
+            />
+        </div> :
+        <div key = {props._id}>
+            <ReceivedMessage 
+                _id = {props._id}
+                name = {props.name}
+                content = {props.content}
+                time = {props.time}
+            />
+        </div>
     }
 
     const changeState = () => 
@@ -134,76 +118,28 @@ const Rooms = () => {
         (state === "Show") ? setState("Hide") : setState("Show")
     }
 
-    const renderUsers = (props, index) => 
+    const printUsers = (props) => 
     {
-        const SeeProfile = (e) => 
-        {
-            buttonSound.play();
-            window.location = (`/profile/${e.target.innerText}`);
-        }
-
-        const isOnline = () => 
-        {
-            for (let user of onlineUsers) 
-            {
-                if(user.name === props.name) return true;
-            }
-            return false;
-        }
-
-        return (
-        <div className="container user" key={index}>
-            <li className="profile" onClick={SeeProfile}> 
-                {props.name}
-                <span 
-                    className="move-right" 
-                    style={!isOnline() ? 
-                    {
-                        display: "none"
-                    } : 
-                    {
-                        backgroundColor: "darkgreen", 
-                        color: "white", 
-                        padding: "4px 8px", 
-                        borderRadius: "5px"
-                    }
-                }>
-                    Online
-                </span>
-                <span 
-                    className="move-right" 
-                    style={isOnline() ? 
-                    {
-                        display: "none"
-                    } : 
-                    {
-                        backgroundColor: "red", 
-                        color: "white", 
-                        padding: "4px 8px", 
-                        borderRadius: "5px"
-                    }
-                }>
-                    Offline
-                </span>
-            </li>
-        </div>
-        );
+        return (<User
+            key={props._id}
+            name={props.name}
+            onlineUsers={onlineUsers}
+        />);
     } 
 
     return (loading) ? <Loader /> :
     <div>
         <Heading />
-        <div className="text-center"> 
-            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room ID: {roomId} </h5>
-            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Name: {roomName} </h5>
-            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Room Creator: {creator} </h5>
-            <h5 className="mt-1" style={!isGroup ? {display: "none"} : null}> Share the above room id with users whom you want to join <strong> {roomName} </strong> </h5>
-            <h5 className="mt-1" style={isGroup ? {display: "none"} : null}> Chat between {roomId} </h5>
-            <button className="btn" onClick={changeState} style={!isGroup ? {display: "none"} : null}> {state} All Users in {roomName} </button>
-            <button className="btn" onClick={changeState} style={isGroup ? {display: "none"} : null}> {state} Status </button>
-        </div>
+        <RoomData 
+            isGroup = {isGroup}
+            roomId = {roomId}
+            creator = {creator}
+            state = {state}
+            roomName = {roomName}
+            change = {changeState}
+        />
         <div className="mt-3" style={(state === "Show") ? {display: "none"} : null}>
-            {allUsers.map(renderUsers)}
+            {allUsers.map(printUsers)}
         </div>
         <div className="outerContainer mt-2">
             <div className="innerContainer">
@@ -217,7 +153,7 @@ const Rooms = () => {
                     placeholder="Type a message..."
                     value={message}
                     onChange={(e) => {setMessage(e.target.value)}}
-                    onKeyPress={event => event.key === "Enter" ? sendMessage(event) : null}
+                    onKeyPress={event => (event.key === "Enter") ? sendMessage(event) : null}
                 />
                 <button type="submit" className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
             </form>

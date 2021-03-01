@@ -24,9 +24,7 @@ const Login = () => {
             try {
                 const user = await checkUser();
                 setLoading(false);
-                if(user !== "INVALID") {
-                    window.location = `/profile/${user.username}`;
-                }
+                (user !== "INVALID") && (window.location = `/profile/${user.username}`);
             }
             catch(err) {
                 console.log(err);
@@ -42,12 +40,7 @@ const Login = () => {
             try {
                 const user = await loginUser(email, password, rememberMe);
                 setMessage(" ");
-                if(user.verified) {
-                    window.location = `/profile/${user.username}`;
-                }
-                else {
-                    window.location = `/verify/${user.token}`;
-                }
+                (user.verified) ? window.location = `/profile/${user.username}` : window.location = `/verify/${user.token}`;
             }
             catch(error) {
                 console.log(error);

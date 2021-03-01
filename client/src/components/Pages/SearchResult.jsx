@@ -83,7 +83,7 @@ const Result = () => {
             try {
                 await addReactionToPost(event.target.name, post.name, post);
                 let response;
-                (message === "all") ? response = await getAllPosts() : response = await getPostsByUser(username)
+                (message === "all") ? response = await getAllPosts() : response = await getPostsByUser(username);
                 const fuse = new Fuse(response, {
                     keys: ['author', 'title', 'content'],
                     includeScore: true,

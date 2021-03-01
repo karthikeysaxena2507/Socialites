@@ -16,9 +16,11 @@ const About = () => {
     useEffect(()=> {
         const fetch = async() => {
             try {
-                let user;
-                (guest !== "true") ? user = await checkUser() : setUsername("Guest");
-                (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
+                if(guest !== "true") {
+                    const user = await checkUser();
+                    (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
+                }
+                else setUsername("Guest");
                 setLoading(false);
             }
             catch(error) {
@@ -47,11 +49,12 @@ const About = () => {
                     <li> The posts can be filtered based on category or any content searched by the user. </li>
                     <li> Users can customize their profile page as they want by adding a profile picture and writing a suitable Bio. </li>
                     <li> Users can also chat with other users in real time, either personally or by creating a room and sharing that roomID. </li>
+                    <li> Users also have an option to leave chat groups and delete their messages from chats </li>
                     <li> Search option and many filters have been added to provide good user experience. </li>
                     <li> For a quick look, Users can also take a tour of the website by logging in as a guest. </li>
                     <li> They can also check the "remember me" option to login once for 7 days. </li>
                     <li> Users can see which other users are online in a group or a personal chat. </li>
-                    <li> Users can see the number of unread messages in their chats and rooms. </li>
+                    <li> Users can see the number of new unread messages in their chats and rooms. </li>
                     <li> Users can see a pie chart based on the different types of reactions and comments on their posts. </li>
                 </ul>
         </div>

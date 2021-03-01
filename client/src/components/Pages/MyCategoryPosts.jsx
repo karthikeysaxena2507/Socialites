@@ -37,9 +37,7 @@ const MyCategoryPosts = () => {
                         return (post.category === type);
                     }));
                 }
-                else {
-                    setUsername("Guest");
-                }
+                else setUsername("Guest");
                 setLoading(false);
             }
             catch(error) {

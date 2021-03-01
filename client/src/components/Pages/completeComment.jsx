@@ -60,7 +60,7 @@ const CompleteComment = () => {
             setlike(true);    
             setlove(false);
             setlaugh(false);
-            setreactions(allreactions.filter(function(reaction) {
+            setreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "likes");
             }));
         }
@@ -72,7 +72,7 @@ const CompleteComment = () => {
             setlike(false);    
             setlove(true);
             setlaugh(false);
-            setreactions(allreactions.filter(function(reaction) {
+            setreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "loves");
             }));
         }
@@ -84,7 +84,7 @@ const CompleteComment = () => {
             setlike(false);    
             setlove(false);
             setlaugh(true);
-            setreactions(allreactions.filter(function(reaction) {
+            setreactions(allreactions.filter((reaction) => {
                 return (reaction.type === "laughs");
             }));
         }
