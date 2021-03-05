@@ -216,15 +216,6 @@ const deleteRoom = async(req, res, next) => {
     }
 }
 
-const deleteMessage = async(req, res, next) => {
-    try {
-
-    }
-    catch(error) {
-        res.json(next(error));
-    }
-}
-
 module.exports = {
                     getRoom,
                     getChatsByUser,
@@ -233,5 +224,4 @@ module.exports = {
                     createRoom,
                     joinRoom,
                     deleteRoom,
-                    deleteMessage
                  }
