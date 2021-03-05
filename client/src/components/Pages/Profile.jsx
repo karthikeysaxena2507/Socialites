@@ -196,6 +196,7 @@ const Profile = () => {
     }
 
     const handleFileInputChange = (e) => {
+        sound.play();
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -255,7 +256,7 @@ const Profile = () => {
                     <div className="margin text-center" style={imageUrl !== "" ? {display: "none"} : null}>
                         <img src={blank} className="profile-pic" alt="image not found"/>
                     </div>
-                    <form onSubmit={() => (username !== "Guest") ? handleSubmitFile() : alert(guestMessage)}>
+                    <form onSubmit={(e) => (username !== "Guest") ? handleSubmitFile(e) : alert(guestMessage)}>
                     <div className="text-center">
                         <div> <button style={ (!show) ? {display: "none"} : null } className="btn mt-1 expand"> Save </button> </div>
                         <div style={(username !== user) ? {display: "none"} : null}>
