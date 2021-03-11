@@ -179,9 +179,9 @@ const loginUser = async(req, res, next) => {
                                 httpOnly: true,
                                 sameSite: true,
                                 secure: true,
-                                maxAge: 7*24*60*60*1000 // (7 DAYS)
+                                maxAge: 24*60*60*1000 // (1 DAY)
                             });
-                            redis.setRedisValue(sessionId, id, 7*24*60*60); // 7 DAYS
+                            redis.setRedisValue(sessionId, id, 24*60*60); // 1 DAY
                         }
                         else 
                         {
@@ -190,7 +190,7 @@ const loginUser = async(req, res, next) => {
                                 sameSite: true,
                                 secure: true
                             });
-                            redis.setRedisValue(sessionId, id, 6*60*60); // 10 HOURS
+                            redis.setRedisValue(sessionId, id, 60*60); // 1 HOUR
                         }
                         res.json({user: {id, username, email, verified}});
                     }
@@ -252,10 +252,10 @@ const loginWithGoogle = async(req, res, next) => {
                     httpOnly: true,
                     sameSite: true,
                     secure: true,
-                    maxAge: 7*24*60*60*1000
+                    maxAge: 24*60*60*1000
                 });
                 const {id, username, email} = user;
-                redis.setRedisValue(sessionId, id, 7*24*60*60); 
+                redis.setRedisValue(sessionId, id, 24*60*60); 
                 res.json({user: {id, username, email}});
             }
             else 
@@ -278,7 +278,7 @@ const loginWithGoogle = async(req, res, next) => {
                         maxAge: 7*24*60*60*1000
                     });
                     const {id, username, email} = data;
-                    redis.setRedisValue(sessionId, id, 7*24*60*60);
+                    redis.setRedisValue(sessionId, id, 24*60*60);
                     res.json({user: {id, username, email}});
                 })
                 .catch((error) => {
