@@ -151,7 +151,7 @@ const Profile = () => {
             love = {props.love}
             laugh = {props.laugh}
             comment_count = {props.comment_count}
-            change = {(e, post) => addReaction(e, post)}
+            change = {(e, post) => (username !== "Guest") ? addReaction(e, post) : alert(guestMessage)}
             show_comments = {true}
             imageUrl = {props.imageUrl}
             reactions = {props.reacts}
