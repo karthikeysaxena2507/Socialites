@@ -65,7 +65,7 @@ const MyCategoryPosts = () => {
         const remove = async() => {
             try {
                 sound.play();
-                await deletePost(props._id);
+                await deletePost(props._id, username);
                 const postsData = await getPostsByUser(username);
                 setPosts(postsData.filter((post) => {
                     return (post.category === type);

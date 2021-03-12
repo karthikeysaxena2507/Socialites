@@ -67,7 +67,7 @@ const CompletePost = () => {
 
         const removeComment = async() => {
             try {
-                await deleteComment(id, props);
+                await deleteComment(id, props, username);
                 const postData = await getPostById(id);
                 setPost(postData);
             }

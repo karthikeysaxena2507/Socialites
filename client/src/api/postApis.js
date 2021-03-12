@@ -110,7 +110,7 @@ const addReactionToPost = async(reactionType, username, body) => {
  * @param {Object} body 
  */
 const addReactionToComment = async(reactionType, postId, username, body) => {
-    await axios.post(`https://socialites-karthikey.herokuapp.com/posts/comment/${reactionType}/${postId}/${username}`, body);
+    await axios.post(`/posts/comment/${reactionType}/${postId}/${username}`, body);
 }
 
 /**
@@ -118,16 +118,16 @@ const addReactionToComment = async(reactionType, postId, username, body) => {
  * @param {String} id 
  * @param {Object} body 
  */
-const deleteComment = async(id, body) => {
-    await axios.post(`/posts/remove/${id}`, body);
+const deleteComment = async(id, body, username) => {
+    await axios.post(`/posts/remove/${id}/${username}`, body);
 }
 
 /**
  * The function to delete a post
  * @param {String} id 
  */
-const deletePost = async(id) => {
-    await axios.delete(`/posts/delete/${id}`);
+const deletePost = async(id, username) => {
+    await axios.delete(`/posts/delete/${id}/${username}`);
 }
 
 export {  getAllPosts, getPostsByUser, getFilteredPosts, getPostById, getPostForEdit, getCommentData, addPost, editPost, addReactionToPost, addReactionToComment, deleteComment, deletePost, addCommentToPost }

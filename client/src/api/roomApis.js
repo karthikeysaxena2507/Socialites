@@ -4,8 +4,8 @@ import axios from "axios";
  * The function to get a chat room by id
  * @param {String} id 
  */
-const getRoomById = async(id) => {
-    const room = await axios.get(`/rooms/get/${id}`);
+const getRoomById = async(id, username) => {
+    const room = await axios.get(`/rooms/get/${id}/${username}`);
     return room.data;
 } 
 

@@ -118,7 +118,7 @@ const Profile = () => {
         const remove = async() => {
             try {
                 sound.play();
-                await deletePost(props._id);
+                await deletePost(props._id, username);
                 const postData = await getPostsByUser(user);
                 setPosts(postData);
                 let cmct = 0, lkct = 0, lvct = 0, lgct = 0;

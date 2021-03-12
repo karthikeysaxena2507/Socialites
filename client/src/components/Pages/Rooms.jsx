@@ -42,7 +42,7 @@ const Rooms = () => {
             try {
                 const user = await checkUser();
                 (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
-                const room = await getRoomById(roomId);
+                const room = await getRoomById(roomId, user.username);
                 setAllUsers(room.users);
                 setRoomName(room.roomName);
                 setCreator(room.creator);

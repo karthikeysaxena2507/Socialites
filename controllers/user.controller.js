@@ -303,25 +303,33 @@ const getUserByUsername = async(req, res, next) => {
 
 const updateProfileImage = async(req, res, next) => {
     try {
-        const user = await User.findOne({username: req.body.user});
-        var imageUrl = "";
-        if(req.body.data !== "") 
-        {
-            var fileStr = req.body.data;
-            var uploadedResponse = await cloudinary.uploader.
-            upload(fileStr, {
-                upload_preset: "socialites"
-            });
-            imageUrl = uploadedResponse.url;
+        if(req.user ===  null) {
+            res.status(401).json({Error: "You are not authenticated"});
         }
-        user.imageUrl = imageUrl;
-        user.save()
-        .then(() => {
-            res.json("Successfully Updated Image");  
-        })
-        .catch((err) => {
-            res.json(err);
-        })
+        else if(req.user.username !== req.body.user) {
+            res.status(401).json({Error: "You are not authenticated"});
+        }
+        else {
+            const user = await User.findOne({username: req.body.user});
+            var imageUrl = "";
+            if(req.body.data !== "") 
+            {
+                var fileStr = req.body.data;
+                var uploadedResponse = await cloudinary.uploader.
+                upload(fileStr, {
+                    upload_preset: "socialites"
+                });
+                imageUrl = uploadedResponse.url;
+            }
+            user.imageUrl = imageUrl;
+            user.save()
+            .then(() => {
+                res.json("Successfully Updated Image");  
+            })
+            .catch((err) => {
+                res.json(err);
+            });
+        }
     }
     catch(error) {
         res.json(next(error));
@@ -330,15 +338,23 @@ const updateProfileImage = async(req, res, next) => {
 
 const updateUserBio = async(req, res, next) => {
     try {
-        const user = await User.findOne({username: req.body.user});
-        user.about = req.body.text;
-        user.save()
-        .then((data) => {
-            res.json(data.about);
-        })
-        .catch((err) => {
-            res.json(err);
-        });
+        if(req.user === null) {
+            res.status(401).json({Error: "You are not authenticated"});
+        }
+        else if(req.user.username !== req.body.user) {
+            res.status(401).json({Error: "You are not authenticated"});
+        } 
+        else {
+            const user = await User.findOne({username: req.body.user});
+            user.about = req.body.text;
+            user.save()
+            .then((data) => {
+                res.json(data.about);
+            })
+            .catch((err) => {
+                res.json(err);
+            });
+        }
     }
     catch(error) {
         res.json(next(error));
@@ -454,12 +470,21 @@ const verifyUser = async(req, res, next) => {
 
 const logoutUser = async(req, res, next) => {
     try {
-        const response = redis.deleteBySessionId(req.cookies.SESSIONID);
-        res.clearCookie("SESSIONID");
-        res.json(response);
+        if(req.user === null) {
+            res.clearCookie("SESSIONID");
+            res.status(401).json({Error: "You are not authenticated"});
+        }
+        else if(req.user.username !== req.params.username) {
+            res.status(401).json({Error: "You are not authenticated"});
+        }
+        else {
+            const response = redis.deleteBySessionId(req.cookies.SESSIONID);
+            res.clearCookie("SESSIONID");
+            res.json(response);
+        }
     }
     catch(err) {
-        res.json(next(error));
+        res.json(next(err));
     }
 }
 

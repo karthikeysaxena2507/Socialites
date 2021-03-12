@@ -27,18 +27,18 @@ router.post("/updateimage", auth, userCtrl.updateProfileImage);
 router.post("/updatebio", auth, userCtrl.updateUserBio);
 
 // RESETING THE PASSWORD
-router.post("/reset", auth, userCtrl.resetPassword);
+router.post("/reset", userCtrl.resetPassword);
 
 // SENDING RESET PASSWORD MAIL TO USER
-router.post("/forgot", auth, userCtrl.forgotPassword);
+router.post("/forgot", userCtrl.forgotPassword);
 
 // SENDING EMAIL VERIFICATION MAIL TO USER
-router.post("/send", auth, userCtrl.sendEmail);
+router.post("/send", userCtrl.sendEmail);
 
 // VERIFY THE REGISTERED USER
-router.post("/verify", auth, userCtrl.verifyUser);
+router.post("/verify", userCtrl.verifyUser);
 
 // LOGGING OUT THE USER
-router.post("/logout", auth, userCtrl.logoutUser);
+router.post("/logout/:username", auth, userCtrl.logoutUser);
 
 module.exports = router;

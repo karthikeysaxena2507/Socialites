@@ -3,7 +3,7 @@ const roomCtrl = require("../controllers/room.controller");
 const auth = require("../middleware/auth");
 
 // ACCESSING A PARTCULAR ROOM
-router.get("/get/:id", auth, roomCtrl.getRoom);
+router.get("/get/:id/:username", auth, roomCtrl.getRoom);
 
 //ACCESSING ALL CHAT GROUPS CREATED BY A USER
 router.get("/groups/:username", auth, roomCtrl.getRoomsByUser);

@@ -101,7 +101,7 @@ const Result = () => {
         const remove = async() => {
             try {
                 sound.play();
-                await deletePost(props.item._id);
+                await deletePost(props.item._id, username);
                 const postsData = await getPostsByUser(username);
                 setLoading(false);
                 const fuse = new Fuse(postsData, {

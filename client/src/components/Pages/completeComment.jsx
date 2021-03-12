@@ -101,7 +101,7 @@ const CompleteComment = () => {
     const removeComment = async() => {
         try {
             sound.play();
-            await deleteComment(id, comment);
+            await deleteComment(id, comment, username);
             window.location = `/complete/${id}`;        
         }
         catch (error) {

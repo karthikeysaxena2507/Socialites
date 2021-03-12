@@ -13,10 +13,13 @@ const Navbar = (props) => {
       sound.play();
       const drop = async() => {
         try {
-          const response = await axios.post("users/logout", props);
+          const response = await axios.post(`/users/logout/${username}`, props);
           console.log(response);
         }
         catch(error) {
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location = "/";
           console.log(error);
         }
       }
