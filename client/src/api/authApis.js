@@ -7,7 +7,7 @@ import axios from "axios";
  * @param {boolean} rememberMe 
  */
 const loginUser = async(email, password, rememberMe) => {
-    const userData = await axios.post("/users/login", {email, password, rememberMe});
+    const userData = await axios.post("https://socialites-karthikey.herokuapp.com/users/login", {email, password, rememberMe});
     return userData.data.user;
 }
 
@@ -18,7 +18,7 @@ const loginUser = async(email, password, rememberMe) => {
  * @param {String} password 
  */
 const registerUser = async(username, email, password) => {
-    const user = await axios.post("/users/register", {username, email, password});
+    const user = await axios.post("https://socialites-karthikey.herokuapp.com/users/register", {username, email, password});
     return user.data;
 }
 
@@ -27,7 +27,7 @@ const registerUser = async(username, email, password) => {
  * @param {String} tokenId 
  */
 const LoginWithGoogle = async(tokenId) => {
-    const userData = await axios.post("/users/googlelogin", {token: tokenId});
+    const userData = await axios.post("https://socialites-karthikey.herokuapp.com/users/googlelogin", {token: tokenId});
     return userData.data.user;
 }
 

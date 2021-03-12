@@ -43,7 +43,7 @@ const ResetPassword = () => {
         if(newPassword === confirmPassword && newPassword.length >= 8) {
             const drop = async() => {
                 try {
-                    const response = await axios.post("/users/reset", {token, newPassword});
+                    const response = await axios.post("https://socialites-karthikey.herokuapp.com/users/reset", {token, newPassword});
                     (response.data === "INVALID") ?
                     alert("You are not a Registered User, Please go to the site and register yourself. Or it is possible that the link to reset password has expired")
                     : window.location = "/login";    

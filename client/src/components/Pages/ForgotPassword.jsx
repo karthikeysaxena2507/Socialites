@@ -30,7 +30,7 @@ const ForgotPassword = () => {
     const reset = async() => {
         try {
             sound.play();
-            const response = await axios.post("/users/forgot", {email});
+            const response = await axios.post("https://socialites-karthikey.herokuapp.com/users/forgot", {email});
             alert(response.data);
         }
         catch(error) {

@@ -8,13 +8,10 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 5000;
-const { time } = require("./helper/date");
 
 // USING ALL MIDDLEWARES
 app.use(cors());
 app.use(express.json( {limit: "50mb"}));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // CONNECTING TO MONGODB ATLAS

@@ -13,7 +13,7 @@ const Navbar = (props) => {
       sound.play();
       const drop = async() => {
         try {
-          const response = await axios.post("/users/logout", props);
+          const response = await axios.post("https://socialites-karthikey.herokuapp.com/users/logout", props);
           console.log(response);
         }
         catch(error) {

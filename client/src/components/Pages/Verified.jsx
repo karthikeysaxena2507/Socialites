@@ -14,7 +14,7 @@ const Verified = () => {
     const submit = async() => {
         try {
             sound.play();
-            const response = await axios.post("/users/verify/", {token});
+            const response = await axios.post("https://socialites-karthikey.herokuapp.com/users/verify/", {token});
             (response.data === "INVALID") ?
             alert("You are not a Registered User, Please go to the site and register yourself Or the Email Verification link has expired")
             : window.location = "/login";

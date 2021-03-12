@@ -71,7 +71,6 @@ const Login = () => {
 
     const failureGoogle = () => {
         setMessage("Google Login Failed");
-        window.location = "/";
     }
 
     return (loading) ? <Loader /> :
