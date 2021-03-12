@@ -33,9 +33,9 @@ router.post("/add/:id", auth, postCtrl.addComment);
 router.post("/comment/:react/:postId/:username", auth, postCtrl.addReactionToComment);
 
 // DELETE A COMMENT
-router.post("/remove/:id", auth, postCtrl.deleteComment);
+router.post("/remove/:id/:username", auth, postCtrl.deleteComment);
 
 // DELETING A POST
-router.delete("/delete/:id", auth, postCtrl.deletePost);
+router.delete("/delete/:id/:username", auth, postCtrl.deletePost);
 
 module.exports = router;

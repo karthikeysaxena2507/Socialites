@@ -241,7 +241,7 @@ const deleteRoom = async(req, res, next) => {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
         }
-        else if(req.user !== req.body.username) {
+        else if(req.user.username !== req.body.username) {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
