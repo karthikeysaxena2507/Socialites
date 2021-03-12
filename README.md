@@ -14,7 +14,7 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 9. Users also have an option leave chat groups and delete their messages from chat.
 10. Search option, sound effects and many filters have been added to provide good user experience.
 11. For a quick look, Users can also take a tour of the website by logging in as a guest.
-12. Users can check the "remember me" option to login once for 7 days.
+12. Users can check the "remember me" option to login once for a specific time.
 13. Users can see which other users are online in a group or a personal chat.
 14. Users can see the number of unread messages in their chats and rooms.
 15. Users can see a pie chart based on the different types of reactions and comments on their posts.
@@ -35,8 +35,6 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 12. Used Howlerjs for adding various sound effects.
 
 The Website is deployed on Heroku platform.
-
-(Earlier I used JsonWebToken for token based authentication but then I changed it to session based authentication with cookies)
 
 Some snapshots of the website:
 
