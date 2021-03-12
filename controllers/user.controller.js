@@ -178,7 +178,7 @@ const loginUser = async(req, res, next) => {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
                                 secure: true,
-                                sameSite: "None",
+                                sameSite: true,
                                 maxAge: 24*60*60*1000 // (1 DAY)
                             });
                             redis.setRedisValue(sessionId, id, 24*60*60); // 1 DAY
@@ -187,7 +187,7 @@ const loginUser = async(req, res, next) => {
                         {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
-                                sameSite: "None",
+                                sameSite: true,
                                 secure: true
                             });
                             redis.setRedisValue(sessionId, id, 60*60); // 1 HOUR
@@ -251,6 +251,7 @@ const loginWithGoogle = async(req, res, next) => {
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
                     secure: true,
+                    sameSite: true,
                     maxAge: 24*60*60*1000
                 });
                 const {id, username, email} = user;
@@ -273,6 +274,7 @@ const loginWithGoogle = async(req, res, next) => {
                     res.cookie("SESSIONID", sessionId, {
                         httpOnly: true,
                         secure: true,
+                        sameSite: true,
                         maxAge: 7*24*60*60*1000
                     });
                     const {id, username, email} = data;
