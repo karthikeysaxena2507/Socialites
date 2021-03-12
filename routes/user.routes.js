@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const userCtrl = require("../controllers/user.controller");
+const auth = require("../middleware/auth");
 
 // SESSION AUTHENTICATION MIDDLEWARE FOR A USER
-router.get("/auth", userCtrl.checkAuth);
+router.get("/auth", auth, userCtrl.checkAuth);
 
 // REGISTER THE USER
 router.post("/register", userCtrl.registerUser);
@@ -20,24 +21,24 @@ router.get("/get", userCtrl.getAllUsers);
 router.get("/find/:user", userCtrl.getUserByUsername);
 
 // UPDATING THE PROFILE PIC OF USER
-router.post("/updateimage", userCtrl.updateProfileImage);
+router.post("/updateimage", auth, userCtrl.updateProfileImage);
 
 // UPDATING THE USER BIO IN PROFILE PAGE
-router.post("/updatebio", userCtrl.updateUserBio);
+router.post("/updatebio", auth, userCtrl.updateUserBio);
 
 // RESETING THE PASSWORD
-router.post("/reset", userCtrl.resetPassword);
+router.post("/reset", auth, userCtrl.resetPassword);
 
 // SENDING RESET PASSWORD MAIL TO USER
-router.post("/forgot", userCtrl.forgotPassword);
+router.post("/forgot", auth, userCtrl.forgotPassword);
 
 // SENDING EMAIL VERIFICATION MAIL TO USER
-router.post("/send", userCtrl.sendEmail);
+router.post("/send", auth, userCtrl.sendEmail);
 
 // VERIFY THE REGISTERED USER
-router.post("/verify", userCtrl.verifyUser);
+router.post("/verify", auth, userCtrl.verifyUser);
 
 // LOGGING OUT THE USER
-router.post("/logout", userCtrl.logoutUser);
+router.post("/logout", auth, userCtrl.logoutUser);
 
 module.exports = router;

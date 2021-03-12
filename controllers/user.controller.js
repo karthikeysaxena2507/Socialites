@@ -12,66 +12,50 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const checkAuth = async(req, res, next) => {
     try {
-        if(req.cookies.SESSIONID !== undefined) 
+        const user = req.user;
+        if(user === null) 
         {
-            const userId = await redis.getUserId(req.cookies.SESSIONID);
-            if(userId !== null && userId !== undefined) 
-            {
-                const user = await User.findById(userId);
-                if(user) 
-                {
-                    let totalUnread = 0;
-                    for (let tempRoom of user.rooms) 
-                    {
-                        const room = await Room.findOne({roomId: tempRoom.roomId});
-                        if(room) 
-                        {
-                            tempRoom.unreadCount = (room.messages.length - tempRoom.lastCount);
-                            if(tempRoom.unreadCount < 0) tempRoom.unreadCount = 0;
-                            totalUnread += tempRoom.unreadCount;
-                        }
-                    }
-                    for (let tempChat of user.chats) 
-                    {
-                        const room = await Room.findOne({roomId: tempChat.roomId});
-                        if(room) 
-                        {
-                            tempChat.unreadCount = (room.messages.length - tempChat.lastCount);
-                            if(tempChat.unreadCount < 0) tempChat.unreadCount = 0;
-                            totalUnread += tempChat.unreadCount;
-                        }
-                    }
-                    user.totalUnread = totalUnread;
-                    user.save()
-                    .then(() => {
-                        res.json({
-                            id: user._id,
-                            username: user.username,
-                            about: user.about,
-                            imageUrl: user.imageUrl,
-                            totalUnread
-                        });
-                    })
-                    .catch((err) => {
-                        res.json(err);
-                    });
-                }
-                else 
-                {
-                    res.clearCookie("SESSIONID");
-                    res.json("INVALID");
-                }     
-            }
-            else 
-            {
-                res.clearCookie("SESSIONID");
-                res.json("INVALID");
-            }
+            redis.deleteBySessionId(req.cookies.SESSIONID);
+            res.clearCookie("SESSIONID");
+            res.json("INVALID");
         }
         else 
         {
-            res.clearCookie("SESSIONID");
-            res.json("INVALID");
+            let totalUnread = 0;
+            for (let tempRoom of user.rooms) 
+            {
+                const room = await Room.findOne({roomId: tempRoom.roomId});
+                if(room) 
+                {
+                    tempRoom.unreadCount = (room.messages.length - tempRoom.lastCount);
+                    if(tempRoom.unreadCount < 0) tempRoom.unreadCount = 0;
+                    totalUnread += tempRoom.unreadCount;
+                }
+            }
+            for (let tempChat of user.chats) 
+            {
+                const room = await Room.findOne({roomId: tempChat.roomId});
+                if(room) 
+                {
+                    tempChat.unreadCount = (room.messages.length - tempChat.lastCount);
+                    if(tempChat.unreadCount < 0) tempChat.unreadCount = 0;
+                    totalUnread += tempChat.unreadCount;
+                }
+            }
+            user.totalUnread = totalUnread;
+            user.save()
+            .then(() => {
+                res.json({
+                    id: user._id,
+                    username: user.username,
+                    about: user.about,
+                    imageUrl: user.imageUrl,
+                    totalUnread
+                });
+            })
+            .catch((err) => {
+                res.json(err);
+            });
         }
     }
     catch(error) 

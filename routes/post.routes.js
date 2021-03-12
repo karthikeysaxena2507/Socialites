@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const postCtrl = require("../controllers/post.controller");
+const auth = require("../middleware/auth");
 
 // ACCESSING ALL POSTS
 router.get("/", postCtrl.getAllPosts);
@@ -17,24 +18,24 @@ router.get("/list/:username", postCtrl.getPostsByUser);
 router.get("/edit/:id", postCtrl.getPostById);
 
 // REACTING TO A POST
-router.post("/update/:react/:username", postCtrl.addReactionToPost);
+router.post("/update/:react/:username", auth, postCtrl.addReactionToPost);
 
 // EDITING A POST
-router.post("/edit/:id", postCtrl.editPost);
+router.post("/edit/:id", auth, postCtrl.editPost);
 
 // ADDING NEW POST
-router.post("/add", postCtrl.addPost);
+router.post("/add", auth, postCtrl.addPost);
 
 // ADDING A COMMENT
-router.post("/add/:id", postCtrl.addComment);
+router.post("/add/:id", auth, postCtrl.addComment);
 
 // REACTING TO A COMMENT
-router.post("/comment/:react/:postId/:username", postCtrl.addReactionToComment);
+router.post("/comment/:react/:postId/:username", auth, postCtrl.addReactionToComment);
 
 // DELETE A COMMENT
-router.post("/remove/:id", postCtrl.deleteComment);
+router.post("/remove/:id", auth, postCtrl.deleteComment);
 
 // DELETING A POST
-router.delete("/delete/:id", postCtrl.deletePost);
+router.delete("/delete/:id", auth, postCtrl.deletePost);
 
 module.exports = router;

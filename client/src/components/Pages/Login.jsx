@@ -23,8 +23,8 @@ const Login = () => {
         const check = async() => {
             try {
                 const user = await checkUser();
-                setLoading(false);
                 (user !== "INVALID") && (window.location = `/profile/${user.username}`);
+                setLoading(false);
             }
             catch(err) {
                 console.log(err);

@@ -1,26 +1,27 @@
 const router = require("express").Router();
 const roomCtrl = require("../controllers/room.controller");
+const auth = require("../middleware/auth");
 
 // ACCESSING A PARTCULAR ROOM
-router.get("/get/:id", roomCtrl.getRoom);
+router.get("/get/:id", auth, roomCtrl.getRoom);
 
 //ACCESSING ALL CHAT GROUPS CREATED BY A USER
-router.get("/groups/:username", roomCtrl.getRoomsByUser);
+router.get("/groups/:username", auth, roomCtrl.getRoomsByUser);
 
 //ACCESSING ALL CHATS OF A USER
-router.get("/chats/:username", roomCtrl.getChatsByUser)
+router.get("/chats/:username", auth, roomCtrl.getChatsByUser)
 
 // CREATING A NEW CHAT
-router.post("/chat", roomCtrl.createChat);
+router.post("/chat", auth, roomCtrl.createChat);
 
 // JOINING AN EXISTING ROOM
-router.post("/join", roomCtrl.joinRoom);
+router.post("/join", auth, roomCtrl.joinRoom);
 
 // CREATING A NEW ROOM
-router.post("/create", roomCtrl.createRoom);
+router.post("/create", auth, roomCtrl.createRoom);
 
 // DELETING A CHAT ROOM
-router.post("/delete/room", roomCtrl.deleteRoom);
+router.post("/delete/room", auth, roomCtrl.deleteRoom);
 
 
 module.exports = router;

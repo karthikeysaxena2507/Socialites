@@ -17,7 +17,6 @@ import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
 import { MessageContext } from "../../utils/Context";
 import { getPostById, addReactionToPost } from "../../api/postApis";
-import { props } from "bluebird";
 var sound = new Howl({src: [music]});
 
 const Reactions = () => {
