@@ -1,10 +1,14 @@
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
+const backendUrl = "https://socialites-karthikey.herokuapp.com/";
+
 /**
  * The function to get all posts
  */
 const getAllPosts = async() => {
-    const posts = await axios.get("/posts");
+    const posts = await axios.get(backendUrl + "posts");
     return posts.data.reverse();
 }
 
@@ -13,7 +17,7 @@ const getAllPosts = async() => {
  * @param {String} type 
  */
 const getFilteredPosts = async(type) => {
-    const posts = await axios.get("/posts");
+    const posts = await axios.get(backendUrl + "posts");
     return posts.data.reverse().filter((post) => {
         return (post.category === type);
     });
@@ -24,7 +28,7 @@ const getFilteredPosts = async(type) => {
  * @param {String} username 
  */
 const getPostsByUser = async(username) => {
-    const posts = await axios.get(`/posts/list/${username}`);
+    const posts = await axios.get(backendUrl + `posts/list/${username}`);
     return posts.data.reverse();
 }
 
@@ -33,7 +37,7 @@ const getPostsByUser = async(username) => {
  * @param {String} id 
  */
 const getPostById = async(id) => {
-    const posts = await axios.get(`/posts/${id}`);
+    const posts = await axios.get(backendUrl + `posts/${id}`);
     return posts.data[0];
 }
 
@@ -42,7 +46,7 @@ const getPostById = async(id) => {
  * @param {String} id 
  */
 const getPostForEdit = async(id) => {
-    const post = await axios.get(`/posts/edit/${id}`);
+    const post = await axios.get(backendUrl + `posts/edit/${id}`);
     return post.data;
 }
 
@@ -52,7 +56,7 @@ const getPostForEdit = async(id) => {
  * @param {String} id 
  */
 const getCommentData = async(commentId, id) => {
-    const comment = await axios.get(`/posts/getcomment/${commentId}/${id}`);
+    const comment = await axios.get(backendUrl + `posts/getcomment/${commentId}/${id}`);
     return comment.data;
 }
 
@@ -61,7 +65,7 @@ const getCommentData = async(commentId, id) => {
  * @param {Object} body 
  */
 const addPost = async(body) => {
-    const post = await fetch("/posts/add", {
+    const post = await fetch(backendUrl + "posts/add", {
         method: "POST",
         body,
         headers: {"Content-type": "application/json"}                
@@ -75,7 +79,7 @@ const addPost = async(body) => {
  * @param {String} id 
  */
 const editPost = async(body, id) => {
-    const post = await fetch(`/posts/edit/${id}`, {
+    const post = await fetch(backendUrl + `posts/edit/${id}`, {
         method: "POST", 
         body,
         headers: {"Content-type": "application/json"}                
@@ -89,7 +93,7 @@ const editPost = async(body, id) => {
  * @param {String} comment 
  */
 const addCommentToPost = async(id, comment) => {
-    await axios.post(`/posts/add/${id}`, comment);
+    await axios.post(backendUrl + `posts/add/${id}`, comment);
 }
 
 /**
@@ -99,7 +103,7 @@ const addCommentToPost = async(id, comment) => {
  * @param {Object} body 
  */
 const addReactionToPost = async(reactionType, username, body) => {
-    await axios.post(`/posts/update/${reactionType}/${username}`, body);
+    await axios.post(backendUrl + `posts/update/${reactionType}/${username}`, body);
 }
 
 /**
@@ -110,7 +114,7 @@ const addReactionToPost = async(reactionType, username, body) => {
  * @param {Object} body 
  */
 const addReactionToComment = async(reactionType, postId, username, body) => {
-    await axios.post(`/posts/comment/${reactionType}/${postId}/${username}`, body);
+    await axios.post(backendUrl + `posts/comment/${reactionType}/${postId}/${username}`, body);
 }
 
 /**
@@ -119,7 +123,7 @@ const addReactionToComment = async(reactionType, postId, username, body) => {
  * @param {Object} body 
  */
 const deleteComment = async(id, body, username) => {
-    await axios.post(`/posts/remove/${id}/${username}`, body);
+    await axios.post(backendUrl + `posts/remove/${id}/${username}`, body);
 }
 
 /**
@@ -127,7 +131,7 @@ const deleteComment = async(id, body, username) => {
  * @param {String} id 
  */
 const deletePost = async(id, username) => {
-    await axios.delete(`/posts/delete/${id}/${username}`);
+    await axios.delete(backendUrl + `posts/delete/${id}/${username}`);
 }
 
 export {  getAllPosts, getPostsByUser, getFilteredPosts, getPostById, getPostForEdit, getCommentData, addPost, editPost, addReactionToPost, addReactionToComment, deleteComment, deletePost, addCommentToPost }

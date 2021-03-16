@@ -1,10 +1,14 @@
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
+const backendUrl = "https://socialites-karthikey.herokuapp.com/";
+
 /**
  * The function to check the authentication status of a user
  */
 var checkUser = async() => {
-   const user = await axios.get("/users/auth");
+   const user = await axios.get(backendUrl + "users/auth");
    return user.data;
 }
 
@@ -12,7 +16,7 @@ var checkUser = async() => {
  * The function to get all the users
  */ 
 const getAllUsers = async() => {
-   const users = await axios.get(`/users/get`);
+   const users = await axios.get(backendUrl + `users/get`);
    return users.data;
 }
 
@@ -21,7 +25,7 @@ const getAllUsers = async() => {
  * @param {String} username 
  */
 const getUserData = async(username) => {
-   const userData = await axios.get(`/users/find/${username}`);
+   const userData = await axios.get(backendUrl + `users/find/${username}`);
    return userData.data;
 }
 
@@ -31,7 +35,7 @@ const getUserData = async(username) => {
  * @param {String} text 
  */
 const updateUserBio = async(user, text) => {
-   const userData = await axios.post(`/users/updatebio`,{user, text});
+   const userData = await axios.post(backendUrl + `users/updatebio`,{user, text});
    return userData.data;
 }
 
@@ -40,7 +44,7 @@ const updateUserBio = async(user, text) => {
  * @param {Object} body 
  */
 const updateUserImage = async(body) => {
-   await fetch("/users/updateimage", {
+   await fetch(backendUrl + "users/updateimage", {
       method: "POST",
       body,
       headers: {"Content-type": "application/json"}                
