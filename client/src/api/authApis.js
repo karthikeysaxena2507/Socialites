@@ -2,7 +2,8 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-const backendUrl = "https://socialites-karthikey.herokuapp.com/";
+// const backendUrl = "https://socialites-karthikey.herokuapp.com/";
+const backendUrl = "/";
 
 /**
  * The function to login the user

@@ -176,7 +176,7 @@ const loginUser = async(req, res, next) => {
                             });
                             redis.setRedisValue(sessionId, id, 60*60); // 1 HOUR
                         }
-                        res.json({user: {id, username, email, verified}});
+                        res.json({user: {id, username, email, verified, sessionId}});
                     }
                     else 
                     {

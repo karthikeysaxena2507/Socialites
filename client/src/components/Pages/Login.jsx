@@ -39,6 +39,7 @@ const Login = () => {
         const drop = async() => {
             try {
                 const user = await loginUser(email, password, rememberMe);
+                localStorage.removeItem("Guest");
                 setMessage(" ");
                 (user.verified) ? window.location = `/profile/${user.username}` : window.location = `/verify/${user.token}`;
             }

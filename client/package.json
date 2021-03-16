@@ -6,7 +6,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.2.2",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.4",
     "countapi-js": "^1.0.1",
@@ -22,6 +22,7 @@
     "react-scripts": "^4.0.1",
     "react-scroll-to-bottom": "^4.1.0",
     "socket.io-client": "^3.0.5",
+    "universal-cookie": "^4.0.4",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

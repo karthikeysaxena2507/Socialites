@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
+
 const Navbar = (props) => {
 
     var username = props.name;
