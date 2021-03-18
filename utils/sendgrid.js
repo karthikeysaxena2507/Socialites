@@ -7,7 +7,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
  * @param {String} email 
  */
 const sendEmailVerificationMail = (token, email) => {
-    const link = `https://socialites.netlify.app/verified/${token}`;
+    const link = `https://socialites-karthikey.herokuapp.com/verified/${token}`;
     const msg = {
         to: email,
         from: "karthikeysaxena@outlook.com", 
@@ -31,7 +31,7 @@ const sendEmailVerificationMail = (token, email) => {
  * @param {String} email 
  */
 const sendResetPasswordMail = (token, email) => {
-    var link = "https://socialites.netlify.app/reset/" + token;
+    var link = "https://socialites-karthikey.herokuapp.com/reset/" + token;
     const msg = {
         to: email,
         from: "karthikeysaxena@outlook.com",
