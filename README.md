@@ -39,7 +39,7 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 ## Other Features:
 * Fully reusable react components have been created and used in the website.
 * Extensive **Error Handling** has been used for handling corner cases.
-* Code is **modularized** and **refactored**, all the buisness logic part is separated from the APIs, middlewares, helpers etc. 
+* Code is **modularized** and **refactored**, all the buisness logic part is separated from the APIs, middlewares, models etc. 
 
 The Website is deployed on **Heroku** platform.
 
