@@ -72,12 +72,8 @@ const addPost = async(body, options) => {
  * @param {Object} body 
  * @param {String} id 
  */
-const editPost = async(body, id) => {
-    const post = await fetch(backendUrl + `posts/edit/${id}`, {
-        method: "POST", 
-        body,
-        headers: {"Content-type": "application/json"}                
-    });
+const editPost = async(body, id, options) => {
+    const post = await axios.post(backendUrl + `posts/edit/${id}`, body, options);
     return post;
 }
 

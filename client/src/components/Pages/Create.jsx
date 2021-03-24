@@ -152,12 +152,12 @@ const Create = () => {
                 <input
                     type="file" 
                     name="image" 
-                    style={{visibility: "hidden"}}
+                    style={{display: "none"}}
                     id="file"
                     onChange={handleFileInputChange}
                 />
             </div>
-            <div className="text-center"> Current Image </div>
+            <div className="margin text-center"> Current Image </div>
             <div className="margin text-center" style={(!preview) ? {visibility: "visible"} : {visibility: "hidden"}}>
                 Image preview will be shown here
             </div>

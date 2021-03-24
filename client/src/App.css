@@ -488,3 +488,10 @@ textarea {
     border-radius: 50%;
     display: inline-block;
   }
+
+  .chatImg {
+    width: 100%;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1.5px solid brown;
+  }

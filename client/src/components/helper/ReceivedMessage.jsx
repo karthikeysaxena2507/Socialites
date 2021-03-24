@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 
 const ReceivedMessage = (props) => {
@@ -9,6 +10,16 @@ const ReceivedMessage = (props) => {
             <div className="messageBox backgroundLight">
                 <p className="messageText" style={(props.content !== "") ? {display: "none"} : null}> <i> message deleted </i> </p>
                 <p className="messageText" style={(props.content === "") ? {display: "none"} : null}> {props.content} </p>
+                <img 
+                    src={props.imageUrl} 
+                    style={(props.imageUrl === "" || props.imageUrl === null || props.imageUrl === undefined) ? {display: "none"} : 
+                    {
+                        width: "100%",
+                        marginBottom: "15px",
+                        borderRadius: "10px",
+                        border: "1.5px solid brown"
+                    }} 
+                />
             </div>
             <div> {props.time} </div>
         </div>

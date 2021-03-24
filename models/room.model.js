@@ -6,7 +6,7 @@ const roomSchema = new mongoose.Schema({
     isGroup: Boolean,
     creator: String,
     users: [{name: String}],
-    messages: [{name: String, content: String, time: String}]
+    messages: [{name: String, content: String, imageUrl: String, time: String}]
 });
 
 const Room = mongoose.model("Room", roomSchema);

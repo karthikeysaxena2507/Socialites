@@ -13,12 +13,15 @@ import { useParams } from 'react-router-dom';
 import { Howl } from "howler";
 import button from "../../sounds/button.mp3";
 import newMessage from "../../sounds/message.mp3";
+import upload from "../../images/imageupload.png";
 import { checkUser } from "../../api/userApis"
 import { getRoomById } from "../../api/roomApis";
 import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
 const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
+// const ENDPOINT = "http://localhost:5000/";
+
 
 const Rooms = () => {
 
@@ -27,8 +30,10 @@ const Rooms = () => {
     const [roomName, setRoomName] = useState("");
     const [creator, setCreator] = useState("");
     const [isGroup, setIsGroup] = useState(false);
+    const [imageUrl, setImageUrl] = useState("");
     const [username, setUsername] = useState("");
     const [message, setMessage] = useState("");
+    const [status, setStatus] = useState("");
     const [messages,setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [onlineUsers, setOnlineUsers] = useState([]);
@@ -54,12 +59,15 @@ const Rooms = () => {
                 socket.current.on("message", (data) => {
                     messageSound.play();
                     setMessages((prev) => {return [...prev, data]});
+                    setStatus("");
+                    setImageUrl("");
                 });
                 socket.current.on("users", (data) => {
                     setOnlineUsers(data.chat);
                 });
                 socket.current.on("updatemessages", (data) => {
                     setMessages(data.messages);
+                    setStatus("");
                 });
                 return () => {
                     socket.current.emit("disconnect");
@@ -73,12 +81,13 @@ const Rooms = () => {
         fetch();
     },[roomId]);
     
-    const sendMessage = (e) => 
+    const sendMessage = async(e) => 
     {
         e.preventDefault();
         if(message) 
         {
-            socket.current.emit("sendmessage", {message, name: username, room: roomId, time: time()}, () => {});
+            setStatus("Sending Message ...");
+            await socket.current.emit("sendmessage", {message, name: username, imageUrl, room: roomId, time: time()}, () => {});
             setMessage("");
         }
     }
@@ -89,6 +98,7 @@ const Rooms = () => {
         const deleteMessage = (messageId) => 
         {
             buttonSound.play();
+            setStatus("Deleting Message ...")
             socket.current.emit("deletemessage", {room: roomId, messageId});
         }
 
@@ -98,6 +108,7 @@ const Rooms = () => {
                 key={props._id}
                 _id = {props._id}
                 username = {username}
+                imageUrl = {props.imageUrl}
                 content = {props.content}
                 time = {props.time}
                 delete = {(messageId) => deleteMessage(messageId)}  
@@ -109,6 +120,7 @@ const Rooms = () => {
                 key={props._id}
                 _id = {props._id}
                 name = {props.name}
+                imageUrl = {props.imageUrl}
                 content = {props.content}
                 time = {props.time}
         />
@@ -130,6 +142,16 @@ const Rooms = () => {
         />);
     } 
 
+    const handleFileInputChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setImageUrl(reader.result);
+            setStatus("Image Attached Successfully");
+        }
+    }
+
     return (loading) ? <Loader /> :
     <div>
         <Heading />
@@ -145,20 +167,36 @@ const Rooms = () => {
             {allUsers.map(printUsers)}
         </div>
         <div className="outerContainer mt-2">
-            <div className="innerContainer">
+            <div className="innerContainer" style={{borderTop: "1px solid brown"}}>
             <ScrollToBottom className="messages">
                 {messages.map(printMessages)}
             </ScrollToBottom>
+            <div className="text-center" style={(imageUrl === "") ? {display: "none"} : null}>
+                <p> Image Preview, <u onClick={() => {setImageUrl(""); setStatus("")}} style={{cursor: "pointer"}}> Remove Image </u> </p>
+                <img src={imageUrl} style={{width: "50%"}} />
+            </div>
+            {status}
             <form className="form">
                 <input
                     className="input"
                     type="text"
                     placeholder="Type a message..."
+                    style={{borderRadius: "5px"}}
                     value={message}
                     onChange={(e) => {setMessage(e.target.value)}}
                     onKeyPress={event => (event.key === "Enter") ? sendMessage(event) : null}
                 />
-                <button type="submit" className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
+                <div className="text-center">
+                    <label for="file"> <img src={upload} className="mt-1 expand" style={{cursor: "pointer"}} /> </label>
+                </div>
+                <input
+                    type="file" 
+                    name="image" 
+                    style={{display: "none"}}
+                    id="file"
+                    onChange={handleFileInputChange}
+                />
+                <button type="submit" style={{borderRadius: "5px"}} className="sendButton" onClick={e => sendMessage(e)}> SEND </button>
             </form>
             </div>
         </div>

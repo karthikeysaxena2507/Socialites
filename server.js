@@ -38,6 +38,7 @@ app.use("/rooms", roomsRouter);
 const Room = require("./models/room.model");
 const Chat = require("./models/chat.model");
 const helper = require("./helper/chat");
+const { cloudinary } = require("./utils/cloudinary");
 
 const io = require('socket.io')(server, {
     cors: {
@@ -70,15 +71,25 @@ io.on("connection", (socket) => {
     socket.on("sendmessage", async(data) => {
         try {
             const room = await Room.findOne({roomId: data.room});
-            await room.messages.push({name: data.name, content: data.message, time: data.time});
+            var imageUrl = "";
+            if(data.imageUrl !== "") 
+            {
+                var fileStr = data.imageUrl;
+                var uploadedResponse = await cloudinary.uploader.
+                upload(fileStr, {
+                    upload_preset: "socialites"
+                });
+                imageUrl = uploadedResponse.url;
+            }
+            await room.messages.push({name: data.name, content: data.message, imageUrl, time: data.time});
             await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);    
             const chat = await Chat.find({room: data.room});
             const messagesCount = room.messages.length;
             room.save()
-            .then(async (roomData) => {
+            .then((roomData) => {
                 const messageId = roomData.messages[messagesCount - 1]._id;
                 io.to(data.room).emit("users", {chat: chat});
-                io.to(data.room).emit("message", { _id: messageId , name: data.name, content: data.message, time: data.time});
+                io.to(data.room).emit("message", { _id: messageId , name: data.name, content: data.message, imageUrl, time: data.time});
             })
             .catch((err) => {
                 console.log(err);
@@ -95,6 +106,7 @@ io.on("connection", (socket) => {
             const chat = await Chat.find({room: data.room});
             const messageIndex = await room.messages.findIndex((message) => (message._id == data.messageId));
             room.messages[messageIndex].content = "";
+            room.messages[messageIndex].imageUrl = "";
             await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);    
             room.save()
             .then(async (roomData) => {

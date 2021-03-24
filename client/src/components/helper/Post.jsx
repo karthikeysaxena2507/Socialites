@@ -94,7 +94,7 @@ const Post = (props) => {
             <div className="margin text-center">
                 <img 
                     src={props.imageUrl} 
-                    style={(props.imageUrl === "") ? {visibility: "hidden"} : {visibility: "visible"}} 
+                    style={(props.imageUrl === "") ? {display: "none"} : null} 
                     className="post-image" 
                     alt="image not found"
                 />

@@ -160,7 +160,7 @@ const Edit = () => {
                 <input
                     type="file" 
                     name="image" 
-                    style={{visibility: "hidden"}}
+                    style={{display: "none"}}
                     id="file"
                     onChange={handleFileInputChange}
                 />

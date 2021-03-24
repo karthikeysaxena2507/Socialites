@@ -12,6 +12,16 @@ const SentMessage = (props) => {
                     <div className="messageBox backgroundOrange">
                         <p className="messageText text-white" style={(props.content !== "") ? {display: "none"} : null}> <i> message deleted </i> </p>
                         <p className="messageText text-white" style={(props.content === "") ? {display: "none"} : null}> {props.content} </p>
+                        <img 
+                            src={props.imageUrl} 
+                            style={(props.imageUrl === "" || props.imageUrl === null || props.imageUrl === undefined) ? {display: "none"} : 
+                            {
+                                width: "100%",
+                                marginBottom: "15px",
+                                borderRadius: "10px",
+                                border: "1.5px solid brown"
+                            }} 
+                        />
                     </div>
                     <img 
                         src={trash} 

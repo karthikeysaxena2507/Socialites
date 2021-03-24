@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.4.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "cloudinary": "^1.23.0",
@@ -31,7 +31,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "google-auth-library": "^6.1.4",
-    "mongoose": "^5.10.16",
+    "mongoose": "^5.12.2",
     "redis": "^3.0.2",
     "socket.io": "^3.0.5",
     "uuid": "^8.3.2"
