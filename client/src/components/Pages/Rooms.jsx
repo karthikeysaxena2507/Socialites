@@ -201,7 +201,7 @@ const Rooms = () => {
             </div>
         </div>
         <div className="text-center">
-            Note: The messages from the admin are system generated
+            Note: The messages from the admin are system generated and a message cannot be empty
         </div>
         <Footer />
     </div>
