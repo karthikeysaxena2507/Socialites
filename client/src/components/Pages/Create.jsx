@@ -8,6 +8,7 @@ import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import Loader from "../helper/Loader";
 import { Howl } from "howler";
+import { ProgressBar } from "react-bootstrap";
 import music from "../../sounds/button.mp3";
 import { checkUser } from "../../api/userApis"
 import { addPost } from "../../api/postApis";
@@ -23,9 +24,11 @@ const Create = () => {
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("Select Category");
     const [preview, setPreview] = useState(""); 
+    const [message, setMessage] = useState("");
     const guest = localStorage.getItem("Guest");
     const [unread, setUnread] = useState(0);
     const guestMessage = useContext(MessageContext);
+    const [percentage, setPercentage] = useState(0);
 
     useEffect(()=> {
         const fetch = async() => {
@@ -61,6 +64,7 @@ const Create = () => {
 
     const uploadImage = async (imageSource) => {
         try {
+            setMessage("Creating your Post, Please wait ...")
             let value;
             (category === "Select Category") ? value = "Other" : value = category;
             const body = JSON.stringify({
@@ -68,8 +72,22 @@ const Create = () => {
                 author: username,
                 title, content, category: value
             });
-            await addPost(body);
-            window.location = "/allposts";
+            const options = {
+                onUploadProgress: (ProgressEvent) => {
+                    const { loaded, total } = ProgressEvent;
+                    let percent = Math.floor( (loaded * 100) / total );
+                    if(percent <= 100) {
+                        setPercentage(percent-1);
+                    }
+                },
+                headers: {"Content-type": "application/json"}
+            }
+            await addPost(body, options)
+            .then(() => {
+                setMessage("Post Created Successfully")
+                setPercentage(0);
+                window.location = "/allposts";
+            });
         }
         catch(error) {
             console.log(error);
@@ -82,7 +100,7 @@ const Create = () => {
     }
  
     return (loading) ? <Loader /> :
-    <div className="text-center">
+    <div className="text-center container">
         <Navbar name={username} page = "create" unread = {unread}/>
         <Heading />
         <div> <h1 className="margin"> Create Your Post Here </h1> </div> 
@@ -139,7 +157,7 @@ const Create = () => {
                     onChange={handleFileInputChange}
                 />
             </div>
-            <div className="margin text-center"> Current Image </div>
+            <div className="text-center"> Current Image </div>
             <div className="margin text-center" style={(!preview) ? {visibility: "visible"} : {visibility: "hidden"}}>
                 Image preview will be shown here
             </div>
@@ -152,6 +170,10 @@ const Create = () => {
                 />
             </div>
             <div className="text-center margin">
+                <div className="text-center" style={{width: "50%", margin: "30px auto"}}>
+                    { (percentage > 0) && <ProgressBar striped animated now={percentage} label={`${percentage}%`} />}
+                </div>
+                <div className="mt-2 mb-2 text-center"> {message} </div>
                 <button className="btn btn-lg expand margin" type="submit"> Create </button> 
             </div>
         </form>

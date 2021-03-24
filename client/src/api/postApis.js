@@ -1,8 +1,5 @@
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
-
-// const backendUrl = "https://socialites-karthikey.herokuapp.com/";
 const backendUrl = "/";
 
 /**
@@ -65,12 +62,8 @@ const getCommentData = async(commentId, id) => {
  * The function to add a new post
  * @param {Object} body 
  */
-const addPost = async(body) => {
-    const post = await fetch(backendUrl + "posts/add", {
-        method: "POST",
-        body,
-        headers: {"Content-type": "application/json"}                
-    });
+const addPost = async(body, options) => {
+    const post = await axios.post(backendUrl + "posts/add", body, options);
     return post;
 }
 

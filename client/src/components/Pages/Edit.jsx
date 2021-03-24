@@ -5,6 +5,7 @@ import Navbar from "../helper/Navbar";
 import { useParams } from "react-router-dom";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
+import { ProgressBar } from "react-bootstrap";
 import Loader from "../helper/Loader";
 import Dropdown from "../helper/Dropdown";
 import { Howl } from "howler";
@@ -24,6 +25,8 @@ const Edit = () => {
     const [loading, setLoading] = useState(true);
     const guest = localStorage.getItem("Guest");
     const [unread, setUnread] = useState(0);
+    const [message, setMessage] = useState("");
+    const [percentage, setPercentage] = useState(0);
 
     useEffect(() => {
         const fetch = async() => {
@@ -69,6 +72,7 @@ const Edit = () => {
 
     const uploadImage = async (imageSource) => {
         try {
+            setMessage("Updating your Post, Please wait ...")
             let value;
             (category === "Select Category") ? value = "Other" : value = category;
             const body = JSON.stringify({
@@ -76,8 +80,22 @@ const Edit = () => {
                 author: username,
                 title, content, category: value
             });
-            await editPost(body, id);
-            window.location = "/myposts";
+            const options = {
+                onUploadProgress: (ProgressEvent) => {
+                    const { loaded, total } = ProgressEvent;
+                    let percent = Math.floor( (loaded * 100) / total );
+                    if(percent <= 100) {
+                        setPercentage(percent-1);
+                    }
+                },
+                headers: {"Content-type": "application/json"}
+            }
+            await editPost(body, id, options)
+            .then(() => {
+                setMessage("Post Edited Successfully")
+                setPercentage(0);
+                window.location = "/myposts";
+            });
         }
         catch(error) {
             console.log(error);
@@ -160,6 +178,10 @@ const Edit = () => {
                 />
             </div>
             <div className="text-center margin">
+                <div className="text-center" style={{width: "50%", margin: "30px auto"}}>
+                    { (percentage > 0) && <ProgressBar striped animated now={percentage} label={`${percentage}%`} />}
+                </div>
+                <div className="mt-2 mb-2 text-center"> {message} </div>
                 <button className="btn btn-lg expand margin" type="submit"> Edit </button> 
             </div>
         </form>

@@ -44,12 +44,8 @@ const updateUserBio = async(user, text) => {
  * The function to update the profile image of a user
  * @param {Object} body 
  */
-const updateUserImage = async(body) => {
-   await fetch(backendUrl + "users/updateimage", {
-      method: "POST",
-      body,
-      headers: {"Content-type": "application/json"}                
-  });
+const updateUserImage = async(body, options) => {
+   await axios.post(backendUrl + "users/updateimage", body, options);
 }
 
 export { checkUser, getAllUsers, getUserData, updateUserBio, updateUserImage };

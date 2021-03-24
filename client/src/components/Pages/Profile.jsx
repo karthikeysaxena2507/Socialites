@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import { Pie } from "react-chartjs-2";
 import { Howl } from "howler";
 import Navbar from "../helper/Navbar";
+import { ProgressBar } from "react-bootstrap";
+import axios from "axios";
 import Footer from "../helper/Footer";
 import Heading from "../helper/Heading";
 import like from "../../images/like.png";
@@ -33,6 +35,7 @@ const Profile = () => {
     const [loves, setLoves] = useState(0);
     const [laughs, setLaughs] = useState(0);
     const [comments, setComments] = useState(0);
+    const [message, setMessage] = useState("");
     const [state, setState] = useState("Hide");
     const [about, setAbout] = useState("");
     const [edit, setEdit] = useState("Edit");
@@ -40,6 +43,7 @@ const Profile = () => {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(true);
     const [unread, setUnread] = useState(0);
+    const [percentage, setPercentage] = useState(0);
     const guestMessage = useContext(MessageContext);
     const guest = localStorage.getItem("Guest");
     let { user } = useParams();
@@ -199,6 +203,7 @@ const Profile = () => {
         sound.play();
         const file = e.target.files[0];
         const reader = new FileReader();
+        setMessage("Profile Pic Preview, Click on save to update profile pic");
         reader.readAsDataURL(file);
         reader.onloadend = () => {
             setImageUrl(reader.result);
@@ -214,12 +219,27 @@ const Profile = () => {
 
     const uploadImage = async (imageSource) => {
         try {
+            setMessage("Updating Profile Pic");
             const body = JSON.stringify({
                 data: imageSource,
                 user: user
             });
-            await updateUserImage(body);
-            window.location = `/profile/${user}`;
+            const options = {
+                onUploadProgress: (ProgressEvent) => {
+                    const { loaded, total } = ProgressEvent;
+                    let percent = Math.floor( (loaded * 100) / total );
+                    if(percent <= 100) {
+                        setPercentage(percent-1);
+                    }
+                },
+                headers: {"Content-type": "application/json"}
+            }
+            updateUserImage(body, options)
+            .then(() => {
+                setMessage("Profile Pic Updated")
+                setPercentage(0);
+                setShow(false);
+            });
         }
         catch(error) {
             console.log(error);
@@ -228,13 +248,30 @@ const Profile = () => {
 
     const removeImage = async() => {
         try {
-            setImageUrl("");
+            setMessage("Removing Profile Pic");
             const body = JSON.stringify({
                 data: "",
                 user: user
             });
-            await updateUserImage(body);
-            window.location = `/profile/${user}`;
+            const options = {
+                onUploadProgress: (ProgressEvent) => {
+                    const { loaded, total } = ProgressEvent;
+                    let percent = Math.floor( (loaded * 100) / total );
+                    if(percent <= 100) {
+                        setPercentage(percent-1);
+                    }
+                },
+                headers: {"Content-type": "application/json"}
+            }
+            axios.post("/users/updateimage", body, options)
+            .then(() => {
+                setTimeout(() => {
+                    setMessage("Profile Pic Removed");
+                    setImageUrl("");
+                    setPercentage(0);
+                    setShow(false);
+                }, 500);
+            });
         }
         catch(error) {
             console.log(error);
@@ -256,6 +293,10 @@ const Profile = () => {
                     <div className="margin text-center" style={imageUrl !== "" ? {display: "none"} : null}>
                         <img src={blank} className="profile-pic" alt="image not found"/>
                     </div>
+                    <div className="mt-2">
+                    { (percentage > 0) && <ProgressBar striped animated now={percentage} label={`${percentage}%`} />}
+                    </div>
+                    <div className="mt-2 mb-2 text-center"> {message} </div>
                     <form onSubmit={(e) => (username !== "Guest") ? handleSubmitFile(e) : alert(guestMessage)}>
                     <div className="text-center">
                         <div> <button style={ (!show) ? {display: "none"} : null } className="btn mt-1 expand"> Save </button> </div>

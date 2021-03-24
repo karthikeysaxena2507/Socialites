@@ -364,8 +364,6 @@ const updateUserBio = async(req, res, next) => {
 const resetPassword = async(req, res, next) => {
     try {
         const foundUser = await User.findOne({resetToken: req.body.token});
-        console.log(Date.now());
-        console.log(foundUser);
         if(foundUser && foundUser.expiresIn >= Date.now()) {
             brcypt.genSalt(10, (err, salt) => {
                 if(!err) {
