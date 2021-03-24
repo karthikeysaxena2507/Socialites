@@ -1,40 +1,47 @@
 # [Socialites](https://socialites-karthikey.herokuapp.com/)
 I built a Social Networking Web Application from scratch using the MERN tech stack. The website is responsive and can be used in mobile browser as well. Find the [live version here](https://socialites-karthikey.herokuapp.com/)
 
-
 ## Website Features:
-* Users first have to register themselves to the site using their email and verify that email or they can quickly login using Google.
-* Users can create a post with/without an image related to chosen category. 
-* Users can also edit and delete their posts.
-* Users can comment and react on posts.
-* Users can see which users commented and reacted on which posts.
-* The posts can be filtered based on category or any content searched by the user.
-* Users can customize their profile page as they want by adding a profile picture and writing a suitable Bio.
-* Users can also chat with other users in real time, either personally or by creating a room and sharing that roomID.
-* Users also have an option leave chat groups and delete their messages from chat.
-* Search option, sound effects and many filters have been added to provide good user experience.
-* For a quick look, Users can also take a tour of the website by logging in as a guest.
-* Users can check the "remember me" option to login once for a specific time.
-* Users can see which other users are online in a group or a personal chat.
-* Users can see the number of unread messages in their chats and rooms.
-* Users can see a pie chart based on the different types of reactions and comments on their posts.
+* Users can create a post, add comments and reactions, see which other users commented and reacted on different posts, and also chat with other users or in a group.
+* Images can also be added in posts or in chats. 
+* Posts and reactions to posts and comments can be filtered according to different categories or based on any content searched by user.
+* Post, comments or chat messages can be edited or deleted any time by the user.
+* Each user has a profile page which can be customized easily as per the needs of user.
+* The number of unread messages are available on top of site as well as besides each chat.
+* Online and Offline users in a personal chat or a group chat can be viewed easily.
 
+## Authentication Features:
+* Users can login and register using their **email** and verifying it or they can also login with **Google**.
+* For a quick look, Users can also take a tour of the website by logging in as a **Guest**.
+* Users can check the **Remember Me** option to login once for a specific period of time.
+* The password is stored in database in a hashed format using **BcryptJs**. 
+* For **Authorization**, Sessions are used with cookies for storing unique **sessionID**. All major requests to the server, send response only after verifying the session ID of user, which gets assigned to the user on successful login.
 
-## Technical Features:
-* The frontend is built using Reactjs (Hooks for state management), HTML, CSS and Bootstrap.
-* The backend is built using Nodejs and Expressjs with MongoDB database.
-* Used sessions with cookies and Bcryptjs for user authentication.
-* Used Redis for mapping session data to user data.
-* Used Socket.io library for adding real time chat feature.
-* Used Google OAuth2 API for authentication with google.
-* Used Cloudinary API for uploading and storing images uploaded by user.
-* Used Sendgrid API for sending emails from server for email verification or to reset the password.
-* Used Count API for maintaining the count of number of visits to the home page of the website.
-* Used Chartjs with React for creating Pie chart based on reactions and comments on posts of the user.
-* Used Fusejs for implementing fuzzy search, based on the Jaro-Winkler algorithm for searching in the site.
-* Used Howlerjs for adding various sound effects.
+## Technologies and APIs Used:
 
-The Website is deployed on Heroku platform.
+## FrontEnd
+* The FrontEnd is built using **Reactjs, CSS/Bootstrap, HTML** and **Hooks API** for state management in React.
+* **Axios** Library for API integration and making requests to backend.
+* **Fusejs** for implementing fuzzy search, based on the Jaro-Winkler algorithm for searching content in the site.
+* **Chartjs** charting library for creating a Pie chart based on reactions and comments on posts of a user.
+* **Howlerjs** for adding various sound effects.
+* **Count API** for maintaining the count of number of visits to the home page of the website.
+
+## Backend
+* The Backend is built using **Nodejs** with **Express** framework.
+* For database, **MongoDB** Atlas is used for storing data and querying is done via **Mongoose** ORM.
+* **Redis** for mapping sessionID to user data, for authentication and authorization.
+* **Socket.io** library for real time chat between multiple users.
+* **Google OAuth2 API** for adding authentication with google.
+* **Cloudinary API** for uploading and storing images on the cloud.
+* **Sendgrid API** for sending emails to the users from server for email verification or to reset the password.
+
+## Other Features:
+* Fully reusable react components have been created and used in the website.
+* Extensive **Error Handling** has been used for handling corner cases.
+* Code is **modularized** and **refactored**, all the buisness logic part is separated from the APIs, middlewares, helpers etc. 
+
+The Website is deployed on **Heroku** platform.
 
 Some snapshots of the website:
 
