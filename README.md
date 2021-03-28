@@ -1,5 +1,5 @@
 # [Socialites](https://socialites-karthikey.herokuapp.com/)
-I built a Social Networking Web Application from scratch using the MERN tech stack. The website is responsive and can be used in mobile browser as well. Find the [live version here](https://socialites-karthikey.herokuapp.com/)
+A Social Networking Web Application built from scratch using the MERN tech stack. The website is responsive and can be used in mobile browser as well. Find the [live version here](https://socialites-karthikey.herokuapp.com/)
 
 ## Website Features:
 * Users can create a post, add comments and reactions, see which other users commented and reacted on different posts, and also chat with other users or in a group.
@@ -39,7 +39,7 @@ I built a Social Networking Web Application from scratch using the MERN tech sta
 ## Other Features:
 * Fully reusable react components have been created and used in the website.
 * Extensive **Error Handling** has been used for handling corner cases.
-* Code is **modularized** and **refactored**, all the buisness logic part is separated from the APIs, middlewares, models etc. 
+* Code is well **structured**, **modularized** and **refactored**, all the buisness logic part is separated from the APIs, middlewares, models etc. 
 
 The Website is deployed on **Heroku** platform.
 
