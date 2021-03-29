@@ -8,6 +8,7 @@ const { OAuth2Client } = require("google-auth-library");
 const { v4: uuidv4 } = require("uuid");
 const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
 const redis = require("../redis/functions"); 
+const helper = require("../helper/index");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const checkAuth = async(req, res, next) => {
@@ -67,6 +68,9 @@ const checkAuth = async(req, res, next) => {
 const registerUser = async(req, res, next) => {
     try {
         const {username, email, password} = req.body;
+        username = helper.sanitize(username);
+        email = helper.sanitize(email);
+        password = helper.sanitize(password);
         const existingUser = await User.findOne({email});
         if(existingUser) 
         {
@@ -142,6 +146,8 @@ const registerUser = async(req, res, next) => {
 const loginUser = async(req, res, next) => {
     try {
         const {email, password, rememberMe} = req.body;
+        email = helper.sanitize(email);
+        password = helper.sanitize(password);
         const user = await User.findOne({email});
         if(user) 
         {
@@ -162,7 +168,7 @@ const loginUser = async(req, res, next) => {
                             res.cookie("SESSIONID", sessionId, {
                                 httpOnly: true,
                                 secure: true,
-                                sameSite: true,
+                                sameSite: "strict",
                                 maxAge: 24*60*60*1000 // (1 DAY)
                             });
                             redis.setRedisValue(sessionId, id, 24*60*60); // 1 DAY
@@ -235,7 +241,7 @@ const loginWithGoogle = async(req, res, next) => {
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
                     secure: true,
-                    sameSite: true,
+                    sameSite: "strict",
                     maxAge: 24*60*60*1000
                 });
                 const {id, username, email} = user;
@@ -258,7 +264,7 @@ const loginWithGoogle = async(req, res, next) => {
                     res.cookie("SESSIONID", sessionId, {
                         httpOnly: true,
                         secure: true,
-                        sameSite: true,
+                        sameSite: "strict",
                         maxAge: 7*24*60*60*1000
                     });
                     const {id, username, email} = data;
@@ -321,7 +327,7 @@ const updateProfileImage = async(req, res, next) => {
                 });
                 imageUrl = uploadedResponse.url;
             }
-            user.imageUrl = imageUrl;
+            user.imageUrl = helper.sanitize(imageUrl);
             user.save()
             .then(() => {
                 res.json("Successfully Updated Image");  
@@ -346,7 +352,7 @@ const updateUserBio = async(req, res, next) => {
         } 
         else {
             const user = await User.findOne({username: req.body.user});
-            user.about = req.body.text;
+            user.about = helper.sanitize(req.body.text);
             user.save()
             .then((data) => {
                 res.json(data.about);
@@ -367,7 +373,7 @@ const resetPassword = async(req, res, next) => {
         if(foundUser && foundUser.expiresIn >= Date.now()) {
             brcypt.genSalt(10, (err, salt) => {
                 if(!err) {
-                    brcypt.hash(req.body.newPassword, salt, (err, hash) => {
+                    brcypt.hash(helper.sanitize(req.body.newPassword), salt, (err, hash) => {
                         if(err) {
                             res.json(err);
                         }
@@ -398,7 +404,7 @@ const resetPassword = async(req, res, next) => {
 
 const forgotPassword = async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({ email: req.body.email });
+        const foundUser = await User.findOne({ email: helper.sanitize(req.body.email) });
         if (foundUser === null) {
             res.json("account with the entered email does not exists, please enter the email with which you registered");
         }

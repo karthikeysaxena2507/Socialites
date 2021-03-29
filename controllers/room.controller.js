@@ -2,6 +2,7 @@ const Room = require("../models/room.model");
 const User = require("../models/user.model");
 const { v4: uuidv4 } = require("uuid");
 const { time } = require("../helper/date");
+const helper = require("../helper/index");
 
 const getRoom = async(req, res, next) => {
     try {
@@ -198,7 +199,7 @@ const createRoom = async(req, res, next) => {
             else {
                 const room = new Room({
                     roomId: roomId,
-                    roomName: req.body.roomName,
+                    roomName: helper.sanitize(req.body.roomName),
                     isGroup: true,
                     creator: req.body.username,
                     users: [],
@@ -206,7 +207,7 @@ const createRoom = async(req, res, next) => {
                 });
                 const userRoom = {
                     roomId: room.roomId, 
-                    roomName: room.roomName, 
+                    roomName: helper.sanitize(room.roomName), 
                     unreadCount: 0,
                     lastCount: 1
                 };

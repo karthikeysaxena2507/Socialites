@@ -1,6 +1,7 @@
 let Post = require("../models/post.model");
 let React = require("../models/react.model");
 let Comment = require("../models/comment.model");
+const helper = require("../helper/index");
 const { cloudinary } = require("../utils/cloudinary");
 
 const getAllPosts = async(req, res, next) => {
@@ -129,10 +130,10 @@ const editPost = async(req, res, next) => {
                 });
                 imageUrl = uploadedResponse.url;
             }
-            post.title = req.body.title;
-            post.content = req.body.content;
-            post.category = req.body.category;
-            post.imageUrl = imageUrl;
+            post.title = helper.sanitize(req.body.title);
+            post.content = helper.sanitize(req.body.content);
+            post.category = helper.sanitize(req.body.category);
+            post.imageUrl = helper.sanitize(imageUrl);
             post.save()
             .then((data) => {
                 res.json(data);
@@ -167,11 +168,11 @@ const addPost = async(req, res, next) => {
             }
             const { author, title, content, category } = req.body;
             const post = new Post({
-                author,
-                title,
-                content,
-                category,
-                imageUrl,
+                author: helper.sanitize(author),
+                title: helper.sanitize(title),
+                content: helper.sanitize(content),
+                category: helper.sanitize(category),
+                imageUrl: helper.sanitize(imageUrl),
                 reacts: [],
                 comment_count: 0,
                 like: 0,
@@ -202,6 +203,7 @@ const addComment = async(req, res, next) => {
         }
         else {
             const post = await Post.findOne({_id: req.params.id});
+            req.body.content = helper.sanitize(req.body.content);
             const comment = new Comment(req.body);
             post.comments.push(comment);
             post.comment_count = post.comments.length;

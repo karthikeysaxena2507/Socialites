@@ -33,6 +33,7 @@
     "google-auth-library": "^6.1.4",
     "mongoose": "^5.12.2",
     "redis": "^3.0.2",
+    "sanitize-html": "^2.3.3",
     "socket.io": "^3.0.5",
     "uuid": "^8.3.2"
   }
