@@ -1,6 +1,8 @@
 # [Socialites](https://socialites-karthikey.herokuapp.com/)
 A Social Networking Web Application built from scratch using the MERN tech stack. The website is responsive and can be used in mobile browser as well. Find the [live version here](https://socialites-karthikey.herokuapp.com/)
 
+---
+
 ## Website Features:
 * Users can create a post, add comments and reactions, see which other users commented and reacted on different posts, and also chat with other users or in a group.
 * Images can also be added in posts or in chats. 
@@ -10,12 +12,16 @@ A Social Networking Web Application built from scratch using the MERN tech stack
 * The number of unread messages are available on top of site as well as besides each chat.
 * Online and Offline users in a personal chat or a group chat can be viewed easily.
 
+---
+
 ## Authentication Features:
 * Users can login and register using their **email** and verifying it or they can also login with **Google**.
 * For a quick look, Users can also take a tour of the website by logging in as a **Guest**.
 * Users can check the **Remember Me** option to login once for a specific period of time.
 * The password is stored in database in a hashed format using **BcryptJs**. 
 * For **Authorization**, Sessions are used with cookies for storing unique **sessionID**. All major requests to the server, send response only after verifying the session ID of user, which gets assigned to the user on successful login.
+
+---
 
 ## Technologies and APIs Used:
 
@@ -36,12 +42,16 @@ A Social Networking Web Application built from scratch using the MERN tech stack
 * **Cloudinary API** for uploading and storing images on the cloud.
 * **Sendgrid API** for sending emails to the users from server for email verification or to reset the password.
 
+---
+
 ## Other Features:
 * Fully reusable react components have been created and used in the website.
 * Extensive **Error Handling** has been used for handling corner cases.
 * Code is well **structured**, **modularized** and **refactored**, all the buisness logic part is separated from the APIs, middlewares, models etc. 
 
 The Website is deployed on **Heroku** platform.
+
+---
 
 Some snapshots of the website:
 
