@@ -1,19 +1,19 @@
 require("dotenv").config();
-const User = require("../models/user.model");
-const Room = require("../models/room.model");
-const brcypt = require("bcryptjs");
-const crypto = require("crypto");
-const { cloudinary } = require("../utils/cloudinary");
-const { OAuth2Client } = require("google-auth-library");
-const { v4: uuidv4 } = require("uuid");
-const { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
-const redis = require("../redis/functions"); 
-const helper = require("../helper/index");
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+let User = require("../models/user.model");
+let Room = require("../models/room.model");
+let brcypt = require("bcryptjs");
+let crypto = require("crypto");
+let { cloudinary } = require("../utils/cloudinary");
+let { OAuth2Client } = require("google-auth-library");
+let { v4: uuidv4 } = require("uuid");
+let { sendEmailVerificationMail, sendResetPasswordMail } = require("../utils/sendgrid");
+let redis = require("../redis/functions"); 
+let helper = require("../helper/index");
+let client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const checkAuth = async(req, res, next) => {
+let checkAuth = async(req, res, next) => {
     try {
-        const user = req.user;
+        let user = req.user;
         if(user === null) 
         {
             redis.deleteBySessionId(req.cookies.SESSIONID);
@@ -25,7 +25,7 @@ const checkAuth = async(req, res, next) => {
             let totalUnread = 0;
             for (let tempRoom of user.rooms) 
             {
-                const room = await Room.findOne({roomId: tempRoom.roomId});
+                let room = await Room.findOne({roomId: tempRoom.roomId});
                 if(room) 
                 {
                     tempRoom.unreadCount = (room.messages.length - tempRoom.lastCount);
@@ -35,7 +35,7 @@ const checkAuth = async(req, res, next) => {
             }
             for (let tempChat of user.chats) 
             {
-                const room = await Room.findOne({roomId: tempChat.roomId});
+                let room = await Room.findOne({roomId: tempChat.roomId});
                 if(room) 
                 {
                     tempChat.unreadCount = (room.messages.length - tempChat.lastCount);
@@ -65,19 +65,19 @@ const checkAuth = async(req, res, next) => {
     }
 }
 
-const registerUser = async(req, res, next) => {
+let registerUser = async(req, res, next) => {
     try {
-        const {username, email, password} = req.body;
+        let {username, email, password} = req.body;
         username = helper.sanitize(username);
         email = helper.sanitize(email);
         password = helper.sanitize(password);
-        const existingUser = await User.findOne({email});
+        let existingUser = await User.findOne({email});
         if(existingUser) 
         {
             res.json("Email already exists");
         }
         else {
-            const foundUser = await User.findOne({username});
+            let foundUser = await User.findOne({username});
             if(foundUser) 
             {
                 res.json("Username already exists");
@@ -89,8 +89,8 @@ const registerUser = async(req, res, next) => {
                     {
                         console.log(err);
                     }
-                    const token = buffer.toString("hex");
-                    const newUser = new User({
+                    let token = buffer.toString("hex");
+                    let newUser = new User({
                         username,
                         email, 
                         password,
@@ -143,12 +143,12 @@ const registerUser = async(req, res, next) => {
     }
 }
 
-const loginUser = async(req, res, next) => {
+let loginUser = async(req, res, next) => {
     try {
-        const {email, password, rememberMe} = req.body;
+        let {email, password, rememberMe} = req.body;
         email = helper.sanitize(email);
         password = helper.sanitize(password);
-        const user = await User.findOne({email});
+        let user = await User.findOne({email});
         if(user) 
         {
             brcypt.compare(password, user.password)
@@ -161,8 +161,8 @@ const loginUser = async(req, res, next) => {
                 {
                     if(user.verified) 
                     {
-                        const sessionId = uuidv4().replace(/-/g,'');
-                        const {id, username, email, verified} = user;
+                        let sessionId = uuidv4().replace(/-/g,'');
+                        let {id, username, email, verified} = user;
                         if(rememberMe) 
                         {
                             res.cookie("SESSIONID", sessionId, {
@@ -192,7 +192,7 @@ const loginUser = async(req, res, next) => {
                             {
                                 console.log(err);
                             }
-                            const verifyToken = buffer.toString("hex");
+                            let verifyToken = buffer.toString("hex");
                             user.verifyToken = verifyToken;
                             user.expiresIn = Date.now() + 1800000;
                             user.save()
@@ -227,30 +227,30 @@ const loginUser = async(req, res, next) => {
     }
 }
 
-const loginWithGoogle = async(req, res, next) => {
+let loginWithGoogle = async(req, res, next) => {
     try {   
         var tokenId = req.body.token;
-        const response = await client.verifyIdToken({idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID});
+        let response = await client.verifyIdToken({idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID});
         var {email_verified, given_name, email} = response.payload;
         if(email_verified) 
         {
-            const user = await User.findOne({email});
+            let user = await User.findOne({email});
             if(user) 
             {
-                const sessionId = uuidv4().replace(/-/g,'');
+                let sessionId = uuidv4().replace(/-/g,'');
                 res.cookie("SESSIONID", sessionId, {
                     httpOnly: true,
                     secure: true,
                     sameSite: "strict",
                     maxAge: 24*60*60*1000
                 });
-                const {id, username, email} = user;
+                let {id, username, email} = user;
                 redis.setRedisValue(sessionId, id, 24*60*60); 
                 res.json({user: {id, username, email}});
             }
             else 
             {
-                const newUser = new User({
+                let newUser = new User({
                     username: given_name,
                     email,
                     about: `Hello, ${given_name} here`,
@@ -260,14 +260,14 @@ const loginWithGoogle = async(req, res, next) => {
                 });
                 newUser.save()
                 .then((data) => {
-                    const sessionId = uuidv4().replace(/-/g,'');
+                    let sessionId = uuidv4().replace(/-/g,'');
                     res.cookie("SESSIONID", sessionId, {
                         httpOnly: true,
                         secure: true,
                         sameSite: "strict",
                         maxAge: 7*24*60*60*1000
                     });
-                    const {id, username, email} = data;
+                    let {id, username, email} = data;
                     redis.setRedisValue(sessionId, id, 24*60*60);
                     res.json({user: {id, username, email}});
                 })
@@ -287,9 +287,9 @@ const loginWithGoogle = async(req, res, next) => {
     }
 }
 
-const getAllUsers = async(req, res, next) => {
+let getAllUsers = async(req, res, next) => {
     try {  
-        const users = await User.find({}).select(['username']);
+        let users = await User.find({}).select(['username']);
         res.json(users);
     }
     catch(error) {
@@ -297,9 +297,9 @@ const getAllUsers = async(req, res, next) => {
     }
 }
 
-const getUserByUsername = async(req, res, next) => {
+let getUserByUsername = async(req, res, next) => {
     try {
-        const user = await User.findOne({username: req.params.user});
+        let user = await User.findOne({username: req.params.user});
         res.json(user);
     }
     catch(error) {
@@ -307,7 +307,7 @@ const getUserByUsername = async(req, res, next) => {
     }
 }
 
-const updateProfileImage = async(req, res, next) => {
+let updateProfileImage = async(req, res, next) => {
     try {
         if(req.user ===  null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -316,7 +316,7 @@ const updateProfileImage = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const user = await User.findOne({username: req.body.user});
+            let user = await User.findOne({username: req.body.user});
             var imageUrl = "";
             if(req.body.data !== "") 
             {
@@ -342,7 +342,7 @@ const updateProfileImage = async(req, res, next) => {
     }
 }
 
-const updateUserBio = async(req, res, next) => {
+let updateUserBio = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -351,7 +351,7 @@ const updateUserBio = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         } 
         else {
-            const user = await User.findOne({username: req.body.user});
+            let user = await User.findOne({username: req.body.user});
             user.about = helper.sanitize(req.body.text);
             user.save()
             .then((data) => {
@@ -367,9 +367,9 @@ const updateUserBio = async(req, res, next) => {
     }
 }
 
-const resetPassword = async(req, res, next) => {
+let resetPassword = async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({resetToken: req.body.token});
+        let foundUser = await User.findOne({resetToken: req.body.token});
         if(foundUser && foundUser.expiresIn >= Date.now()) {
             brcypt.genSalt(10, (err, salt) => {
                 if(!err) {
@@ -402,9 +402,9 @@ const resetPassword = async(req, res, next) => {
     }
 }
 
-const forgotPassword = async(req, res, next) => {
+let forgotPassword = async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({ email: helper.sanitize(req.body.email) });
+        let foundUser = await User.findOne({ email: helper.sanitize(req.body.email) });
         if (foundUser === null) {
             res.json("account with the entered email does not exists, please enter the email with which you registered");
         }
@@ -413,7 +413,7 @@ const forgotPassword = async(req, res, next) => {
                 if(err) {
                     console.log(err);
                 }
-                const token = buffer.toString("hex");
+                let token = buffer.toString("hex");
                 foundUser.resetToken = token;
                 foundUser.expiresIn = Date.now() + 1800000;
                 foundUser.save()
@@ -432,9 +432,9 @@ const forgotPassword = async(req, res, next) => {
     }
 }
 
-const sendEmail = async(req, res, next) => {
+let sendEmail = async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({verifyToken: req.body.token});
+        let foundUser = await User.findOne({verifyToken: req.body.token});
         if(foundUser && foundUser.expiresIn >= Date.now()) {
             sendEmailVerificationMail(foundUser.verifyToken, foundUser.email);
             res.json("Email Sent Successfully");
@@ -448,9 +448,9 @@ const sendEmail = async(req, res, next) => {
     }
 }
 
-const verifyUser = async(req, res, next) => {
+let verifyUser = async(req, res, next) => {
     try {
-        const foundUser = await User.findOne({verifyToken: req.body.token});
+        let foundUser = await User.findOne({verifyToken: req.body.token});
         if(foundUser && foundUser.expiresIn >= Date.now()) {
             foundUser.verified = true;
             foundUser.verifyToken = undefined;
@@ -472,7 +472,7 @@ const verifyUser = async(req, res, next) => {
     }
 }
 
-const logoutUser = async(req, res, next) => {
+let logoutUser = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.clearCookie("SESSIONID");
@@ -482,7 +482,7 @@ const logoutUser = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const response = redis.deleteBySessionId(req.cookies.SESSIONID);
+            let response = redis.deleteBySessionId(req.cookies.SESSIONID);
             res.clearCookie("SESSIONID");
             res.json(response);
         }

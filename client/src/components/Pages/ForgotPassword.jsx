@@ -8,15 +8,15 @@ import Footer from "../helper/Footer";
 import { checkUser } from "../../api/userApis"
 var sound = new Howl({src: [music]});
 
-const ForgotPassword = () => {
+let ForgotPassword = () => {
 
-    const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(true);
+    let [email, setEmail] = useState("");
+    let [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const check = async() => {
+        let check = async() => {
             try {
-                const user = await checkUser();
+                let user = await checkUser();
                 setLoading(false);
                 (user !== "INVALID") && (window.location = `/profile/${user.username}`)
             }
@@ -27,10 +27,10 @@ const ForgotPassword = () => {
         check();
     },[]);
 
-    const reset = async() => {
+    let reset = async() => {
         try {
             sound.play();
-            const response = await axios.post("users/forgot", {email});
+            let response = await axios.post("users/forgot", {email});
             alert(response.data);
         }
         catch(error) {

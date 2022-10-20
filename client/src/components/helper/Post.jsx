@@ -12,12 +12,12 @@ import { addCommentToPost } from "../../api/postApis";
 import { MessageContext } from "../../utils/Context";
 var sound = new Howl({src: [music]});
 
-const Post = (props) => {
+let Post = (props) => {
 
-    const [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
-    const guestMessage = useContext(MessageContext);
+    let [comment, setComment] = useState({name:props.name, content:"", likes:0, loves:0, laughs:0, reacts:[]});
+    let guestMessage = useContext(MessageContext);
 
-    const change = (event) => {
+    let change = (event) => {
         var {name, value} = event.target;
 
         setComment((prevPost) => {
@@ -28,11 +28,11 @@ const Post = (props) => {
       });
     }
 
-    const addComment = () => {
+    let addComment = () => {
         sound.play();
         if(props.name !== "Guest") {
             if(comment.content !== "") {
-                const drop = async() => {
+                let drop = async() => {
                     try {
                         await addCommentToPost(props._id, comment);
                         window.location = `/complete/${props._id}`;
@@ -52,13 +52,13 @@ const Post = (props) => {
         }
     }
 
-    const changePost = (e) => {
+    let changePost = (e) => {
         sound.play();
         props.change(e, props);
     }        
 
-    const check = (type) => {
-        const reactions = props.reactions;
+    let check = (type) => {
+        let reactions = props.reactions;
         for(let reaction of reactions) {
             if(reaction.name === props.name && reaction.type === type) {
                 return true;
@@ -67,17 +67,17 @@ const Post = (props) => {
         return false;
     }
 
-    const SeeAll = () => {
+    let SeeAll = () => {
         sound.play();
         window.location = `/post/${props._id}`;
     }
 
-    const SeeComplete = () => {
+    let SeeComplete = () => {
         sound.play();
         window.location = `/complete/${props._id}`;
     }
 
-    const SeeProfile = (e) => {
+    let SeeProfile = (e) => {
         sound.play();
         window.location = `/profile/${e.target.innerText}`;
     }

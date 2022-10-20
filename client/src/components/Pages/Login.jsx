@@ -11,18 +11,18 @@ import { checkUser } from "../../api/userApis"
 import { loginUser, LoginWithGoogle } from "../../api/authApis";
 var sound = new Howl({src: [music]});
 
-const Login = () => {
+let Login = () => {
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState(" ");
-    const [rememberMe, setRememberMe] = useState(false);
-    const [loading, setLoading] = useState(true);
+    let [email, setEmail] = useState("");
+    let [password, setPassword] = useState("");
+    let [message, setMessage] = useState(" ");
+    let [rememberMe, setRememberMe] = useState(false);
+    let [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const check = async() => {
+        let check = async() => {
             try {
-                const user = await checkUser();
+                let user = await checkUser();
                 (user !== "INVALID") && (window.location = `/profile/${user.username}`);
                 setLoading(false);
             }
@@ -33,12 +33,12 @@ const Login = () => {
         check();
     },[]);
 
-    const add = (event) => {
+    let add = (event) => {
         event.preventDefault();
         sound.play();
-        const drop = async() => {
+        let drop = async() => {
             try {
-                const user = await loginUser(email, password, rememberMe);
+                let user = await loginUser(email, password, rememberMe);
                 localStorage.removeItem("Guest");
                 setMessage(" ");
                 (user.verified) ? window.location = `/profile/${user.username}` : window.location = `/verify/${user.token}`;
@@ -51,15 +51,15 @@ const Login = () => {
         drop();
     }
 
-    const guestLogin = () => {
+    let guestLogin = () => {
         sound.play();
         localStorage.setItem("Guest", true);
     }
 
-    const successGoogle = (response) => {
-        const post = async() => {
+    let successGoogle = (response) => {
+        let post = async() => {
             try {
-                const user = await LoginWithGoogle(response.tokenId);
+                let user = await LoginWithGoogle(response.tokenId);
                 localStorage.removeItem("Guest");
                 window.location = `/profile/${user.username}`;
             }
@@ -70,7 +70,7 @@ const Login = () => {
         post();
     }
 
-    const failureGoogle = () => {
+    let failureGoogle = () => {
         setMessage("Google Login Failed");
     }
 

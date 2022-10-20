@@ -10,9 +10,9 @@ import trash from "../../images/trash.png";
 import { createChat } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
-const Comment = (props) => {
+let Comment = (props) => {
 
-    const createRoom = async() => {
+    let createRoom = async() => {
         try {
             sound.play();
             let room = (props.username < props.name) ? (props.username + "-" + props.name) : (props.name + "-" + props.username);
@@ -24,8 +24,8 @@ const Comment = (props) => {
         }
     }
 
-    const check = (type) => {
-        const reactions = props.reacts;
+    let check = (type) => {
+        let reactions = props.reacts;
         for(let reaction of reactions) {
             if(reaction.name === props.username && reaction.type === type) {
                 return true;

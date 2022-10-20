@@ -3,7 +3,7 @@ import React from "react";
 var date = new Date();
 var year = date.getFullYear();
 
-const Footer = () => {
+let Footer = () => {
     return (<div>
     <div className="space"></div>
     <footer className="text-center container">

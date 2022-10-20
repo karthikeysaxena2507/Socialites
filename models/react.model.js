@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+let mongoose = require("mongoose");
 
-const reactSchema = new mongoose.Schema({
+let reactSchema = new mongoose.Schema({
     name: String,
     type: String
 });
 
-const React = mongoose.model("React", reactSchema);
+let React = mongoose.model("React", reactSchema);
 
 module.exports = React;

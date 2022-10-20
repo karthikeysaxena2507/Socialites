@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
-const CategoryMenu = (props) => {
+let CategoryMenu = (props) => {
 
-    let history = useHistory();
+    let navigate = useNavigate();
 
-    const changeCategory = (event) => {
+    let changeCategory = (event) => {
         sound.play();
-        (event.target.innerText === "All" && props.message === "my") && (history.push(`/myposts`));
-        (event.target.innerText !== "All" && props.message === "my") && (history.push(`/mycategoryposts/${event.target.innerText}`));
-        (event.target.innerText === "All" && props.message === "all") && (history.push(`/allposts`));
-        (event.target.innerText !== "All" && props.message === "all") && (history.push(`/categoryposts/${event.target.innerText}`));
+        (event.target.innerText === "All" && props.message === "my") && (navigate(`/myposts`));
+        (event.target.innerText !== "All" && props.message === "my") && (navigate(`/mycategoryposts/${event.target.innerText}`));
+        (event.target.innerText === "All" && props.message === "all") && (navigate(`/allposts`));
+        (event.target.innerText !== "All" && props.message === "all") && (navigate(`/categoryposts/${event.target.innerText}`));
     }
 
     return <div className="dropdown text-center">

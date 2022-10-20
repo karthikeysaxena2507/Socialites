@@ -1,7 +1,7 @@
 /**
  * The function to get the current time
  */
-const time = () => {
+let time = () => {
     var d = new Date();
     var date = d.getDate().toString();
     if(date.length === 1) date = "0" + date;

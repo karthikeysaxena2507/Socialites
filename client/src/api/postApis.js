@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const backendUrl = "/";
+let backendUrl = "/";
 
 /**
  * The function to get all posts
  */
-const getAllPosts = async() => {
-    const posts = await axios.get(backendUrl + "posts");
+let getAllPosts = async() => {
+    let posts = await axios.get(backendUrl + "posts");
     return posts.data.reverse();
 }
 
@@ -14,8 +14,8 @@ const getAllPosts = async() => {
  * The function to get the posts filtered by category
  * @param {String} type 
  */
-const getFilteredPosts = async(type) => {
-    const posts = await axios.get(backendUrl + "posts");
+let getFilteredPosts = async(type) => {
+    let posts = await axios.get(backendUrl + "posts");
     return posts.data.reverse().filter((post) => {
         return (post.category === type);
     });
@@ -25,8 +25,8 @@ const getFilteredPosts = async(type) => {
  * The function to get all posts of a particular user
  * @param {String} username 
  */
-const getPostsByUser = async(username) => {
-    const posts = await axios.get(backendUrl + `posts/list/${username}`);
+let getPostsByUser = async(username) => {
+    let posts = await axios.get(backendUrl + `posts/list/${username}`);
     return posts.data.reverse();
 }
 
@@ -34,8 +34,8 @@ const getPostsByUser = async(username) => {
  * The function to get the post by unique post id
  * @param {String} id 
  */
-const getPostById = async(id) => {
-    const posts = await axios.get(backendUrl + `posts/${id}`);
+let getPostById = async(id) => {
+    let posts = await axios.get(backendUrl + `posts/${id}`);
     return posts.data[0];
 }
 
@@ -43,8 +43,8 @@ const getPostById = async(id) => {
  * The function to get the post by unique post id for editing
  * @param {String} id 
  */
-const getPostForEdit = async(id) => {
-    const post = await axios.get(backendUrl + `posts/edit/${id}`);
+let getPostForEdit = async(id) => {
+    let post = await axios.get(backendUrl + `posts/edit/${id}`);
     return post.data;
 }
 
@@ -53,8 +53,8 @@ const getPostForEdit = async(id) => {
  * @param {String} commentId 
  * @param {String} id 
  */
-const getCommentData = async(commentId, id) => {
-    const comment = await axios.get(backendUrl + `posts/getcomment/${commentId}/${id}`);
+let getCommentData = async(commentId, id) => {
+    let comment = await axios.get(backendUrl + `posts/getcomment/${commentId}/${id}`);
     return comment.data;
 }
 
@@ -62,8 +62,8 @@ const getCommentData = async(commentId, id) => {
  * The function to add a new post
  * @param {Object} body 
  */
-const addPost = async(body, options) => {
-    const post = await axios.post(backendUrl + "posts/add", body, options);
+let addPost = async(body, options) => {
+    let post = await axios.post(backendUrl + "posts/add", body, options);
     return post;
 }
 
@@ -72,8 +72,8 @@ const addPost = async(body, options) => {
  * @param {Object} body 
  * @param {String} id 
  */
-const editPost = async(body, id, options) => {
-    const post = await axios.post(backendUrl + `posts/edit/${id}`, body, options);
+let editPost = async(body, id, options) => {
+    let post = await axios.post(backendUrl + `posts/edit/${id}`, body, options);
     return post;
 }
 
@@ -82,7 +82,7 @@ const editPost = async(body, id, options) => {
  * @param {String} id 
  * @param {String} comment 
  */
-const addCommentToPost = async(id, comment) => {
+let addCommentToPost = async(id, comment) => {
     await axios.post(backendUrl + `posts/add/${id}`, comment);
 }
 
@@ -92,7 +92,7 @@ const addCommentToPost = async(id, comment) => {
  * @param {String} username 
  * @param {Object} body 
  */
-const addReactionToPost = async(reactionType, username, body) => {
+let addReactionToPost = async(reactionType, username, body) => {
     await axios.post(backendUrl + `posts/update/${reactionType}/${username}`, body);
 }
 
@@ -103,7 +103,7 @@ const addReactionToPost = async(reactionType, username, body) => {
  * @param {String} username 
  * @param {Object} body 
  */
-const addReactionToComment = async(reactionType, postId, username, body) => {
+let addReactionToComment = async(reactionType, postId, username, body) => {
     await axios.post(backendUrl + `posts/comment/${reactionType}/${postId}/${username}`, body);
 }
 
@@ -112,7 +112,7 @@ const addReactionToComment = async(reactionType, postId, username, body) => {
  * @param {String} id 
  * @param {Object} body 
  */
-const deleteComment = async(id, body, username) => {
+let deleteComment = async(id, body, username) => {
     await axios.post(backendUrl + `posts/remove/${id}/${username}`, body);
 }
 
@@ -120,7 +120,7 @@ const deleteComment = async(id, body, username) => {
  * The function to delete a post
  * @param {String} id 
  */
-const deletePost = async(id, username) => {
+let deletePost = async(id, username) => {
     await axios.delete(backendUrl + `posts/delete/${id}/${username}`);
 }
 

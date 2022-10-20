@@ -1,10 +1,10 @@
-const User = require("../models/user.model");
-const Chat = require("../models/chat.model");
+let User = require("../models/user.model");
+let Chat = require("../models/chat.model");
 
-const updateOnlineUsers = async(roomId, countOfMessages, isGroup) => {
-    const onlineUsers = await Chat.find({room: roomId});
+let updateOnlineUsers = async(roomId, countOfMessages, isGroup) => {
+    let onlineUsers = await Chat.find({room: roomId});
     for (let tempUser of onlineUsers) {
-        const user = await User.findOne({username: tempUser.name});
+        let user = await User.findOne({username: tempUser.name});
         if(isGroup) {
             let temp = null;
             for (let item of user.rooms) {

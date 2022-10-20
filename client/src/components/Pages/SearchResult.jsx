@@ -17,33 +17,33 @@ import { getAllPosts, getPostsByUser, addReactionToPost } from "../../api/postAp
 import { deletePost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
-const Result = () => {
+let Result = () => {
 
-    const [username, setUsername] = useState("");
-    const { searchContent,message,type } = useParams();
-    const [foundPosts,setfoundPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const guest = localStorage.getItem("Guest");
-    const [unread, setUnread] = useState(0);
-    const guestMessage = useContext(MessageContext);
+    let [username, setUsername] = useState("");
+    let { searchContent,message,type } = useParams();
+    let [foundPosts,setfoundPosts] = useState([]);
+    let [loading, setLoading] = useState(true);
+    let guest = localStorage.getItem("Guest");
+    let [unread, setUnread] = useState(0);
+    let guestMessage = useContext(MessageContext);
 
     useEffect(() => {
         if(message === "all") {
-            const fetch = async() => {
+            let fetch = async() => {
                 try {
                     if(guest !== "true") {
-                        const user = await checkUser();
+                        let user = await checkUser();
                         (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                     }
                     else setUsername("Guest");
-                    const postsData = await getAllPosts();
+                    let postsData = await getAllPosts();
                     setLoading(false);
-                    const fuse = new Fuse(postsData, {
+                    let fuse = new Fuse(postsData, {
                         keys: ['author', 'title', 'content'],
                         includeScore: true,
                         includeMatches: true
                     });
-                    const results = fuse.search(searchContent);
+                    let results = fuse.search(searchContent);
                     setfoundPosts(results);
                     (type !== "none") && (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
                 }
@@ -54,18 +54,18 @@ const Result = () => {
             fetch();
         }
         else if(message === "personal") {
-            const fetch = async() => {
+            let fetch = async() => {
                 try {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
-                    const postsData = await getPostsByUser(user.username);
+                    let postsData = await getPostsByUser(user.username);
                     setLoading(false);
-                    const fuse = new Fuse(postsData, {
+                    let fuse = new Fuse(postsData, {
                         keys: ['author', 'title', 'content'],
                         includeScore: true,
                         includeMatches: true
                     });
-                    const results = fuse.search(searchContent);
+                    let results = fuse.search(searchContent);
                     setfoundPosts(results.reverse());
                     (type !== "none") && (setfoundPosts(results.reverse().filter((post) => {return (post.item.category === type)})))
                 }
@@ -77,19 +77,19 @@ const Result = () => {
         }
     },[guest, message, searchContent, type, username]);
 
-    const createPost = (props) => {
+    let createPost = (props) => {
 
-        const addReaction = async(event, post) => {
+        let addReaction = async(event, post) => {
             try {
                 await addReactionToPost(event.target.name, post.name, post);
                 let response;
                 (message === "all") ? response = await getAllPosts() : response = await getPostsByUser(username);
-                const fuse = new Fuse(response, {
+                let fuse = new Fuse(response, {
                     keys: ['author', 'title', 'content'],
                     includeScore: true,
                     includeMatches: true
                 });
-                const results = fuse.search(searchContent);
+                let results = fuse.search(searchContent);
                 setfoundPosts(results);
                 (type !== "none") && (setfoundPosts(results.filter((post) => {return (post.item.category === type)})))
             }
@@ -98,18 +98,18 @@ const Result = () => {
             }
         }
 
-        const remove = async() => {
+        let remove = async() => {
             try {
                 sound.play();
                 await deletePost(props.item._id, username);
-                const postsData = await getPostsByUser(username);
+                let postsData = await getPostsByUser(username);
                 setLoading(false);
-                const fuse = new Fuse(postsData, {
+                let fuse = new Fuse(postsData, {
                     keys: ['author', 'title', 'content'],
                     includeScore: true,
                     includeMatches: true
                 });
-                const results = fuse.search(searchContent);
+                let results = fuse.search(searchContent);
                 setfoundPosts(results.reverse());
                 (type !== "none") && (setfoundPosts(results.reverse().filter((post) => {return (post.item.category === type)})))
             }

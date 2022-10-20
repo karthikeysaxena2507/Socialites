@@ -1,7 +1,7 @@
-const sanitizeHtml = require("sanitize-html");
+let sanitizeHtml = require("sanitize-html");
 
-const sanitize = (content) => {
-    const sanitizedContent = sanitizeHtml(content, {
+let sanitize = (content) => {
+    let sanitizedContent = sanitizeHtml(content, {
         allowedAttributes: [],
         allowedTags: []
     });

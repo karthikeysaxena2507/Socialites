@@ -17,22 +17,22 @@ import { checkUser } from "../../api/userApis";
 import { getPostsByUser, addReactionToPost, deletePost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
-const MyCategoryPosts = () => {
+let MyCategoryPosts = () => {
 
-    const [username, setUsername] = useState("");
-    const { type } = useParams();
-    const [posts,setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const guest = localStorage.getItem("Guest");
-    const [unread, setUnread] = useState(0);
+    let [username, setUsername] = useState("");
+    let { type } = useParams();
+    let [posts,setPosts] = useState([]);
+    let [loading, setLoading] = useState(true);
+    let guest = localStorage.getItem("Guest");
+    let [unread, setUnread] = useState(0);
 
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
-                    const postsData = await getPostsByUser(user.username);
+                    let postsData = await getPostsByUser(user.username);
                     setPosts(postsData.filter((post) => {
                         return (post.category === type);
                     }));
@@ -47,12 +47,12 @@ const MyCategoryPosts = () => {
         fetch();
     },[guest, type, username]);
 
-    const MyPost = (props) => {
+    let MyPost = (props) => {
 
-        const changepost = async(event, post) => {
+        let changepost = async(event, post) => {
             try {
                 await addReactionToPost(event.target.name, post.name, post);
-                const postsData = await getPostsByUser(post.name);
+                let postsData = await getPostsByUser(post.name);
                 setPosts(postsData.filter((post) => {
                     return (post.category === type);
                 }));
@@ -62,11 +62,11 @@ const MyCategoryPosts = () => {
             }
         }
 
-        const remove = async() => {
+        let remove = async() => {
             try {
                 sound.play();
                 await deletePost(props._id, username);
-                const postsData = await getPostsByUser(username);
+                let postsData = await getPostsByUser(username);
                 setPosts(postsData.filter((post) => {
                     return (post.category === type);
                 }));

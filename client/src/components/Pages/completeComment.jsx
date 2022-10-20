@@ -18,30 +18,30 @@ import { MessageContext } from "../../utils/Context";
 import { getCommentData, deleteComment, addReactionToComment } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
-const CompleteComment = () => {
+let CompleteComment = () => {
 
-    const [username, setUsername] = useState("");
-    const { commentId,id } = useParams();
-    const [comment, setComment] = useState({});
-    const [like,setlike] = useState(false);
-    const [love,setlove] = useState(false);
-    const [laugh,setlaugh] = useState(false);
-    const [reactions,setreactions] = useState([]);
-    const [allreactions,setallreactions] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const guest = localStorage.getItem("Guest");
-    const [unread, setUnread] = useState(0);
-    const guestMessage = useContext(MessageContext);
+    let [username, setUsername] = useState("");
+    let { commentId,id } = useParams();
+    let [comment, setComment] = useState({});
+    let [like,setlike] = useState(false);
+    let [love,setlove] = useState(false);
+    let [laugh,setlaugh] = useState(false);
+    let [reactions,setreactions] = useState([]);
+    let [allreactions,setallreactions] = useState([]);
+    let [loading, setLoading] = useState(true);
+    let guest = localStorage.getItem("Guest");
+    let [unread, setUnread] = useState(0);
+    let guestMessage = useContext(MessageContext);
 
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try{
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else setUsername("Guest");
-                const commentData = await getCommentData(commentId, id);
+                let commentData = await getCommentData(commentId, id);
                 setComment(commentData);
                 setallreactions(commentData.reacts.reverse());
                 setreactions(commentData.reacts.reverse());
@@ -54,7 +54,7 @@ const CompleteComment = () => {
         fetch();
     },[commentId, guest, id]);
 
-    const changeLike = () => {
+    let changeLike = () => {
         sound.play();
         if(!like) {
             setlike(true);    
@@ -66,7 +66,7 @@ const CompleteComment = () => {
         }
     }
 
-    const changeLove = () => {
+    let changeLove = () => {
         sound.play();
         if(!love) {
             setlike(false);    
@@ -78,7 +78,7 @@ const CompleteComment = () => {
         }
     }
 
-    const changeLaugh = () => {
+    let changeLaugh = () => {
         sound.play();
         if(!laugh) {
             setlike(false);    
@@ -90,7 +90,7 @@ const CompleteComment = () => {
         }
     }
 
-    const changeAll = () => {
+    let changeAll = () => {
         sound.play();
         setlike(false);    
         setlove(false);
@@ -98,7 +98,7 @@ const CompleteComment = () => {
         setreactions(allreactions);
     }
 
-    const removeComment = async() => {
+    let removeComment = async() => {
         try {
             sound.play();
             await deleteComment(id, comment, username);
@@ -109,7 +109,7 @@ const CompleteComment = () => {
         }
     }
 
-    const renderUsers = (props) => {
+    let renderUsers = (props) => {
         return (<User
             key={props._id}
             user1={username}
@@ -118,10 +118,10 @@ const CompleteComment = () => {
         />);
     } 
 
-    const reactToComment = async(e) => {
+    let reactToComment = async(e) => {
         try {
             await addReactionToComment(e.target.name, id, username, comment);
-            const commentData = await getCommentData(commentId, id);
+            let commentData = await getCommentData(commentId, id);
             setComment(commentData);
             setallreactions(commentData.reacts.reverse());
             setreactions(commentData.reacts.reverse());

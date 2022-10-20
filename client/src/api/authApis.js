@@ -2,8 +2,8 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-// const backendUrl = "https://socialites-karthikey.herokuapp.com/";
-const backendUrl = "/";
+// let backendUrl = "https://socialites-karthikey.herokuapp.com/";
+let backendUrl = "/";
 
 /**
  * The function to login the user
@@ -11,8 +11,8 @@ const backendUrl = "/";
  * @param {String} password 
  * @param {boolean} rememberMe 
  */
-const loginUser = async(email, password, rememberMe) => {
-    const userData = await axios.post(backendUrl + "users/login", {email, password, rememberMe});
+let loginUser = async(email, password, rememberMe) => {
+    let userData = await axios.post(backendUrl + "users/login", {email, password, rememberMe});
     return userData.data.user;
 }
 
@@ -22,8 +22,8 @@ const loginUser = async(email, password, rememberMe) => {
  * @param {String} email 
  * @param {String} password 
  */
-const registerUser = async(username, email, password) => {
-    const user = await axios.post(backendUrl + "users/register", {username, email, password});
+let registerUser = async(username, email, password) => {
+    let user = await axios.post(backendUrl + "users/register", {username, email, password});
     return user.data;
 }
 
@@ -31,8 +31,8 @@ const registerUser = async(username, email, password) => {
  * The function to login a user with google
  * @param {String} tokenId 
  */
-const LoginWithGoogle = async(tokenId) => {
-    const userData = await axios.post(backendUrl + "users/googlelogin", {token: tokenId});
+let LoginWithGoogle = async(tokenId) => {
+    let userData = await axios.post(backendUrl + "users/googlelogin", {token: tokenId});
     return userData.data.user;
 }
 

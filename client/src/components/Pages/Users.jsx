@@ -16,48 +16,48 @@ import { MessageContext } from "../../utils/Context";
 import { createChatRoom, joinChatRoom, getRoomsByUser, getChatsByUser, deleteRoom } from "../../api/roomApis";
 var sound = new Howl({src: [music]});
 
-const Users = () => {
+let Users = () => {
 
-    const [username, setUsername] = useState("");
-    const [users, setUsers] = useState([]);
-    const [allUsers, setAllUsers] = useState([]);
-    const [rooms, setRooms] = useState([]);
-    const [allRooms, setAllRooms] = useState([]);
-    const [chats, setChats] = useState([]);
-    const [allChats, setAllChats] = useState([]);
-    const [chatInfo, setChatInfo] = useState("");
-    const [roomInfo, setRoomInfo] = useState("");
-    const [searchUsers,setSearchUsers] = useState("");
-    const [searchRooms, setSearchRooms] = useState("");
-    const [searchChats, setSearchChats] = useState("");
-    const [message, setMessage] = useState("");
-    const [roomId, setRoomId] = useState("");
-    const [roomMessage, setRoomMessage] = useState("");
-    const [tempMessage, setTempMessage] = useState("");
-    const [chatMessage, setChatMessage] = useState("");
-    const [state, setState] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [unread, setUnread] = useState(0);
-    const guest = localStorage.getItem("Guest");
-    const guestMessage = useContext(MessageContext);
+    let [username, setUsername] = useState("");
+    let [users, setUsers] = useState([]);
+    let [allUsers, setAllUsers] = useState([]);
+    let [rooms, setRooms] = useState([]);
+    let [allRooms, setAllRooms] = useState([]);
+    let [chats, setChats] = useState([]);
+    let [allChats, setAllChats] = useState([]);
+    let [chatInfo, setChatInfo] = useState("");
+    let [roomInfo, setRoomInfo] = useState("");
+    let [searchUsers,setSearchUsers] = useState("");
+    let [searchRooms, setSearchRooms] = useState("");
+    let [searchChats, setSearchChats] = useState("");
+    let [message, setMessage] = useState("");
+    let [roomId, setRoomId] = useState("");
+    let [roomMessage, setRoomMessage] = useState("");
+    let [tempMessage, setTempMessage] = useState("");
+    let [chatMessage, setChatMessage] = useState("");
+    let [state, setState] = useState("");
+    let [loading, setLoading] = useState(true);
+    let [unread, setUnread] = useState(0);
+    let guest = localStorage.getItem("Guest");
+    let guestMessage = useContext(MessageContext);
 
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
-                    const roomsData = await getRoomsByUser(user.username);
+                    let roomsData = await getRoomsByUser(user.username);
                     if(roomsData.rooms.length === 0) setRoomInfo("You currently don't have any chat rooms");
                     setRooms(roomsData.rooms);
                     setAllRooms(roomsData.rooms);
-                    const chatsData = await getChatsByUser(user.username);
+                    let chatsData = await getChatsByUser(user.username);
                     if(chatsData.chats.length === 0) setChatInfo("You currently don't have any chats");
                     setChats(chatsData.chats);
                     setAllChats(chatsData.chats);
                 }
                 else setUsername("Guest");
-                const usersData = await getAllUsers();
+                let usersData = await getAllUsers();
                 setUsers(usersData);
                 setAllUsers(usersData);
                 setLoading(false);
@@ -69,7 +69,7 @@ const Users = () => {
         fetch();
     },[guest]);
 
-    const searchAmongUsers = (e) => {
+    let searchAmongUsers = (e) => {
         e.preventDefault();
         sound.play();
         if(searchUsers === "") {
@@ -78,17 +78,17 @@ const Users = () => {
         }
         else {
             setMessage(`Showing Search results for: ${searchUsers}` )
-            const fuse = new Fuse(allUsers, {
+            let fuse = new Fuse(allUsers, {
                 keys: ["username"],
                 includeScore: true,
                 includeMatches: true
             });
-            const result = fuse.search(searchUsers);
+            let result = fuse.search(searchUsers);
             setUsers(result);
         }
     }
 
-    const searchAmongRooms = (e) => {
+    let searchAmongRooms = (e) => {
         e.preventDefault();
         sound.play();
         if(searchRooms === "") {
@@ -97,17 +97,17 @@ const Users = () => {
         }
         else {
             setTempMessage(`Showing Search results for: ${searchRooms}` )
-            const fuse = new Fuse(allRooms, {
+            let fuse = new Fuse(allRooms, {
                 keys: ["roomName"],
                 includeScore: true,
                 includeMatches: true
             });
-            const result = fuse.search(searchRooms);
+            let result = fuse.search(searchRooms);
             setRooms(result);
         }
     }
 
-    const searchAmongChats = (e) => {
+    let searchAmongChats = (e) => {
         e.preventDefault();
         sound.play();
         if(searchChats === "") 
@@ -118,19 +118,19 @@ const Users = () => {
         else 
         {
             setChatMessage(`Showing Search results for: ${searchChats}` )
-            const fuse = new Fuse(allChats, {
+            let fuse = new Fuse(allChats, {
                 keys: ["name"],
                 includeScore: true,
                 includeMatches: true
             });
-            const result = fuse.search(searchChats);
+            let result = fuse.search(searchChats);
             setChats(result);
         }
     }
 
-    const createRoom = async() => {
+    let createRoom = async() => {
         try {
-            const roomData = await createChatRoom(username, roomId);
+            let roomData = await createChatRoom(username, roomId);
             (roomData === "Room Name Already Exists") ? setRoomMessage(roomData) : window.location = `/room/${roomData.roomId}`;
         }
         catch(error) {
@@ -138,10 +138,10 @@ const Users = () => {
         }
     }
 
-    const joinRoom = async(roomId, username) => {
+    let joinRoom = async(roomId, username) => {
         try {
             sound.play();
-            const roomData = await joinChatRoom(roomId, username);
+            let roomData = await joinChatRoom(roomId, username);
             (roomData === "invalid") ? setRoomMessage("invalid Room Id") : window.location = `/room/${roomId}`;
         }
         catch(err) {
@@ -149,10 +149,10 @@ const Users = () => {
         }
     }
 
-    const deleteUserRoom = async(id, roomId, username) => {
+    let deleteUserRoom = async(id, roomId, username) => {
         try {
             sound.play();
-            const rooms = await deleteRoom(id, roomId, username);
+            let rooms = await deleteRoom(id, roomId, username);
             setAllRooms(rooms)
             setRooms(rooms);
         }
@@ -161,7 +161,7 @@ const Users = () => {
         }
     }
 
-    const printRooms = (props) => {
+    let printRooms = (props) => {
         return (props.roomName !== undefined) ?
         <Room
             key={props._id}
@@ -179,7 +179,7 @@ const Users = () => {
         />
     } 
 
-    const printUsers = (props) => {
+    let printUsers = (props) => {
         if(props.username !== undefined) {
             if(props.username !== "Guest") {
                 return <User
@@ -200,7 +200,7 @@ const Users = () => {
         }
     }
 
-    const printChats = (props) => {
+    let printChats = (props) => {
         return (props.name !== undefined) ?
         <User
             key={props._id}

@@ -14,25 +14,25 @@ import { checkUser } from "../../api/userApis"
 import { getFilteredPosts, addReactionToPost } from "../../api/postApis";
 import { MessageContext } from "../../utils/Context";
 
-const CategoryPosts = () => {
+let CategoryPosts = () => {
 
-    const [username, setUsername] = useState("");
-    const { type } = useParams();
-    const [posts,setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const guest = localStorage.getItem("Guest");
-    const [unread, setUnread] = useState(0);
-    const guestMessage = useContext(MessageContext);
+    let [username, setUsername] = useState("");
+    let { type } = useParams();
+    let [posts,setPosts] = useState([]);
+    let [loading, setLoading] = useState(true);
+    let guest = localStorage.getItem("Guest");
+    let [unread, setUnread] = useState(0);
+    let guestMessage = useContext(MessageContext);
 
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try{
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else setUsername("Guest");
-                const filteredPosts = await getFilteredPosts(type);
+                let filteredPosts = await getFilteredPosts(type);
                 setPosts(filteredPosts);
                 setLoading(false);
             }
@@ -43,12 +43,12 @@ const CategoryPosts = () => {
         fetch();
     },[guest, type]);
 
-    const createPost = (props) => {
+    let createPost = (props) => {
 
-        const addReaction = async(e, post) => {
+        let addReaction = async(e, post) => {
             try {
                 await addReactionToPost(e.target.name, post.name, post);
-                const filteredPosts = await getFilteredPosts(type);
+                let filteredPosts = await getFilteredPosts(type);
                 setPosts(filteredPosts);
             }
             catch(error) {

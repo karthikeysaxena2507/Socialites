@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const postCtrl = require("../controllers/post.controller");
-const auth = require("../middleware/auth");
+let router = require("express").Router();
+let postCtrl = require("../controllers/post.controller");
+let auth = require("../middleware/auth");
 
 // ACCESSING ALL POSTS
-router.get("/", postCtrl.getAllPosts);
+router.get("/", () => {postCtrl.getAllPosts});
 
 // ACCESSING A PARTICULAR COMMENT
 router.get("/getcomment/:commentId/:id", postCtrl.getComment);

@@ -6,11 +6,11 @@ import { createChat } from "../../api/roomApis";
 import { MessageContext } from "../../utils/Context";
 var sound = new Howl({src: [music]});
 
-const User = (props) => {
+let User = (props) => {
 
-    const guestMessage = useContext(MessageContext);
+    let guestMessage = useContext(MessageContext);
 
-    const createRoom = async() => {
+    let createRoom = async() => {
         try {
             let room = (props.user1 < props.user2) ? (props.user1 + "-" + props.user2) : (props.user2 + "-" + props.user1);
             await createChat(room, props.user1, props.user2);
@@ -21,7 +21,7 @@ const User = (props) => {
         }
     }
 
-    const SeeProfile = (e) => {
+    let SeeProfile = (e) => {
         sound.play();
         window.location = `/profile/${e.target.innerText}`;
     }

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 
-const Dropdown = (props) => {
+let Dropdown = (props) => {
     return (
     <div className="dropdown-menu">
         <a className="dropdown-item" href="#" onClick={(e)=> props.change(e)}> Art </a>

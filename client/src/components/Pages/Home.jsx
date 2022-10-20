@@ -6,10 +6,10 @@ import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 import Loader from "../helper/Loader";
 import { checkUser } from "../../api/userApis"
-const countapi = require('countapi-js');
+let countapi = require('countapi-js');
 var sound = new Howl({src: [music]});
 
-const Home = () => {
+let Home = () => {
 
     var [visits, setVisits] = useState(0);
     var [loading, setLoading] = useState(true);
@@ -18,9 +18,9 @@ const Home = () => {
             setVisits(result.value);
             setLoading(false);
         });  
-        const check = async() => {
+        let check = async() => {
             try {
-                const user = await checkUser();
+                let user = await checkUser();
                 (user !== "INVALID") && (window.location = `/profile/${user.username}`)
                 setLoading(false);
             }
@@ -31,7 +31,7 @@ const Home = () => {
         check();
     },[]);
 
-    const guestLogin = () => {
+    let guestLogin = () => {
         sound.play();
         localStorage.setItem("Guest", true);
     }

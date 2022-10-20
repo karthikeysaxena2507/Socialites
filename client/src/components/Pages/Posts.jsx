@@ -12,24 +12,24 @@ import { checkUser } from "../../api/userApis"
 import { MessageContext } from "../../utils/Context";
 import { getAllPosts, addReactionToPost,  } from "../../api/postApis";
 
-const Posts = () => {
+let Posts = () => {
 
-    const [username, setUsername] = useState("");
-    const [posts,setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const guest = localStorage.getItem("Guest");
-    const [unread, setUnread] = useState(0);
-    const guestMessage = useContext(MessageContext);
+    let [username, setUsername] = useState("");
+    let [posts,setPosts] = useState([]);
+    let [loading, setLoading] = useState(true);
+    let guest = localStorage.getItem("Guest");
+    let [unread, setUnread] = useState(0);
+    let guestMessage = useContext(MessageContext);
 
     useEffect(() => {
-        const fetch = async () => {
+        let fetch = async () => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else setUsername("Guest");
-                const postsData = await getAllPosts();
+                let postsData = await getAllPosts();
                 setPosts(postsData);
                 setLoading(false);
             }
@@ -40,12 +40,12 @@ const Posts = () => {
         fetch(); 
     },[guest]);
 
-    const createPost = (props) => {
+    let createPost = (props) => {
 
-        const addReaction = async(event, post) => {
+        let addReaction = async(event, post) => {
             try {
                 await addReactionToPost(event.target.name, post.name, post);
-                const postsData = await getAllPosts();
+                let postsData = await getAllPosts();
                 setPosts(postsData);
             }
             catch(error) {

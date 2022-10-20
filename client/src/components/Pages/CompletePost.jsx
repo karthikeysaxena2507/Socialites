@@ -12,25 +12,25 @@ import { checkUser } from "../../api/userApis";
 import { MessageContext } from "../../utils/Context";
 import { getPostById, addReactionToPost, addReactionToComment, deleteComment } from "../../api/postApis";
 
-const CompletePost = () => {
+let CompletePost = () => {
     
-    const [username, setUsername] = useState("");
-    const { id } = useParams();
-    const [loading, setLoading] = useState(true);
-    const guest = localStorage.getItem("Guest");
-    const [post,setPost] = useState({});
-    const [unread, setUnread] = useState(0);
-    const guestMessage = useContext(MessageContext);
+    let [username, setUsername] = useState("");
+    let { id } = useParams();
+    let [loading, setLoading] = useState(true);
+    let guest = localStorage.getItem("Guest");
+    let [post,setPost] = useState({});
+    let [unread, setUnread] = useState(0);
+    let guestMessage = useContext(MessageContext);
 
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else setUsername("Guest");
-                const postData = await getPostById(id);
+                let postData = await getPostById(id);
                 setPost(postData);
                 setLoading(false);
             }
@@ -41,10 +41,10 @@ const CompletePost = () => {
         fetch();
     },[guest, id]);
 
-    const addReaction = async(e, post) => {
+    let addReaction = async(e, post) => {
         try {
             await addReactionToPost(e.target.name, post.name, post);
-            const postData = await getPostById(id);
+            let postData = await getPostById(id);
             setPost(postData);
         }
         catch(error) {
@@ -52,12 +52,12 @@ const CompletePost = () => {
         }
     }
 
-    const printComments = (props) => {
+    let printComments = (props) => {
 
-        const reactToComment = async(e) => {
+        let reactToComment = async(e) => {
             try {
                 await addReactionToComment(e.target.name, id, username, props);
-                const postData = await getPostById(id);
+                let postData = await getPostById(id);
                 setPost(postData);
             }
             catch(error) {
@@ -65,10 +65,10 @@ const CompletePost = () => {
             }
         }
 
-        const removeComment = async() => {
+        let removeComment = async() => {
             try {
                 await deleteComment(id, props, username);
-                const postData = await getPostById(id);
+                let postData = await getPostById(id);
                 setPost(postData);
             }
             catch(error) {

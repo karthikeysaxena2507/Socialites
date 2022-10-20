@@ -8,7 +8,7 @@ import Loader from "../helper/Loader";
 import { checkUser } from "../../api/userApis"
 var sound = new Howl({src: [music]});
 
-const ResetPassword = () => {
+let ResetPassword = () => {
 
     var { token } = useParams();
     var [newPassword, setNewPassword] = useState("");
@@ -18,9 +18,9 @@ const ResetPassword = () => {
     var [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const check = async() => {
+        let check = async() => {
             try {
-                const user = await checkUser();
+                let user = await checkUser();
                 setLoading(false);
                 if(user !== "INVALID") {
                     window.location = `/profile/${user.username}`;
@@ -33,17 +33,17 @@ const ResetPassword = () => {
         check();
     },[]);
 
-    const check = (e) => {
+    let check = (e) => {
         setNewPassword(e.target.value);
         (e.target.value.length >= 8) ? setCorrect(true) : setCorrect(false);
     }
 
-    const reset = () => {
+    let reset = () => {
         sound.play();
         if(newPassword === confirmPassword && newPassword.length >= 8) {
-            const drop = async() => {
+            let drop = async() => {
                 try {
-                    const response = await axios.post("/users/reset", {token, newPassword});
+                    let response = await axios.post("/users/reset", {token, newPassword});
                     (response.data === "INVALID") ?
                     alert("You are not a Registered User, Please go to the site and register yourself. Or it is possible that the link to reset password has expired")
                     : window.location = "/login";    

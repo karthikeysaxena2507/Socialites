@@ -5,11 +5,11 @@ import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
-const SearchBar = (props) => {
+let SearchBar = (props) => {
 
-    const [searchContent,setsearchContent] = useState("");
+    let [searchContent,setsearchContent] = useState("");
 
-    const searchIt = () => {
+    let searchIt = () => {
         sound.play();
         setsearchContent("");
         window.location = `/result/${searchContent}/${props.message}/${props.type}`;

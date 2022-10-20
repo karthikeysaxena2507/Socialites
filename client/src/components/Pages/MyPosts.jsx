@@ -16,21 +16,21 @@ import { checkUser } from "../../api/userApis";
 import { getPostsByUser, addReactionToPost, deletePost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
-const MyPosts = () => {
+let MyPosts = () => {
 
-    const [username, setUsername] = useState("");
-    const [posts,setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [unread, setUnread] = useState(0);
-    const guest = localStorage.getItem("Guest");
+    let [username, setUsername] = useState("");
+    let [posts,setPosts] = useState([]);
+    let [loading, setLoading] = useState(true);
+    let [unread, setUnread] = useState(0);
+    let guest = localStorage.getItem("Guest");
 
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
-                    const postsData = await getPostsByUser(user.username);
+                    let postsData = await getPostsByUser(user.username);
                     setPosts(postsData);
                 }
                 else setUsername("Guest");
@@ -43,12 +43,12 @@ const MyPosts = () => {
         fetch();
     },[guest, username]);
 
-    const MyPost = (props) => {
+    let MyPost = (props) => {
 
-        const addReaction = async(event, post) => {
+        let addReaction = async(event, post) => {
             try {
                 await addReactionToPost(event.target.name, post.name, post);
-                const postsData = await getPostsByUser(post.name);
+                let postsData = await getPostsByUser(post.name);
                 setPosts(postsData);
             }
             catch(error) {
@@ -56,11 +56,11 @@ const MyPosts = () => {
             }
         }
 
-        const remove = async() => {
+        let remove = async() => {
             try {
                 sound.play();
                 await deletePost(props._id, username);
-                const postsData = await getPostsByUser(username);
+                let postsData = await getPostsByUser(username);
                 setPosts(postsData);
             }
             catch(error) {

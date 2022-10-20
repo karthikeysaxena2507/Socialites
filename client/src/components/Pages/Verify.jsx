@@ -7,14 +7,14 @@ import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
-const Verify = () => {
+let Verify = () => {
 
     let { token } = useParams();
 
-    const send = async() => {
+    let send = async() => {
         try {
             sound.play();
-            const response = await axios.post("/users/send", {token});
+            let response = await axios.post("/users/send", {token});
             (response.data === "INVALID") ?
             alert("You are not a Registered User, Please go to the site and register yourself")
             : alert("Link sent to email")

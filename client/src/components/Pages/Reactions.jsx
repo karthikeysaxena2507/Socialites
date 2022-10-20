@@ -19,33 +19,33 @@ import { MessageContext } from "../../utils/Context";
 import { getPostById, addReactionToPost } from "../../api/postApis";
 var sound = new Howl({src: [music]});
 
-const Reactions = () => {
+let Reactions = () => {
 
-    const [username, setUsername] = useState("");
+    let [username, setUsername] = useState("");
     let { id } = useParams();
-    const [like,setlike] = useState(false);
-    const [love,setlove] = useState(false);
-    const [laugh,setlaugh] = useState(false);
-    const [searchContent,setsearchContent] = useState("");
-    const [reactions,setreactions] = useState([]);
-    const [allreactions,setallreactions] = useState([]);
-    const [tempreactions,settempreactions] = useState([]);
-    const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(true);
-    const guest = localStorage.getItem("Guest");
-    const [post,setPost] = useState({});
-    const [unread, setUnread] = useState(0);
-    const guestMessage = useContext(MessageContext);
+    let [like,setlike] = useState(false);
+    let [love,setlove] = useState(false);
+    let [laugh,setlaugh] = useState(false);
+    let [searchContent,setsearchContent] = useState("");
+    let [reactions,setreactions] = useState([]);
+    let [allreactions,setallreactions] = useState([]);
+    let [tempreactions,settempreactions] = useState([]);
+    let [message, setMessage] = useState("");
+    let [loading, setLoading] = useState(true);
+    let guest = localStorage.getItem("Guest");
+    let [post,setPost] = useState({});
+    let [unread, setUnread] = useState(0);
+    let guestMessage = useContext(MessageContext);
 
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else setUsername("Guest");
-                const postData = await getPostById(id);
+                let postData = await getPostById(id);
                 setallreactions(postData.reacts.reverse());
                 setreactions(postData.reacts.reverse());
                 settempreactions(postData.reacts.reverse());
@@ -59,7 +59,7 @@ const Reactions = () => {
         fetch();
     },[guest, id]);
 
-    const changeLike = () => {
+    let changeLike = () => {
         sound.play();
         if(!like) {
             setlike(true);    
@@ -75,7 +75,7 @@ const Reactions = () => {
         }
     }
 
-    const changeLove = () => {
+    let changeLove = () => {
         sound.play();
         if(!love) {
             setlike(false);    
@@ -91,7 +91,7 @@ const Reactions = () => {
         }
     }
 
-    const changeLaugh = () => {
+    let changeLaugh = () => {
         sound.play();
         if(!laugh) {
             setlike(false);    
@@ -107,7 +107,7 @@ const Reactions = () => {
         }
     }
     
-    const changeAll = () => {
+    let changeAll = () => {
         sound.play();
         setlike(false);    
         setlove(false);
@@ -117,7 +117,7 @@ const Reactions = () => {
         setMessage("Showing All Users Who Reacted");
     }
 
-    const renderUsers = (props) => {
+    let renderUsers = (props) => {
 
         return (props.name !== undefined) ? 
         <User
@@ -134,7 +134,7 @@ const Reactions = () => {
         />                     
     }
 
-    const searchIt = (event) => {
+    let searchIt = (event) => {
         sound.play();
         event.preventDefault();
         if(searchContent === "") {
@@ -143,20 +143,20 @@ const Reactions = () => {
         }
         else {
             setMessage(`Showing Search results for: ${searchContent}` )
-            const fuse = new Fuse(tempreactions, {
+            let fuse = new Fuse(tempreactions, {
                 keys: ["name"],
                 includeScore: true,
                 includeMatches: true
             });
-            const result = fuse.search(searchContent);
+            let result = fuse.search(searchContent);
             setreactions(result);
         }
     }
 
-    const addReaction = async(event, post) => {
+    let addReaction = async(event, post) => {
         try {
             await addReactionToPost(event.target.name, post.name, post);
-            const postData = await getPostById(id);
+            let postData = await getPostById(id);
             setallreactions(postData.reacts.reverse());
             setreactions(postData.reacts.reverse());
             settempreactions(postData.reacts.reverse());

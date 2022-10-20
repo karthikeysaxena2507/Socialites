@@ -1,12 +1,13 @@
 let Post = require("../models/post.model");
 let React = require("../models/react.model");
 let Comment = require("../models/comment.model");
-const helper = require("../helper/index");
-const { cloudinary } = require("../utils/cloudinary");
+let helper = require("../helper/index");
+let { cloudinary } = require("../utils/cloudinary");
+let { lifestyleKeywords } = require("../utils/data");
 
-const getAllPosts = async(req, res, next) => {
+let getAllPosts = async(req, res, next) => {
     try {
-        const posts = await Post.find({});
+        let posts = await Post.find({});
         res.json(posts);
     }
     catch(error) {
@@ -14,9 +15,9 @@ const getAllPosts = async(req, res, next) => {
     }
 }
 
-const getComment = async(req, res, next) => {
+let getComment = async(req, res, next) => {
     try {
-        const post = await Post.find({_id: req.params.id});
+        let post = await Post.find({_id: req.params.id});
         var index = post[0].comments.findIndex((comment) => (comment._id == req.params.commentId));
         res.json(post[0].comments[index]);
     }
@@ -25,9 +26,9 @@ const getComment = async(req, res, next) => {
     }
 }
 
-const getPost = async(req, res, next) => {
+let getPost = async(req, res, next) => {
     try {
-        const post = await Post.find({_id: req.params.id});
+        let post = await Post.find({_id: req.params.id});
         res.json(post);
     }
     catch(error) {
@@ -35,9 +36,9 @@ const getPost = async(req, res, next) => {
     }
 }
 
-const getPostsByUser = async(req, res, next) => {
+let getPostsByUser = async(req, res, next) => {
     try {
-        const posts = await Post.find({author: req.params.username});
+        let posts = await Post.find({author: req.params.username});
         res.json(posts);
     }
     catch(error) {
@@ -45,10 +46,10 @@ const getPostsByUser = async(req, res, next) => {
     }
 }
 
-const getPostById = async(req, res, next) => {
+let getPostById = async(req, res, next) => {
     try {
-        const post = await Post.findOne({_id: req.params.id});
-        const { title, content, imageUrl, category } = post;
+        let post = await Post.findOne({_id: req.params.id});
+        let { title, content, imageUrl, category } = post;
         res.json({ title, content, imageUrl, category });
     }
     catch(error) {
@@ -56,7 +57,7 @@ const getPostById = async(req, res, next) => {
     }
 }
 
-const addReactionToPost = async(req, res, next) => {
+let addReactionToPost = async(req, res, next) => {
     try 
     {
         if(req.user === null) {
@@ -66,8 +67,8 @@ const addReactionToPost = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const post = await Post.findOne({_id: req.body._id});
-            const newReaction = new React({
+            let post = await Post.findOne({_id: req.body._id});
+            let newReaction = new React({
                 name: req.params.username,
                 type: req.params.react
             });
@@ -111,7 +112,7 @@ const addReactionToPost = async(req, res, next) => {
     }
 }
 
-const editPost = async(req, res, next) => {
+let editPost = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -120,7 +121,7 @@ const editPost = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const post = await Post.findOne({_id: req.params.id});
+            let post = await Post.findOne({_id: req.params.id});
             var imageUrl = "";
             if(req.body.data !== "") {
                 var fileStr = req.body.data;
@@ -148,7 +149,7 @@ const editPost = async(req, res, next) => {
     }
 }
 
-const addPost = async(req, res, next) => {
+let addPost = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -166,8 +167,8 @@ const addPost = async(req, res, next) => {
                 });
                 imageUrl = uploadedResponse.url;
             }
-            const { author, title, content, category } = req.body;
-            const post = new Post({
+            let { author, title, content, category } = req.body;
+            let post = new Post({
                 author: helper.sanitize(author),
                 title: helper.sanitize(title),
                 content: helper.sanitize(content),
@@ -193,7 +194,7 @@ const addPost = async(req, res, next) => {
     }
 }
 
-const addComment = async(req, res, next) => {
+let addComment = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -202,9 +203,9 @@ const addComment = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const post = await Post.findOne({_id: req.params.id});
+            let post = await Post.findOne({_id: req.params.id});
             req.body.content = helper.sanitize(req.body.content);
-            const comment = new Comment(req.body);
+            let comment = new Comment(req.body);
             post.comments.push(comment);
             post.comment_count = post.comments.length;
             post.save()
@@ -221,7 +222,7 @@ const addComment = async(req, res, next) => {
     }
 }
 
-const addReactionToComment = async(req, res, next) => {
+let addReactionToComment = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -230,9 +231,9 @@ const addReactionToComment = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const post = await Post.findOne({_id: req.params.postId});
+            let post = await Post.findOne({_id: req.params.postId});
             let index = await post.comments.findIndex((comment) => (comment._id == req.body._id));
-            const newReaction = new React({
+            let newReaction = new React({
                 name: req.params.username,
                 type: req.params.react
             });
@@ -278,7 +279,7 @@ const addReactionToComment = async(req, res, next) => {
     }
 }
 
-const deleteComment = async(req, res, next) => {
+let deleteComment = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -287,7 +288,7 @@ const deleteComment = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const post = await Post.findOne({_id: req.params.id});
+            let post = await Post.findOne({_id: req.params.id});
             var index = post.comments.findIndex((comment) => comment._id == req.body._id);
             if(index !== -1) 
             {
@@ -308,7 +309,7 @@ const deleteComment = async(req, res, next) => {
     }
 }
 
-const deletePost = async(req, res, next) => {
+let deletePost = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -317,7 +318,7 @@ const deletePost = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const response = await Post.deleteOne({_id: req.params.id});
+            let response = await Post.deleteOne({_id: req.params.id});
             res.json(response);
         }
     }

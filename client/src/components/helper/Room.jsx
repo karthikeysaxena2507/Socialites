@@ -2,7 +2,7 @@
 import React from "react";
 import trash from "../../images/trash.png";
 
-const Room = (props) => {
+let Room = (props) => {
     return (
     <div className="container user">
         <li className="profile">

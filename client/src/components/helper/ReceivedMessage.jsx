@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 
-const ReceivedMessage = (props) => {
+let ReceivedMessage = (props) => {
     return (
     <div key={props._id}>
         <div className="messageContainer justifyStart mt-3">

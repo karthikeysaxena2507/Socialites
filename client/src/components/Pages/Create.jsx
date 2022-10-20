@@ -16,25 +16,25 @@ import { MessageContext } from "../../utils/Context";
 import Dropdown from "../helper/Dropdown";
 var sound = new Howl({src: [music]});
 
-const Create = () => {
+let Create = () => {
 
-    const [username, setUsername] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [category, setCategory] = useState("Select Category");
-    const [preview, setPreview] = useState(""); 
-    const [message, setMessage] = useState("");
-    const guest = localStorage.getItem("Guest");
-    const [unread, setUnread] = useState(0);
-    const guestMessage = useContext(MessageContext);
-    const [percentage, setPercentage] = useState(0);
+    let [username, setUsername] = useState("");
+    let [loading, setLoading] = useState(true);
+    let [title, setTitle] = useState("");
+    let [content, setContent] = useState("");
+    let [category, setCategory] = useState("Select Category");
+    let [preview, setPreview] = useState(""); 
+    let [message, setMessage] = useState("");
+    let guest = localStorage.getItem("Guest");
+    let [unread, setUnread] = useState(0);
+    let guestMessage = useContext(MessageContext);
+    let [percentage, setPercentage] = useState(0);
 
     useEffect(()=> {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else setUsername("Guest");
@@ -47,34 +47,34 @@ const Create = () => {
         fetch();
     },[guest]);
 
-    const handleFileInputChange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
+    let handleFileInputChange = (e) => {
+        let file = e.target.files[0];
+        let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
             setPreview(reader.result);
         }
     }
 
-    const handleSubmitFile = (e) => {
+    let handleSubmitFile = (e) => {
         e.preventDefault();
         sound.play();
         uploadImage(preview);
     }
 
-    const uploadImage = async (imageSource) => {
+    let uploadImage = async (imageSource) => {
         try {
             setMessage("Creating your Post, Please wait ...")
             let value;
             (category === "Select Category") ? value = "Other" : value = category;
-            const body = JSON.stringify({
+            let body = JSON.stringify({
                 data: imageSource,
                 author: username,
                 title, content, category: value
             });
-            const options = {
+            let options = {
                 onUploadProgress: (ProgressEvent) => {
-                    const { loaded, total } = ProgressEvent;
+                    let { loaded, total } = ProgressEvent;
                     let percent = Math.floor( (loaded * 100) / total );
                     if(percent <= 100) {
                         setPercentage(percent-1);
@@ -94,7 +94,7 @@ const Create = () => {
         }
     }
 
-    const changeCategory = (e) => {
+    let changeCategory = (e) => {
         sound.play();
         setCategory(e.target.innerText);
     }

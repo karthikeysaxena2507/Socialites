@@ -2,7 +2,7 @@
 import React from "react";
 import trash from "../../images/trash.png";
 
-const SentMessage = (props) => {
+let SentMessage = (props) => {
     return (
     <div key={props._id}>
         <div className="messageContainer justifyEnd mt-3">

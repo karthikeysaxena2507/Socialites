@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+let mongoose = require("mongoose");
 
-const chatSchema = new mongoose.Schema({
+let chatSchema = new mongoose.Schema({
     id: String,
     name: String,
     room: String
 });
 
-const Chat = mongoose.model("Chat", chatSchema);
+let Chat = mongoose.model("Chat", chatSchema);
 
 module.exports = Chat;

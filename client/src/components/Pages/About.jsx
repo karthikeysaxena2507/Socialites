@@ -6,18 +6,18 @@ import Loader from "../helper/Loader";
 import { Container} from "react-bootstrap";
 import { checkUser } from "../../api/userApis.js";
 
-const About = () => {
+let About = () => {
 
-    const [username, setUsername] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [unread, setUnread] = useState(0);
-    const guest = localStorage.getItem("Guest");
+    let [username, setUsername] = useState("");
+    let [loading, setLoading] = useState(true);
+    let [unread, setUnread] = useState(0);
+    let guest = localStorage.getItem("Guest");
     
     useEffect(()=> {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const user = await checkUser();
+                    let user = await checkUser();
                     (user === "INVALID") ? window.location = "/login" : setUsername(user.username); setUnread(user.totalUnread);
                 }
                 else setUsername("Guest");

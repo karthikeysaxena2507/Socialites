@@ -1,10 +1,10 @@
-const Room = require("../models/room.model");
-const User = require("../models/user.model");
-const { v4: uuidv4 } = require("uuid");
-const { time } = require("../helper/date");
-const helper = require("../helper/index");
+let Room = require("../models/room.model");
+let User = require("../models/user.model");
+let { v4: uuidv4 } = require("uuid");
+let { time } = require("../helper/date");
+let helper = require("../helper/index");
 
-const getRoom = async(req, res, next) => {
+let getRoom = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authorized"});
@@ -13,7 +13,7 @@ const getRoom = async(req, res, next) => {
             res.status(401).json({Error: "You can only see your own chats"});
         }
         else {
-            const room = await Room.findOne({roomId: req.params.id});
+            let room = await Room.findOne({roomId: req.params.id});
             res.json(room);
         }
     }
@@ -22,7 +22,7 @@ const getRoom = async(req, res, next) => {
     }
 }
 
-const getRoomsByUser = async(req, res, next) => {
+let getRoomsByUser = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authorized"});
@@ -31,7 +31,7 @@ const getRoomsByUser = async(req, res, next) => {
             res.status(401).json({Error: "You can only see your own chat rooms"});
         }
         else {
-            const userRooms = await User.findOne({username: req.params.username}).select(['rooms']);
+            let userRooms = await User.findOne({username: req.params.username}).select(['rooms']);
             res.json(userRooms);
         }
     }
@@ -40,7 +40,7 @@ const getRoomsByUser = async(req, res, next) => {
     }
 }   
 
-const getChatsByUser = async(req, res, next) => {
+let getChatsByUser = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -49,7 +49,7 @@ const getChatsByUser = async(req, res, next) => {
             res.status(401).json({Error: "You can only see your own chats"});
         }
         else {
-            const userChats = await User.findOne({username: req.params.username}).select(['chats']);
+            let userChats = await User.findOne({username: req.params.username}).select(['chats']);
             res.json(userChats);
         }
     }
@@ -58,7 +58,7 @@ const getChatsByUser = async(req, res, next) => {
     }
 }
 
-const createChat = async(req, res, next) => {
+let createChat = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -67,17 +67,17 @@ const createChat = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const room = await Room.findOne({roomId: req.body.roomId, isGroup: false});
+            let room = await Room.findOne({roomId: req.body.roomId, isGroup: false});
             if(room === null) {
-                const room = new Room({
+                let room = new Room({
                     roomId: req.body.roomId,
                     roomName: req.body.roomId,
                     isGroup: false,
                     users: [],
                     messages: []
                 });
-                const user1 = await User.findOne({username: req.body.user1});
-                const userRoom1 = {
+                let user1 = await User.findOne({username: req.body.user1});
+                let userRoom1 = {
                     roomId: req.body.roomId, 
                     name: req.body.user2, 
                     lastCount: 1,
@@ -86,8 +86,8 @@ const createChat = async(req, res, next) => {
                 user1.chats.push(userRoom1);
                 user1.save()
                 .then(async() => {
-                    const user2 = await User.findOne({username: req.body.user2});
-                    const userRoom2 = {
+                    let user2 = await User.findOne({username: req.body.user2});
+                    let userRoom2 = {
                         roomId: req.body.roomId, 
                         name: req.body.user1, 
                         lastCount: 1,
@@ -96,7 +96,7 @@ const createChat = async(req, res, next) => {
                     user2.chats.push(userRoom2);
                     user2.save()
                     .then(() => {
-                        const message = {name: "Admin", content: `Hello Users`, time: time()};
+                        let message = {name: "Admin", content: `Hello Users`, time: time()};
                         room.messages.push(message);
                         room.users.push({name: req.body.user1});
                         room.users.push({name: req.body.user2});
@@ -126,7 +126,7 @@ const createChat = async(req, res, next) => {
     }
 }
 
-const joinRoom = async(req, res, next) => {
+let joinRoom = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -135,13 +135,13 @@ const joinRoom = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const room = await Room.findOne({roomId: req.body.roomId, isGroup: true});
-            const user = await User.findOne({username: req.body.username});
+            let room = await Room.findOne({roomId: req.body.roomId, isGroup: true});
+            let user = await User.findOne({username: req.body.username});
             if(room === null) {
                 res.json("invalid");
             }
             else {
-                const userRoom = {
+                let userRoom = {
                     roomId: room.roomId, 
                     roomName: room.roomName, 
                     unreadCount: 0,
@@ -182,7 +182,7 @@ const joinRoom = async(req, res, next) => {
     }
 }
 
-const createRoom = async(req, res, next) => {
+let createRoom = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -191,13 +191,13 @@ const createRoom = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const roomId = uuidv4().replace(/-/g,'').substring(0,6);
-            const existingRoom = await Room.findOne({roomName: req.body.roomName});
+            let roomId = uuidv4().replace(/-/g,'').substring(0,6);
+            let existingRoom = await Room.findOne({roomName: req.body.roomName});
             if(existingRoom) {
                 res.json("Room Name Already Exists");
             }
             else {
-                const room = new Room({
+                let room = new Room({
                     roomId: roomId,
                     roomName: helper.sanitize(req.body.roomName),
                     isGroup: true,
@@ -205,17 +205,17 @@ const createRoom = async(req, res, next) => {
                     users: [],
                     messages: []
                 });
-                const userRoom = {
+                let userRoom = {
                     roomId: room.roomId, 
                     roomName: helper.sanitize(room.roomName), 
                     unreadCount: 0,
                     lastCount: 1
                 };
-                const user = await User.findOne({username: req.body.username});
+                let user = await User.findOne({username: req.body.username});
                 user.rooms.push(userRoom);
                 user.save()
                 .then(() => {
-                    const message = {name: "Admin", content: `Hello Users`, time: time()};
+                    let message = {name: "Admin", content: `Hello Users`, time: time()};
                     room.messages.push(message);
                     room.users.push({name: req.body.username});
                     room.save()
@@ -237,7 +237,7 @@ const createRoom = async(req, res, next) => {
     }
 }
 
-const deleteRoom = async(req, res, next) => {
+let deleteRoom = async(req, res, next) => {
     try {
         if(req.user === null) {
             res.status(401).json({Error: "You are not authenticated"});
@@ -246,9 +246,9 @@ const deleteRoom = async(req, res, next) => {
             res.status(401).json({Error: "You are not authenticated"});
         }
         else {
-            const { username, id, roomId } = req.body;
-            const user = await User.findOne({username});
-            const room = await Room.findOne({roomId, isGroup: true});
+            let { username, id, roomId } = req.body;
+            let user = await User.findOne({username});
+            let room = await Room.findOne({roomId, isGroup: true});
             let userIndex = await room.users.findIndex((user) => (user.name === username));
             let roomIndex = await user.rooms.findIndex((room) => (room._id == id));
             await user.rooms.splice(roomIndex, 1);

@@ -3,15 +3,15 @@ import { Howl } from "howler";
 import button from "../../sounds/button.mp3";
 var buttonSound = new Howl({src: [button]});
 
-const ChatRoomUser = (props) => {
+let ChatRoomUser = (props) => {
 
-    const SeeProfile = (e) => 
+    let SeeProfile = (e) => 
     {
         buttonSound.play();
         window.location = (`/profile/${e.target.innerText}`);
     }
 
-    const isOnline = () => 
+    let isOnline = () => 
     {
         for (let user of props.onlineUsers) 
         {

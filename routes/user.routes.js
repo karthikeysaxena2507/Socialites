@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const userCtrl = require("../controllers/user.controller");
-const auth = require("../middleware/auth");
+let router = require("express").Router();
+let userCtrl = require("../controllers/user.controller");
+let auth = require("../middleware/auth");
 
 // SESSION AUTHENTICATION MIDDLEWARE FOR A USER
 router.get("/auth", auth, userCtrl.checkAuth);

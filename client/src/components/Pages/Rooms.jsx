@@ -19,35 +19,35 @@ import { getRoomById } from "../../api/roomApis";
 import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
-const ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
-// const ENDPOINT = "http://localhost:5000/";
+let ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
+// let ENDPOINT = "http://localhost:5000/";
 
 
-const Rooms = () => {
+let Rooms = () => {
 
-    const socket = useRef(null);
-    const { roomId } = useParams();
-    const [roomName, setRoomName] = useState("");
-    const [creator, setCreator] = useState("");
-    const [isGroup, setIsGroup] = useState(false);
-    const [imageUrl, setImageUrl] = useState("");
-    const [username, setUsername] = useState("");
-    const [message, setMessage] = useState("");
-    const [status, setStatus] = useState("");
-    const [messages,setMessages] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [onlineUsers, setOnlineUsers] = useState([]);
-    const [allUsers, setAllUsers] = useState([]);
-    const [state, setState] = useState("Show");
+    let socket = useRef(null);
+    let { roomId } = useParams();
+    let [roomName, setRoomName] = useState("");
+    let [creator, setCreator] = useState("");
+    let [isGroup, setIsGroup] = useState(false);
+    let [imageUrl, setImageUrl] = useState("");
+    let [username, setUsername] = useState("");
+    let [message, setMessage] = useState("");
+    let [status, setStatus] = useState("");
+    let [messages,setMessages] = useState([]);
+    let [loading, setLoading] = useState(true);
+    let [onlineUsers, setOnlineUsers] = useState([]);
+    let [allUsers, setAllUsers] = useState([]);
+    let [state, setState] = useState("Show");
 
     useEffect(() => 
     {
-        const fetch = async() => 
+        let fetch = async() => 
         {
             try {
-                const user = await checkUser();
+                let user = await checkUser();
                 (user === "INVALID") ? window.location = "/login" : setUsername(user.username);
-                const room = await getRoomById(roomId, user.username);
+                let room = await getRoomById(roomId, user.username);
                 setAllUsers(room.users);
                 setRoomName(room.roomName);
                 setCreator(room.creator);
@@ -81,7 +81,7 @@ const Rooms = () => {
         fetch();
     },[roomId]);
     
-    const sendMessage = async(e) => 
+    let sendMessage = async(e) => 
     {
         e.preventDefault();
         if(message) 
@@ -92,10 +92,10 @@ const Rooms = () => {
         }
     }
 
-    const printMessages = (props) => 
+    let printMessages = (props) => 
     {
 
-        const deleteMessage = (messageId) => 
+        let deleteMessage = (messageId) => 
         {
             buttonSound.play();
             setStatus("Deleting Message ...")
@@ -127,13 +127,13 @@ const Rooms = () => {
         }
     }
 
-    const changeState = () => 
+    let changeState = () => 
     {
         buttonSound.play();
         (state === "Show") ? setState("Hide") : setState("Show")
     }
 
-    const printUsers = (props) => 
+    let printUsers = (props) => 
     {
         return (<User
             key={props._id}
@@ -142,9 +142,9 @@ const Rooms = () => {
         />);
     } 
 
-    const handleFileInputChange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
+    let handleFileInputChange = (e) => {
+        let file = e.target.files[0];
+        let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
             setImageUrl(reader.result);

@@ -1,4 +1,4 @@
-const sgMail = require("@sendgrid/mail");
+let sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
@@ -6,9 +6,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
  * @param {String} token 
  * @param {String} email 
  */
-const sendEmailVerificationMail = (token, email) => {
-    const link = `https://socialites-karthikey.herokuapp.com/verified/${token}`;
-    const msg = {
+let sendEmailVerificationMail = (token, email) => {
+    let link = `https://socialites-karthikey.herokuapp.com/verified/${token}`;
+    let msg = {
         to: email,
         from: "karthikeysaxena@outlook.com", 
         subject: "Welcome to Socialites",
@@ -30,9 +30,9 @@ const sendEmailVerificationMail = (token, email) => {
  * @param {String} token 
  * @param {String} email 
  */
-const sendResetPasswordMail = (token, email) => {
+let sendResetPasswordMail = (token, email) => {
     var link = "https://socialites-karthikey.herokuapp.com/reset/" + token;
-    const msg = {
+    let msg = {
         to: email,
         from: "karthikeysaxena@outlook.com",
         subject: "Reset Your Password at Socialites",

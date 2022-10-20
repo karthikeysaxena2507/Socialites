@@ -1,13 +1,13 @@
 require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
-const http = require("http");
-const app = express();
-const server = http.createServer(app);
-const port = process.env.PORT || 5000;
-const help = require("./helper/index");
+let express = require("express");
+let cors = require("cors");
+let mongoose = require("mongoose");
+let cookieParser = require("cookie-parser");
+let http = require("http");
+let app = express();
+let server = http.createServer(app);
+let port = process.env.PORT || 5000;
+let help = require("./helper/index");
 
 // USING ALL MIDDLEWARES
 app.use(cors({
@@ -19,28 +19,26 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 // CONNECTING TO MONGODB ATLAS
 mongoose.connect(process.env.ATLAS_URI, {
     useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify:false
+    useUnifiedTopology: true
 })
 .then(() => {console.log("Mongodb cluster connected Successfully");})
 .catch((err) => {console.log(err);});
 
 // IMPORTING ALL ROUTES
-const postsRouter = require("./routes/post.routes");
-const usersRouter = require("./routes/user.routes");
-const roomsRouter = require("./routes/room.routes");
+let postsRouter = require("./routes/post.routes");
+let usersRouter = require("./routes/user.routes");
+let roomsRouter = require("./routes/room.routes");
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/rooms", roomsRouter);
 
 // SETTING UP SOCKET.IO FOR REAL TIME CHAT FEATURE
-const Room = require("./models/room.model");
-const Chat = require("./models/chat.model");
-const helper = require("./helper/chat");
-const { cloudinary } = require("./utils/cloudinary");
+let Room = require("./models/room.model");
+let Chat = require("./models/chat.model");
+let helper = require("./helper/chat");
+let { cloudinary } = require("./utils/cloudinary");
 
-const io = require('socket.io')(server, {
+let io = require('socket.io')(server, {
     cors: {
       origin: '*',
     }
@@ -51,15 +49,15 @@ io.on("connection", (socket) => {
 
     socket.on("join", async(data) => {
         try {
-            const room = await Room.findOne({roomId: data.room});
-            const existingUser = await Chat.findOne({name: data.name, room: data.room});
+            let room = await Room.findOne({roomId: data.room});
+            let existingUser = await Chat.findOne({name: data.name, room: data.room});
             if(existingUser === null) 
             {
-                const chat = new Chat({id: socket.id, name: data.name, room: data.room});
+                let chat = new Chat({id: socket.id, name: data.name, room: data.room});
                 await chat.save();
             }
             await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup)
-            const chat = await Chat.find({room: data.room});
+            let chat = await Chat.find({room: data.room});
             await socket.join(data.room);
             await io.to(data.room).emit("users", {chat: chat});
         }
@@ -70,7 +68,7 @@ io.on("connection", (socket) => {
 
     socket.on("sendmessage", async(data) => {
         try {
-            const room = await Room.findOne({roomId: data.room});
+            let room = await Room.findOne({roomId: data.room});
             var imageUrl = "";
             if(data.imageUrl !== "") 
             {
@@ -83,11 +81,11 @@ io.on("connection", (socket) => {
             }
             await room.messages.push({name: data.name, content: help.sanitize(data.message), imageUrl, time: data.time});
             await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);    
-            const chat = await Chat.find({room: data.room});
-            const messagesCount = room.messages.length;
+            let chat = await Chat.find({room: data.room});
+            let messagesCount = room.messages.length;
             room.save()
             .then((roomData) => {
-                const messageId = roomData.messages[messagesCount - 1]._id;
+                let messageId = roomData.messages[messagesCount - 1]._id;
                 io.to(data.room).emit("users", {chat: chat});
                 io.to(data.room).emit("message", { _id: messageId , name: data.name, content: help.sanitize(data.message), imageUrl, time: data.time});
             })
@@ -102,9 +100,9 @@ io.on("connection", (socket) => {
 
     socket.on("deletemessage", async(data) => {
         try {
-            const room = await Room.findOne({roomId: data.room});
-            const chat = await Chat.find({room: data.room});
-            const messageIndex = await room.messages.findIndex((message) => (message._id == data.messageId));
+            let room = await Room.findOne({roomId: data.room});
+            let chat = await Chat.find({room: data.room});
+            let messageIndex = await room.messages.findIndex((message) => (message._id == data.messageId));
             room.messages[messageIndex].content = "";
             room.messages[messageIndex].imageUrl = "";
             await helper.updateOnlineUsers(data.room, room.messages.length, room.isGroup);    
@@ -136,7 +134,7 @@ io.on("connection", (socket) => {
 // HANDLING THE PRODUCTION BUILD FOR HEROKU
 if(process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
-    const path = require("path");
+    let path = require("path");
     app.get("*", function(req, res) {
         res.sendFile(path.resolve(__dirname,"client","build","index.html"));
     });

@@ -6,15 +6,15 @@ import { Howl } from "howler";
 import music from "../../sounds/button.mp3";
 var sound = new Howl({src: [music]});
 
-const Navbar = (props) => {
+let Navbar = (props) => {
 
     var username = props.name;
 
-    const change = () => {
+    let change = () => {
       sound.play();
-      const drop = async() => {
+      let drop = async() => {
         try {
-          const response = await axios.post(`/users/logout/${username}`, props);
+          let response = await axios.post(`/users/logout/${username}`, props);
           console.log(response);
         }
         catch(error) {
@@ -30,7 +30,7 @@ const Navbar = (props) => {
       window.location = "/";
     }
 
-    const SeeProfile = (e) => {
+    let SeeProfile = (e) => {
       sound.play();
       window.location = `/profile/${username}`;
     }

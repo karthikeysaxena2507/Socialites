@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const roomCtrl = require("../controllers/room.controller");
-const auth = require("../middleware/auth");
+let router = require("express").Router();
+let roomCtrl = require("../controllers/room.controller");
+let auth = require("../middleware/auth");
 
 // ACCESSING A PARTCULAR ROOM
 router.get("/get/:id/:username", auth, roomCtrl.getRoom);

@@ -11,19 +11,19 @@ import { checkUser } from "../../api/userApis";
 import { registerUser, LoginWithGoogle } from "../../api/authApis";
 var sound = new Howl({src: [music]});
 
-const Register = () => {
+let Register = () => {
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState(" ");
-    const [correct, setCorrect] = useState(false);
-    const [loading, setLoading] = useState(true);
+    let [username, setUsername] = useState("");
+    let [email, setEmail] = useState("");
+    let [password, setPassword] = useState("");
+    let [message, setMessage] = useState(" ");
+    let [correct, setCorrect] = useState(false);
+    let [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const check = async() => {
+        let check = async() => {
             try {
-                const user = await checkUser();
+                let user = await checkUser();
                 setLoading(false);
                 (user !== "INVALID") && (window.location = `/profile/${user.username}`)
             }
@@ -34,18 +34,18 @@ const Register = () => {
         check();
     },[]);
 
-    const check = (e) => {
+    let check = (e) => {
         setPassword(e.target.value);
         (e.target.value.length >= 8) ? setCorrect(true) : setCorrect(false)
     }
 
-    const add = (event) => {
+    let add = (event) => {
         event.preventDefault();
         sound.play();
         if(password.length >= 8) {
-            const drop = async() => {
+            let drop = async() => {
                 try {
-                    const response = await registerUser(username, email, password);
+                    let response = await registerUser(username, email, password);
                     if(response === "Username Already Exists" || response === "Email already exists") {
                         setMessage(response);
                     }
@@ -62,10 +62,10 @@ const Register = () => {
         }
     }
 
-    const successGoogle = (response) => {
-        const post = async() => {
+    let successGoogle = (response) => {
+        let post = async() => {
             try {
-                const user = await LoginWithGoogle(response.tokenId);
+                let user = await LoginWithGoogle(response.tokenId);
                 localStorage.removeItem("Guest");
                 window.location = `/profile/${user.username}`;
             }
@@ -76,12 +76,12 @@ const Register = () => {
         post();
     }
 
-    const failureGoogle = () => {
+    let failureGoogle = () => {
         setMessage("Google Login Failed");
         window.location = "/";
     }
 
-    const guestLogin = () => {
+    let guestLogin = () => {
         sound.play();
         localStorage.setItem("Guest", true);
     }

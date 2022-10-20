@@ -24,28 +24,28 @@ import { createChat } from "../../api/roomApis";
 import { MessageContext } from "../../utils/Context";
 var sound = new Howl({src: [music]});
 
-const Profile = () => {
+let Profile = () => {
 
-    const [username, setUsername] = useState("");
-    const [imageUrl, setImageUrl] = useState("");
-    const [data, setData] = useState([]);
-    const [posts, setPosts] = useState([]);
-    const [postCount, setPostCount] = useState(0);
-    const [likes, setLikes] = useState(0);
-    const [loves, setLoves] = useState(0);
-    const [laughs, setLaughs] = useState(0);
-    const [comments, setComments] = useState(0);
-    const [message, setMessage] = useState("");
-    const [state, setState] = useState("Hide");
-    const [about, setAbout] = useState("");
-    const [edit, setEdit] = useState("Edit");
-    const [text, setText] = useState("");
-    const [show, setShow] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [unread, setUnread] = useState(0);
-    const [percentage, setPercentage] = useState(0);
-    const guestMessage = useContext(MessageContext);
-    const guest = localStorage.getItem("Guest");
+    let [username, setUsername] = useState("");
+    let [imageUrl, setImageUrl] = useState("");
+    let [data, setData] = useState([]);
+    let [posts, setPosts] = useState([]);
+    let [postCount, setPostCount] = useState(0);
+    let [likes, setLikes] = useState(0);
+    let [loves, setLoves] = useState(0);
+    let [laughs, setLaughs] = useState(0);
+    let [comments, setComments] = useState(0);
+    let [message, setMessage] = useState("");
+    let [state, setState] = useState("Hide");
+    let [about, setAbout] = useState("");
+    let [edit, setEdit] = useState("Edit");
+    let [text, setText] = useState("");
+    let [show, setShow] = useState(false);
+    let [loading, setLoading] = useState(true);
+    let [unread, setUnread] = useState(0);
+    let [percentage, setPercentage] = useState(0);
+    let guestMessage = useContext(MessageContext);
+    let guest = localStorage.getItem("Guest");
     let { user } = useParams();
     let chartData = {
         labels: ["Likes", "Loves", "Laughs", "Comments", "Reactions"],
@@ -59,18 +59,18 @@ const Profile = () => {
     }
     
     useEffect(() => {
-        const fetch = async() => {
+        let fetch = async() => {
             try {
                 if(guest !== "true") {
-                    const response = await checkUser();
+                    let response = await checkUser();
                     (response === "INVALID") ? window.location = "/login" : setUsername(response.username); setUnread(response.totalUnread);;
                 }
                 else setUsername("Guest")
-                const userData = await getUserData(user);
+                let userData = await getUserData(user);
                 setImageUrl(userData.imageUrl);
                 setAbout(userData.about);
                 setText(userData.about);
-                const postData = await getPostsByUser(user);
+                let postData = await getPostsByUser(user);
                 setPostCount(postData.length);
                 setPosts(postData.reverse());
                 let cmct = 0, lkct = 0, lvct = 0, lgct = 0;
@@ -94,12 +94,12 @@ const Profile = () => {
         fetch();
     },[guest, user]);
 
-    const MyPost = (props) => {
+    let MyPost = (props) => {
         
-        const addReaction = async(event, post) => {
+        let addReaction = async(event, post) => {
             try {
                 await addReactionToPost(event.target.name, post.name, post);
-                const postData = await getPostsByUser(user);
+                let postData = await getPostsByUser(user);
                 setPosts(postData);
                 let cmct = 0, lkct = 0, lvct = 0, lgct = 0;
                 for(let post of postData) {
@@ -119,11 +119,11 @@ const Profile = () => {
             }
         }
 
-        const remove = async() => {
+        let remove = async() => {
             try {
                 sound.play();
                 await deletePost(props._id, username);
-                const postData = await getPostsByUser(user);
+                let postData = await getPostsByUser(user);
                 setPosts(postData);
                 let cmct = 0, lkct = 0, lvct = 0, lgct = 0;
                 for(let post of postData) {
@@ -167,7 +167,7 @@ const Profile = () => {
     </div>);
     }
 
-    const createRoom = async() => {
+    let createRoom = async() => {
         try {
             var room = (username < user) ? (username + "-" + user) : (user + "-" + username);
             await createChat(room, username, user);
@@ -178,19 +178,19 @@ const Profile = () => {
         }
     }
 
-    const changeState = () => {
+    let changeState = () => {
         sound.play();
         (state === "Show") ? setState("Hide") : setState("Show")
     }
 
-    const changeEdit = () => {
+    let changeEdit = () => {
         sound.play();
         (edit === "Edit") ? setEdit("Back") : setEdit("Edit")
     }
 
-    const updateBio = async() => {
+    let updateBio = async() => {
         try {
-            const userData = await updateUserBio(user, text);
+            let userData = await updateUserBio(user, text);
             setAbout(userData);
             setEdit("Edit");
         }
@@ -199,10 +199,10 @@ const Profile = () => {
         }
     }
 
-    const handleFileInputChange = (e) => {
+    let handleFileInputChange = (e) => {
         sound.play();
-        const file = e.target.files[0];
-        const reader = new FileReader();
+        let file = e.target.files[0];
+        let reader = new FileReader();
         setMessage("Profile Pic Preview, Click on save to update profile pic");
         reader.readAsDataURL(file);
         reader.onloadend = () => {
@@ -211,22 +211,22 @@ const Profile = () => {
         setShow(true);
     }
 
-    const handleSubmitFile = (e) => {
+    let handleSubmitFile = (e) => {
         e.preventDefault();
         sound.play();
         uploadImage(imageUrl);
     }
 
-    const uploadImage = async (imageSource) => {
+    let uploadImage = async (imageSource) => {
         try {
             setMessage("Updating Profile Pic");
-            const body = JSON.stringify({
+            let body = JSON.stringify({
                 data: imageSource,
                 user: user
             });
-            const options = {
+            let options = {
                 onUploadProgress: (ProgressEvent) => {
-                    const { loaded, total } = ProgressEvent;
+                    let { loaded, total } = ProgressEvent;
                     let percent = Math.floor( (loaded * 100) / total );
                     if(percent <= 100) {
                         setPercentage(percent-1);
@@ -246,16 +246,16 @@ const Profile = () => {
         }
     }
 
-    const removeImage = async() => {
+    let removeImage = async() => {
         try {
             setMessage("Removing Profile Pic");
-            const body = JSON.stringify({
+            let body = JSON.stringify({
                 data: "",
                 user: user
             });
-            const options = {
+            let options = {
                 onUploadProgress: (ProgressEvent) => {
-                    const { loaded, total } = ProgressEvent;
+                    let { loaded, total } = ProgressEvent;
                     let percent = Math.floor( (loaded * 100) / total );
                     if(percent <= 100) {
                         setPercentage(percent-1);

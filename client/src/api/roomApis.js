@@ -2,15 +2,15 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-// const backendUrl = "https://socialites-karthikey.herokuapp.com/";
-const backendUrl = "/";
+// let backendUrl = "https://socialites-karthikey.herokuapp.com/";
+let backendUrl = "/";
 
 /**
  * The function to get a chat room by id
  * @param {String} id 
  */
-const getRoomById = async(id, username) => {
-    const room = await axios.get(backendUrl + `rooms/get/${id}/${username}`);
+let getRoomById = async(id, username) => {
+    let room = await axios.get(backendUrl + `rooms/get/${id}/${username}`);
     return room.data;
 } 
 
@@ -18,8 +18,8 @@ const getRoomById = async(id, username) => {
  * The function to get all the chat room created by a user
  * @param {String} username 
  */
-const getRoomsByUser = async(username) => {
-    const rooms = await axios.get(backendUrl + `rooms/groups/${username}`);
+let getRoomsByUser = async(username) => {
+    let rooms = await axios.get(backendUrl + `rooms/groups/${username}`);
     return rooms.data;
 }
 
@@ -27,8 +27,8 @@ const getRoomsByUser = async(username) => {
  * The function to get all the chats of a user
  * @param {String} username 
  */
-const getChatsByUser = async(username) => {
-    const chats = await axios.get(backendUrl + `rooms/chats/${username}`);
+let getChatsByUser = async(username) => {
+    let chats = await axios.get(backendUrl + `rooms/chats/${username}`);
     return chats.data;
 }
 
@@ -36,7 +36,7 @@ const getChatsByUser = async(username) => {
  * The function to create chat between two users
  * @param {String} room 
  */
-const createChat = async(room, user1, user2) => {
+let createChat = async(room, user1, user2) => {
     await axios.post(backendUrl + "rooms/chat",{roomId: room, user1, user2});
 }
 
@@ -44,8 +44,8 @@ const createChat = async(room, user1, user2) => {
  * The function to create a chat room for more than 2 users
  * @param {String} username 
  */
-const createChatRoom = async(username, roomName) => {
-    const roomData = await axios.post(backendUrl + "rooms/create", {username, roomName});
+let createChatRoom = async(username, roomName) => {
+    let roomData = await axios.post(backendUrl + "rooms/create", {username, roomName});
     return roomData.data;
 }
 
@@ -54,8 +54,8 @@ const createChatRoom = async(username, roomName) => {
  * @param {String} roomId 
  * @param {String} username 
  */
-const joinChatRoom = async(roomId, username) => {
-    const roomData = await axios.post(backendUrl + "rooms/join", {roomId, username});
+let joinChatRoom = async(roomId, username) => {
+    let roomData = await axios.post(backendUrl + "rooms/join", {roomId, username});
     return roomData.data;
 }
 
@@ -65,8 +65,8 @@ const joinChatRoom = async(roomId, username) => {
  * @param {String} roomId 
  * @param {String} username 
  */
-const deleteRoom = async(id, roomId, username) => {
-    const rooms = await axios.post(backendUrl + "rooms/delete/room", {username, id, roomId});
+let deleteRoom = async(id, roomId, username) => {
+    let rooms = await axios.post(backendUrl + "rooms/delete/room", {username, id, roomId});
     return rooms.data;
 }
 

@@ -1,3 +1,3 @@
 import React from "react";
-const MessageContext = React.createContext(null);
+let MessageContext = React.createContext(null);
 export { MessageContext };

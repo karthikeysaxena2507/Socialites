@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+let mongoose = require("mongoose");
 
-const reactSchema = new mongoose.Schema({
+let reactSchema = new mongoose.Schema({
     name: String,
     type: String
 });
 
-const commentSchema = new mongoose.Schema({
+let commentSchema = new mongoose.Schema({
     name: String,
     content: String,
     likes: Number,
@@ -14,6 +14,6 @@ const commentSchema = new mongoose.Schema({
     reacts: [reactSchema]
 });
 
-const Comment = mongoose.model("Comment", commentSchema);
+let Comment = mongoose.model("Comment", commentSchema);
 
 module.exports = Comment;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const RoomData = (props) => {
+let RoomData = (props) => {
     return (
     <div className="text-center"> 
         <h5 className="mt-1" style={!props.isGroup ? {display: "none"} : null}> Room ID: {props.roomId} </h5>
