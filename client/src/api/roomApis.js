@@ -2,8 +2,9 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-let backendUrl = "https://socialites-karthikey.herokuapp.com/";
+// let backendUrl = "https://socialites-karthikey.herokuapp.com/";
 // let backendUrl = "/";
+let backendUrl = "https://socialites-24x7.herokuapp.com/";
 
 /**
  * The function to get a chat room by id

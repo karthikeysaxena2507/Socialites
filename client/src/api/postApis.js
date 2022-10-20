@@ -1,7 +1,8 @@
 import axios from "axios";
 
-let backendUrl = "https://socialites-karthikey.herokuapp.com/";
+// let backendUrl = "https://socialites-karthikey.herokuapp.com/";
 // let backendUrl = "/";
+let backendUrl = "https://socialites-24x7.herokuapp.com/";
 
 /**
  * The function to get all posts
