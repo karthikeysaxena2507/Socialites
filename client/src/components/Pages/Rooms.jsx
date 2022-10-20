@@ -19,8 +19,9 @@ import { getRoomById } from "../../api/roomApis";
 import { time } from "../../utils/Date";
 var buttonSound = new Howl({src: [button]});
 var messageSound = new Howl({src: [newMessage]});
-let ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
+// let ENDPOINT = "https://socialites-karthikey.herokuapp.com/";
 // let ENDPOINT = "http://localhost:5000/";
+let ENDPOINT = "https://socialites-24x7.herokuapp.com/";
 
 
 let Rooms = () => {

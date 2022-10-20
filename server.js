@@ -11,7 +11,7 @@ let help = require("./helper/index");
 
 // USING ALL MIDDLEWARES
 app.use(cors({
-    origin: "https://socialites-karthikey.herokuapp.com/"
+    origin: "https://socialites-24x7.herokuapp.com/"
 }));
 app.use(express.json( {limit: "50mb"}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
